@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+[1.0.2] - TODO
+--------------------
+- [CHANGED] Moved decreasing_rate() out of SOM classes
+- [FIXED] Removed duplicate constructor for SOMRegressor
+
 [1.0.1] - 2019-03-26
 --------------------
 - [ADDED] Config file for Travis

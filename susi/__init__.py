@@ -12,6 +12,51 @@ from sklearn.utils import class_weight
 from sklearn.preprocessing import binarize
 
 
+def decreasing_rate(a_1, a_2, iteration_max, iteration, mode):
+    """Collection of different decreasing rates.
+
+    Parameters
+    ----------
+    a_1 : float
+        Starting value of decreasing rate
+    a_2 : float
+        End value of decreasing rate
+    iteration_max : int
+        Maximum number of iterations
+    iteration : int
+        Current number of iterations
+    mode : str
+        Mode (= formula) of the decreasing rate
+
+    Returns
+    -------
+    float
+        Decreasing rate
+
+    """
+    if mode == "min":
+        return a_1 * np.power(a_2 / a_1, iteration / iteration_max)
+
+    elif mode == "exp":
+        return a_1 * np.exp(-5 * np.divide(iteration, iteration_max))
+
+    elif mode == "expsquare":
+        return a_1 * np.exp(
+            -5 * np.power(np.divide(iteration, iteration_max), 2))
+
+    elif mode == "linear":
+        return a_1*(1 - np.divide(iteration, iteration_max))
+
+    elif mode == "inverse":
+        return a_1 / iteration
+
+    elif mode == "root":
+        return np.power(a_1, iteration / iteration_max)
+
+    else:
+        raise ValueError("Invalid decreasing rate mode: "+str(mode))
+
+
 class SOMClustering():
     """Unsupervised self-organizing map for clustering.
 
@@ -195,7 +240,7 @@ class SOMClustering():
             Learning rate
 
         """
-        return self.decreasing_rate(
+        return decreasing_rate(
             self.learning_rate_start, self.learning_rate_end,
             self.max_iterations_, curr_it, mode)
 
@@ -215,53 +260,9 @@ class SOMClustering():
             Neighborhood function (= radius)
 
         """
-        return self.decreasing_rate(
+        return decreasing_rate(
             self.radius_max_, self.radius_min_, self.max_iterations_,
             curr_it, mode)
-
-    def decreasing_rate(self, a_1, a_2, iteration_max, iteration, mode):
-        """Different decreasing rates for the SOM.
-
-        Parameters
-        ----------
-        a_1 : float
-            Starting value of decreasing rate
-        a_2 : float
-            End value of decreasing rate
-        iteration_max : int
-            Maximum number of iterations
-        iteration : int
-            Current number of iterations
-        mode : str
-            Mode (= formula) of the decreasing rate
-
-        Returns
-        -------
-        float
-            Decreasing rate
-
-        """
-        if mode == "min":
-            return a_1 * np.power(a_2 / a_1, iteration / iteration_max)
-
-        elif mode == "exp":
-            return a_1 * np.exp(-5 * np.divide(iteration, iteration_max))
-
-        elif mode == "expsquare":
-            return a_1 * np.exp(
-                -5 * np.power(np.divide(iteration, iteration_max), 2))
-
-        elif mode == "linear":
-            return a_1*(1 - np.divide(iteration, iteration_max))
-
-        elif mode == "inverse":
-            return a_1 / iteration
-
-        elif mode == "root":
-            return np.power(a_1, iteration / iteration_max)
-
-        else:
-            raise ValueError("Invalid decreasing rate mode: "+str(mode))
 
     def get_bmu(self, datapoint, som_array):
         """Get best matching unit (BMU) for datapoint.
@@ -609,7 +610,6 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         List of best matching units (BMUs) of the dataset X_
 
     """
-    @abstractmethod
     def __init__(self,
                  n_rows: int = 10,
                  n_columns: int = 10,
@@ -648,7 +648,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         self.neighborhood_mode_supervised = neighborhood_mode_supervised
         self.learn_mode_supervised = learn_mode_supervised
 
-    def fit(self, X, y):
+    def fit(self, X, y=None):
         """Fit supervised SOM to the input data.
 
         Parameters
@@ -839,7 +839,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
             # TODO implement batch mode
             pass
 
-    def fit_transform(self, X, y):
+    def fit_transform(self, X, y=None):
         """Fit to the input data and transform it.
 
         Parameters
@@ -865,129 +865,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
 
 class SOMRegressor(SOMEstimator, RegressorMixin):
-    """Supervised SOM for estimating continuous variables (= regression).
-
-    Parameters
-    ----------
-    n_rows : int, optional (default=10)
-        Number of rows for the SOM grid
-
-    n_columns : int, optional (default=10)
-        Number of columns for the SOM grid
-
-    n_iter_unsupervised : int, optional (default=1000)
-        Number of iterations for the unsupervised SOM
-
-    n_iter_supervised : int, optional (default=1000)
-        Number of iterations for the supervised SOM
-
-    train_mode_unsupervised : str, optional (default="online")
-        Training mode of the unsupervised SOM
-
-    train_mode_supervised : str, optional (default="online")
-        Training mode of the supervised SOM
-
-    neighborhood_mode_unsupervised : str, optional (default="linear")
-        Neighborhood mode of the unsupervised SOM
-
-    neighborhood_mode_supervised : str, optional (default="linear")
-        Neighborhood mode of the supervised SOM
-
-    learn_mode_unsupervised : str, optional (default="min")
-        Learning mode of the unsupervised SOM
-
-    learn_mode_supervised : str, optional (default="min")
-        Learning mode of the supervised SOM
-
-    distance_metric : str, optional (default="euclidean")
-        Distance metric to compare on feature level (not SOM grid)
-
-    learning_rate_start : float, optional (default=0.5)
-        Learning rate start value
-
-    learning_rate_end : float, optional (default=0.05)
-        Learning rate end value (only needed for some lr definitions)
-
-    nbh_dist_weight_mode : str, optional (default="pseudo-gaussian")
-        Formula of the neighborhood distance weight
-
-    n_jobs : int or None, optional (default=None)
-        The number of jobs to run in parallel.
-
-    random_state : int, RandomState instance or None, optional (default=None)
-        If int, random_state is the seed used by the random number generator;
-        If RandomState instance, random_state is the random number generator;
-        If None, the random number generator is the RandomState instance used
-        by `np.random`.
-
-    verbose : int, optional (default=0)
-        Controls the verbosity.
-
-    Attributes
-    ----------
-    node_list_ : np.array of (int, int) tuples
-        List of 2-dimensional coordinates of SOM nodes
-
-    radius_max_ : float, int
-        Maximum radius of the neighborhood function
-
-    radius_min_ : float, int
-        Minimum radius of the neighborhood function
-
-    unsuper_som_ : np.array
-        Weight vectors of the unsupervised SOM
-        shape = (self.n_rows, self.n_columns, X.shape[1])
-
-    X_ : np.array
-        Input data
-
-    fitted_ : bool
-        States if estimator is fitted to X_
-
-    max_iterations_ : int
-        Maximum number of iterations for the current training
-
-    bmus_ :  list of (int, int) tuples
-        List of best matching units (BMUs) of the dataset X_
-
-    """
-
-    def __init__(self,
-                 n_rows: int = 10,
-                 n_columns: int = 10,
-                 n_iter_unsupervised: int = 1000,
-                 n_iter_supervised: int = 1000,
-                 train_mode_unsupervised="online",
-                 train_mode_supervised="online",
-                 neighborhood_mode_unsupervised="linear",
-                 neighborhood_mode_supervised="linear",
-                 learn_mode_unsupervised="min",
-                 learn_mode_supervised="min",
-                 distance_metric="euclidean",
-                 learning_rate_start=0.5,
-                 learning_rate_end=0.05,
-                 nbh_dist_weight_mode="pseudo-gaussian",
-                 n_jobs=None,
-                 random_state=None,
-                 verbose=0):
-        """Initialize SOMRegressor object."""
-        super().__init__(n_rows,
-                         n_columns,
-                         n_iter_unsupervised,
-                         n_iter_supervised,
-                         train_mode_unsupervised,
-                         train_mode_supervised,
-                         neighborhood_mode_unsupervised,
-                         neighborhood_mode_supervised,
-                         learn_mode_unsupervised,
-                         learn_mode_supervised,
-                         distance_metric,
-                         learning_rate_start,
-                         learning_rate_end,
-                         nbh_dist_weight_mode,
-                         n_jobs,
-                         random_state,
-                         verbose)
+    """Supervised SOM for estimating continuous variables (= regression)."""
 
     def init_estimator(self):
         """Initialize estimator with regression options."""

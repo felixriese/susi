@@ -93,8 +93,7 @@ def test_calc_neighborhood_func(radius_max, radius_min, max_it, curr_it, mode,
     (0.9, 0.1, 800, 34, "exp", 0.7277042846893071),
 ])
 def test_decreasing_rate(a_1, a_2, max_it, curr_it, mode, expected):
-    som_clustering = susi.SOMClustering()
-    assert som_clustering.decreasing_rate(
+    assert susi.decreasing_rate(
         a_1, a_2, max_it, curr_it, mode) == expected
 
 
