@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2609131.svg)](https://doi.org/10.5281/zenodo.2609131)
+
 SUSI: SUpervised Self-organIzing maps in Python
 ===============================================
 
@@ -94,32 +96,31 @@ The bibtex file including both references is available `here <bibliography.bib>`
 
 **Paper:**
 
-F. M. Riese and S. Keller, "SUSI: Supervised self-organizing maps for regression and classification in Python", 2019, Submitted to an ISPRS conference.
+Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python", 2019, Submitted to an ISPRS conference.
 
 .. code:: bibtex
 
     @article{riese2019susi,
         author = {Riese, Felix~M. and Keller, Sina},
-        title = {SUSI: Supervised self-organizing maps for regression and classification in Python},
+        title = {SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python},
         year = {2019},
         notes = {Submitted to an ISPRS conference},
-        TODO arxiv
     }
 
 
 **Code:**
 
-F. M. Riese, "TODO", [DOI TODO](DOI TODO), 2019.
+Felix M. Riese, "SUSI: SUpervised Self-organIzing maps in Python", [10.5281/zenodo.2609130](https://doi.org/10.5281/zenodo.2609130), 2019.
 
-TODO Badge
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2609131.svg)](https://doi.org/10.5281/zenodo.2609131)
 
 .. code:: bibtex
 
-    @misc{riese2019cnn,
-      author       = {Riese, Felix~M.},
-      title        = {{TODO}},
-      year         = {2019},
-      publisher    = {Zenodo},
-      DOI          = {TODO},
-      howpublished = {\href{TODO}{TODO}}
-    }
+    @misc{riese2019susi,
+        author = {Riese, Felix~M.},
+        title = {{SUSI: SUpervised Self-organIzing maps in Python}},
+        year = {2019},
+        DOI = {10.5281/zenodo.2609130},
+        publisher = {Zenodo},
+        howpublished = {\href{https://doi.org/10.5281/zenodo.2609130}{doi.org/10.5281/zenodo.2609130}}
+}
