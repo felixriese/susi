@@ -14,6 +14,14 @@
     :target: https://travis-ci.org/felixriese/susi
     :alt: Travis.CI
 
+.. image:: https://codecov.io/gh/felixriese/susi/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/felixriese/susi
+    :alt: Codecov
+
+.. image:: https://api.codacy.com/project/badge/Grade/d304689a7364437db1ef998cf7765f5a
+	:target: https://app.codacy.com/app/felixriese/susi
+	:alt: Codacy Badge
+
 .. image:: https://readthedocs.org/projects/susi/badge/?version=latest
     :target: https://susi.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
@@ -74,7 +82,7 @@ Manually:
 
 .. code:: bash
 
-    git clone TODO
+    git clone https://github.com/felixriese/susi.git
     cd susi/
     python setup.py install
 
