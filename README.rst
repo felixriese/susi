@@ -1,6 +1,10 @@
 .. image:: https://badge.fury.io/py/susi.svg
-    :target: https://badge.fury.io/py/susi
-    :alt: PyPi
+    :target: https://pypi.org/project/susi/
+    :alt: PyPi - Code Version
+
+.. image:: https://img.shields.io/pypi/pyversions/susi.svg
+    :target: https://pypi.org/project/susi/
+    :alt: PyPI - Python Version
 
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.2609131.svg
     :target: https://doi.org/10.5281/zenodo.2609131
