@@ -153,3 +153,8 @@ Felix M. Riese, "SUSI: SUpervised Self-organIzing maps in Python", [10.5281/zeno
         publisher = {Zenodo},
         howpublished = {\href{https://doi.org/10.5281/zenodo.2609130}{doi.org/10.5281/zenodo.2609130}}
     }
+
+
+.. image:: https://api.codacy.com/project/badge/Grade/d304689a7364437db1ef998cf7765f5a
+   :alt: Codacy Badge
+   :target: https://app.codacy.com/app/felixriese/susi?utm_source=github.com&utm_medium=referral&utm_content=felixriese/susi&utm_campaign=Badge_Grade_Dashboard
