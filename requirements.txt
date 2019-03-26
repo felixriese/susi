@@ -1,5 +1,14 @@
+# for the package itself
 joblib==0.13.0
 numpy==1.15.4
-pytest==3.5.1
 scikit-learn==0.20.0
 scipy==1.1.0
+
+# for testing
+pytest==3.5.1
+
+# for the documentation
+sphinx==1.8.2
+sphinx-autobuild
+numpydoc
+sphinx_rtd_theme

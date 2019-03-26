@@ -1,5 +1,7 @@
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.2609131.svg
    :target: https://doi.org/10.5281/zenodo.2609131
+.. image:: https://travis-ci.org/felixriese/susi.svg?branch=master
+    :target: https://travis-ci.org/felixriese/susi
 
 SUSI: SUpervised Self-organIzing maps in Python
 ===============================================
