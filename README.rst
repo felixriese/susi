@@ -1,7 +1,16 @@
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.2609131.svg
-   :target: https://doi.org/10.5281/zenodo.2609131
+    :target: https://doi.org/10.5281/zenodo.2609131
+    :alt: Zenodo DOI
+
 .. image:: https://travis-ci.org/felixriese/susi.svg?branch=master
     :target: https://travis-ci.org/felixriese/susi
+    :alt: Travis.CI
+
+.. image:: https://readthedocs.org/projects/susi/badge/?version=latest
+    :target: https://susi.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
+|
 
 SUSI: SUpervised Self-organIzing maps in Python
 ===============================================
@@ -24,7 +33,7 @@ The class structure is set up as follows:
 
 
 :Paper:
-    to be published
+    Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python", 2019, Submitted to an ISPRS conference.
 
 :License:
     `3-Clause BSD license <LICENSE>`_
@@ -33,7 +42,11 @@ The class structure is set up as follows:
     `Felix M. Riese <mailto:github@felixriese.de>`_,
     `Sina Keller <mailto:sina.keller@kit.edu>`_
 
-:Citation: see `Citation`_ and in the `bibtex <bibliography.bib>`_ file
+:Citation:
+    see `Citation`_ and in the `bibtex <bibliography.bib>`_ file
+
+:Documentation:
+    `read the docs <https://susi.readthedocs.io/en/latest/readme.html>`_
 
 Installation
 ------------
@@ -103,7 +116,7 @@ Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regress
 
 .. code:: bibtex
 
-    @article{riese2019susi,
+    @article{riesekeller2019susi,
         author = {Riese, Felix~M. and Keller, Sina},
         title = {SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python},
         year = {2019},
@@ -120,11 +133,11 @@ Felix M. Riese, "SUSI: SUpervised Self-organIzing maps in Python", [10.5281/zeno
 
 .. code:: bibtex
 
-    @misc{riese2019susi,
+    @misc{riese2019susicode,
         author = {Riese, Felix~M.},
         title = {{SUSI: SUpervised Self-organIzing maps in Python}},
         year = {2019},
         DOI = {10.5281/zenodo.2609130},
         publisher = {Zenodo},
         howpublished = {\href{https://doi.org/10.5281/zenodo.2609130}{doi.org/10.5281/zenodo.2609130}}
-}
+    }

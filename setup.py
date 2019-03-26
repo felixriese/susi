@@ -14,7 +14,7 @@ long_description = '\n\n'.join((readme, changelog))
 
 setuptools.setup(
     name="susi",
-    version="1.0.0",
+    version="1.0.1",
     author="Felix M. Riese",
     author_email="github@felixriese.de",
     description="Python package for unsupervised and supervised self-organizing maps (SOM)",
@@ -29,6 +29,10 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Environment :: Console",
         "Intended Audience :: Developers",
         "Intended Audience :: Education",
