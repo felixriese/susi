@@ -1,3 +1,7 @@
+.. image:: https://badge.fury.io/py/susi.svg
+    :target: https://badge.fury.io/py/susi
+    :alt: PyPi
+
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.2609131.svg
     :target: https://doi.org/10.5281/zenodo.2609131
     :alt: Zenodo DOI
@@ -9,6 +13,10 @@
 .. image:: https://readthedocs.org/projects/susi/badge/?version=latest
     :target: https://susi.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
+
+.. image:: https://img.shields.io/pypi/l/susi.svg
+    :target: https://github.com/felixriese/susi/blob/master/LICENSE
+    :alt: PyPI - License
 
 |
 
