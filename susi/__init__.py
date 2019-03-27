@@ -175,7 +175,7 @@ class SOMClustering():
         som = np.random.rand(self.n_rows, self.n_columns, self.X_.shape[1])
         self.unsuper_som_ = som
 
-    def fit(self, X):
+    def fit(self, X, y=None):
         """Fit unsupervised SOM to input data.
 
         Parameters

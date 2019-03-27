@@ -6,9 +6,13 @@
     :target: https://pypi.org/project/susi/
     :alt: PyPI - Python Version
 
-.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.2609131.svg
-    :target: https://doi.org/10.5281/zenodo.2609131
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.2609130.svg
+    :target: https://doi.org/10.5281/zenodo.2609130
     :alt: Zenodo DOI
+
+.. image:: https://img.shields.io/pypi/l/susi.svg
+    :target: https://github.com/felixriese/susi/blob/master/LICENSE
+    :alt: PyPI - License
 
 .. image:: https://travis-ci.org/felixriese/susi.svg?branch=master
     :target: https://travis-ci.org/felixriese/susi
@@ -25,10 +29,6 @@
 .. image:: https://readthedocs.org/projects/susi/badge/?version=latest
     :target: https://susi.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
-
-.. image:: https://img.shields.io/pypi/l/susi.svg
-    :target: https://github.com/felixriese/susi/blob/master/LICENSE
-    :alt: PyPI - License
 
 |
 
@@ -143,13 +143,12 @@ Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regress
         notes = {Submitted to an ISPRS conference},
     }
 
-
 **Code:**
 
 Felix M. Riese, "SUSI: SUpervised Self-organIzing maps in Python", [10.5281/zenodo.2609130](https://doi.org/10.5281/zenodo.2609130), 2019.
 
-.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.2609131.svg
-   :target: https://doi.org/10.5281/zenodo.2609131
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.2609130.svg
+   :target: https://doi.org/10.5281/zenodo.2609130
 
 .. code:: bibtex
 
