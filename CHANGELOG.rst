@@ -1,10 +1,11 @@
 Change Log
 ==========
 
-[1.0.2] - TODO
+[1.0.2] - 2019-03-27
 --------------------
 - [CHANGED] Moved decreasing_rate() out of SOM classes
-- [FIXED] Removed duplicate constructor for SOMRegressor
+- [FIXED] Removed duplicate constructor for SOMRegressor, fixed fit() params
+- [ADDED] Codecov, Codacy
 
 [1.0.1] - 2019-03-26
 --------------------
