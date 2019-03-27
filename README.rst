@@ -16,7 +16,11 @@
 
 .. image:: https://travis-ci.org/felixriese/susi.svg?branch=master
     :target: https://travis-ci.org/felixriese/susi
-    :alt: Travis.CI
+    :alt: Travis.CI Status
+
+.. image:: https://readthedocs.org/projects/susi/badge/?version=latest
+    :target: https://susi.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 .. image:: https://codecov.io/gh/felixriese/susi/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/felixriese/susi
@@ -25,10 +29,6 @@
 .. image:: https://api.codacy.com/project/badge/Grade/d304689a7364437db1ef998cf7765f5a
 	:target: https://app.codacy.com/app/felixriese/susi
 	:alt: Codacy Badge
-
-.. image:: https://readthedocs.org/projects/susi/badge/?version=latest
-    :target: https://susi.readthedocs.io/en/latest/?badge=latest
-    :alt: Documentation Status
 
 |
 
@@ -51,22 +51,21 @@ The class structure is set up as follows:
     - SOMRegressor: Regression SOM
     - SOMClassifier: Classification SOM
 
-
-:Paper:
-    Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python", 2019, Submitted to an ISPRS conference.
-
 :License:
     `3-Clause BSD license <LICENSE>`_
 
-:Authors:
-    `Felix M. Riese <mailto:github@felixriese.de>`_,
-    `Sina Keller <mailto:sina.keller@kit.edu>`_
+:Author:
+    `Felix M. Riese <mailto:github@felixriese.de>`_
 
 :Citation:
     see `Citation`_ and in the `bibtex <bibliography.bib>`_ file
 
 :Documentation:
     `read the docs <https://susi.readthedocs.io/en/latest/readme.html>`_
+
+:Paper:
+    Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python", 2019, Submitted to an ISPRS conference.
+
 
 Installation
 ------------
@@ -145,7 +144,7 @@ Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regress
 
 **Code:**
 
-Felix M. Riese, "SUSI: SUpervised Self-organIzing maps in Python", [10.5281/zenodo.2609130](https://doi.org/10.5281/zenodo.2609130), 2019.
+Felix M. Riese, "SUSI: SUpervised Self-organIzing maps in Python", `10.5281/zenodo.2609130 <https://doi.org/10.5281/zenodo.2609130>`_, 2019.
 
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.2609130.svg
    :target: https://doi.org/10.5281/zenodo.2609130

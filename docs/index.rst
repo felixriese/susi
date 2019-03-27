@@ -9,17 +9,21 @@ Welcome to SUSI's documentation!
 We present the SUSI package for Python.
 It includes a fully functional SOM for unsupervised and supervised tasks.
 
-:Paper:
-    to be published
-
 :License:
-    `3-Clause BSD license <LICENSE>`_
+    `3-Clause BSD license <LICENSE <https://github.com/felixriese/susi/LICENSE>`_
 
-:Authors:
-    `Felix M. Riese <mailto:github@felixriese.de>`_,
-    `Sina Keller <mailto:sina.keller@kit.edu>`_
+:Author:
+    `Felix M. Riese <mailto:github@felixriese.de>`_
 
 :Citation: see `Citation <https://github.com/felixriese/susi/README.rst>`_ and in the `bibtex <https://github.com/felixriese/susi/bibliography.bib>`_ file
+
+
+:Documentation:
+    `read the docs <https://susi.readthedocs.io/en/latest/readme.html>`_
+
+:Paper:
+    Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python", 2019, Submitted to an ISPRS conference.
+
 
 .. toctree::
    :maxdepth: 2
