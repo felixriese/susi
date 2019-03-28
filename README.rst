@@ -6,10 +6,6 @@
     :target: https://pypi.org/project/susi/
     :alt: PyPI - Python Version
 
-.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.2609130.svg
-    :target: https://doi.org/10.5281/zenodo.2609130
-    :alt: Zenodo DOI
-
 .. image:: https://img.shields.io/pypi/l/susi.svg
     :target: https://github.com/felixriese/susi/blob/master/LICENSE
     :alt: PyPI - License
@@ -64,7 +60,7 @@ The class structure is set up as follows:
     `read the docs <https://susi.readthedocs.io/en/latest/readme.html>`_
 
 :Paper:
-    Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python", 2019, Submitted to an ISPRS conference.
+    `arXiv:1903.11114 <https://arxiv.org/abs/1903.11114>`_
 
 
 Installation
@@ -131,7 +127,7 @@ The bibtex file including both references is available `here <bibliography.bib>`
 
 **Paper:**
 
-Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python", 2019, Submitted to an ISPRS conference.
+Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python", `arXiv:1903.11114 <https://arxiv.org/abs/1903.11114>`_, 2019. Submitted to an ISPRS conference.
 
 .. code:: bibtex
 
@@ -140,6 +136,10 @@ Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regress
         title = {SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python},
         year = {2019},
         notes = {Submitted to an ISPRS conference},
+	    archivePrefix = {arXiv},
+   	    eprint = {1903.11114},
+   	    primaryClass = {cs.LG},
+   	    url = {https://arxiv.org/abs/1903.11114}
     }
 
 **Code:**
