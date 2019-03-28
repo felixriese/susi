@@ -9,21 +9,27 @@ Welcome to SUSI's documentation!
 We present the SUSI package for Python.
 It includes a fully functional SOM for unsupervised and supervised tasks.
 
-:Paper:
-    to be published
-
 :License:
-    `3-Clause BSD license <LICENSE>`_
+    `3-Clause BSD license <https://github.com/felixriese/susi/blob/master/LICENSE>`_
 
-:Authors:
-    `Felix M. Riese <mailto:github@felixriese.de>`_,
-    `Sina Keller <mailto:sina.keller@kit.edu>`_
+:Author:
+    `Felix M. Riese <mailto:github@felixriese.de>`_
 
-:Citation: see `Citation <https://github.com/felixriese/susi/README.rst>`_ and in the `bibtex <https://github.com/felixriese/susi/bibliography.bib>`_ file
+:Citation: see `Citation <https://github.com/felixriese/susi#citation>`_ and in the `bibtex <https://github.com/felixriese/susi/blob/master/bibliography.bib>`_ file
+
+
+:Documentation:
+    `read the docs <https://susi.readthedocs.io/en/latest/readme.html>`_
+
+:Paper:
+    `arXiv:1903.11114 <https://arxiv.org/abs/1903.11114>`_
+
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+
+   Home <self>
 
    Overview <readme.rst>
 

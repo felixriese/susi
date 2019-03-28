@@ -6,17 +6,17 @@
     :target: https://pypi.org/project/susi/
     :alt: PyPI - Python Version
 
-.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.2609130.svg
-    :target: https://doi.org/10.5281/zenodo.2609130
-    :alt: Zenodo DOI
-
 .. image:: https://img.shields.io/pypi/l/susi.svg
     :target: https://github.com/felixriese/susi/blob/master/LICENSE
     :alt: PyPI - License
 
 .. image:: https://travis-ci.org/felixriese/susi.svg?branch=master
     :target: https://travis-ci.org/felixriese/susi
-    :alt: Travis.CI
+    :alt: Travis.CI Status
+
+.. image:: https://readthedocs.org/projects/susi/badge/?version=latest
+    :target: https://susi.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 .. image:: https://codecov.io/gh/felixriese/susi/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/felixriese/susi
@@ -25,10 +25,6 @@
 .. image:: https://api.codacy.com/project/badge/Grade/d304689a7364437db1ef998cf7765f5a
 	:target: https://app.codacy.com/app/felixriese/susi
 	:alt: Codacy Badge
-
-.. image:: https://readthedocs.org/projects/susi/badge/?version=latest
-    :target: https://susi.readthedocs.io/en/latest/?badge=latest
-    :alt: Documentation Status
 
 |
 
@@ -51,22 +47,21 @@ The class structure is set up as follows:
     - SOMRegressor: Regression SOM
     - SOMClassifier: Classification SOM
 
-
-:Paper:
-    Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python", 2019, Submitted to an ISPRS conference.
-
 :License:
     `3-Clause BSD license <LICENSE>`_
 
-:Authors:
-    `Felix M. Riese <mailto:github@felixriese.de>`_,
-    `Sina Keller <mailto:sina.keller@kit.edu>`_
+:Author:
+    `Felix M. Riese <mailto:github@felixriese.de>`_
 
 :Citation:
     see `Citation`_ and in the `bibtex <bibliography.bib>`_ file
 
 :Documentation:
     `read the docs <https://susi.readthedocs.io/en/latest/readme.html>`_
+
+:Paper:
+    `arXiv:1903.11114 <https://arxiv.org/abs/1903.11114>`_
+
 
 Installation
 ------------
@@ -132,7 +127,7 @@ The bibtex file including both references is available `here <bibliography.bib>`
 
 **Paper:**
 
-Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python", 2019, Submitted to an ISPRS conference.
+Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python", `arXiv:1903.11114 <https://arxiv.org/abs/1903.11114>`_, 2019. Submitted to an ISPRS conference.
 
 .. code:: bibtex
 
@@ -141,11 +136,15 @@ Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regress
         title = {SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python},
         year = {2019},
         notes = {Submitted to an ISPRS conference},
+	    archivePrefix = {arXiv},
+   	    eprint = {1903.11114},
+   	    primaryClass = {cs.LG},
+   	    url = {https://arxiv.org/abs/1903.11114}
     }
 
 **Code:**
 
-Felix M. Riese, "SUSI: SUpervised Self-organIzing maps in Python", [10.5281/zenodo.2609130](https://doi.org/10.5281/zenodo.2609130), 2019.
+Felix M. Riese, "SUSI: SUpervised Self-organIzing maps in Python", `10.5281/zenodo.2609130 <https://doi.org/10.5281/zenodo.2609130>`_, 2019.
 
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.2609130.svg
    :target: https://doi.org/10.5281/zenodo.2609130
