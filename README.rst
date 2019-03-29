@@ -153,7 +153,7 @@ Felix M. Riese, "SUSI: SUpervised Self-organIzing maps in Python", `10.5281/zeno
 
     @misc{riese2019susicode,
         author = {Riese, Felix~M.},
-        title = {{SUSI: SUpervised Self-organIzing maps in Python}},
+        title = {{SUSI: SUpervised Self-organizing maps in Python}},
         year = {2019},
         DOI = {10.5281/zenodo.2609130},
         publisher = {Zenodo},
