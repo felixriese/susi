@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+[1.0.3] - 2019-03-28
+--------------------
+- [ADDED] Link to arXiv paper
+- [FIXED] URLs and styles in documentation
+- [FIXED] Colormap in Salinas example
+
 [1.0.2] - 2019-03-27
 --------------------
 - [CHANGED] Moved decreasing_rate() out of SOM classes

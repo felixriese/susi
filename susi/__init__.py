@@ -123,13 +123,13 @@ class SOMClustering():
         Input data
 
     fitted_ : bool
-        States if estimator is fitted to X_
+        States if estimator is fitted to X
 
     max_iterations_ : int
         Maximum number of iterations for the current training
 
     bmus_ :  list of (int, int) tuples
-        List of best matching units (BMUs) of the dataset X_
+        List of best matching units (BMUs) of the dataset X
     """
 
     def __init__(self,
@@ -270,7 +270,7 @@ class SOMClustering():
         Parameters
         ----------
         datapoint : np.array, shape=shape[1]
-            Datapoint = one row of the dataset X_
+            Datapoint = one row of the dataset X
         som_array : np.array
             Weight vectors of the SOM
             shape = (self.n_rows, self.n_columns, X.shape[1])
@@ -360,7 +360,7 @@ class SOMClustering():
         Parameters
         ----------
         datapoint : np.array, shape=(X.shape[1])
-            Datapoint = one row of the dataset X_
+            Datapoint = one row of the dataset X
         som_array : np.array
             Weight vectors of the SOM
             shape = (self.n_rows, self.n_columns, X.shape[1])
@@ -449,7 +449,7 @@ class SOMClustering():
         dist_weight_matrix : np.array of float
             Current distance weight of the SOM for the specific node
         true_vector : np.array
-            Datapoint = one row of the dataset X_
+            Datapoint = one row of the dataset X
 
         Returns
         -------
@@ -601,13 +601,13 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         Input data
 
     fitted_ : bool
-        States if estimator is fitted to X_
+        States if estimator is fitted to X
 
     max_iterations_ : int
         Maximum number of iterations for the current training
 
     bmus_ :  list of (int, int) tuples
-        List of best matching units (BMUs) of the dataset X_
+        List of best matching units (BMUs) of the dataset X
 
     """
     def __init__(self,
@@ -750,7 +750,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         Parameters
         ----------
         datapoint : np.array, shape=(X.shape[1])
-            Datapoint = one row of the dataset X_
+            Datapoint = one row of the dataset X
         mode : str, optional (default="bmu")
             Mode of the regression output calculation
 
@@ -797,7 +797,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         dist_weight_matrix : np.array of float
             Current distance weight of the SOM for the specific node
         true_vector : np.array
-            Datapoint = one row of the dataset X_
+            Datapoint = one row of the dataset X
 
         Returns
         -------
@@ -953,13 +953,13 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         Input data
 
     fitted_ : bool
-        States if estimator is fitted to X_
+        States if estimator is fitted to X
 
     max_iterations_ : int
         Maximum number of iterations for the current training
 
     bmus_ :  list of (int, int) tuples
-        List of best matching units (BMUs) of the dataset X_
+        List of best matching units (BMUs) of the dataset X
 
     """
 
@@ -1029,7 +1029,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         dist_weight_matrix : np.array of float
             Current distance weight of the SOM for the specific node
         true_vector : np.array
-            Datapoint = one row of the dataset X_
+            Datapoint = one row of the dataset X
 
         Returns
         -------
