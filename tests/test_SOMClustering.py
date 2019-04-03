@@ -1,7 +1,7 @@
-"""Test for susi.py.
+"""Test for susi.SOMClustering
 
 Usage:
-python -m pytest tests/test_susi.py
+python -m pytest tests/test_SOMClustering.py
 
 """
 import pytest
@@ -91,10 +91,21 @@ def test_calc_neighborhood_func(radius_max, radius_min, max_it, curr_it, mode,
 @pytest.mark.parametrize("a_1,a_2,max_it,curr_it,mode,expected", [
     (0.9, 0.1, 800, 34, "min", 0.8197609052582371),
     (0.9, 0.1, 800, 34, "exp", 0.7277042846893071),
+    (0.9, 0.1, 800, 34, "expsquare", 0.8919084683204536),
+    (0.9, 0.1, 800, 34, "linear", 0.86175),
+    (0.9, 0.1, 800, 34, "inverse", 0.026470588235294117),
+    (0.9, 0.1, 800, 34, "root", 0.9955321885817805),
+    (0.9, 0.1, 800, 34, "testerror", 0.7277042846893071),
 ])
 def test_decreasing_rate(a_1, a_2, max_it, curr_it, mode, expected):
-    assert susi.decreasing_rate(
-        a_1, a_2, max_it, curr_it, mode) == expected
+    if mode == "testerror":
+        with pytest.raises(Exception):
+            assert susi.decreasing_rate(
+                a_1, a_2, max_it, curr_it, mode) == expected
+
+    else:
+        assert susi.decreasing_rate(
+            a_1, a_2, max_it, curr_it, mode) == expected
 
 
 @pytest.mark.parametrize("som,expected", [
@@ -117,20 +128,30 @@ def test_get_bmu(som_array, datapoint, expected):
     assert np.array_equal(som_clustering.get_bmu(datapoint, som_array), expected)
 
 
-@pytest.mark.parametrize("X,n_rows,n_columns,random_state,expected", [
-    (np.array([[0., 0.1, 0.2], [2.3, 2.1, 2.1]]), 2, 2, 42,
+@pytest.mark.parametrize("X,n_rows,n_columns,train_mode_unsupervised,random_state,expected", [
+    (np.array([[0., 0.1, 0.2], [2.3, 2.1, 2.1]]), 2, 2, "online", 42,
      np.array([[[2.29999999, 2.1, 2.1],
                 [1.25232099, 1.18897478, 1.23452604]],
                [[1.25232099, 1.18897478, 1.23452604],
                 [2.23083779e-9, 1.00000002e-1, 2.00000002e-1]]])),
+    (np.array([[0., 0.1, 0.2], [2.3, 2.1, 2.1]]), 2, 2, "batch", 42, 0)
 ])
-def test_fit(X, n_rows, n_columns, random_state, expected):
+def test_fit(X, n_rows, n_columns, train_mode_unsupervised, random_state, expected):
     som_clustering = susi.SOMClustering(
-        n_rows=n_rows, n_columns=n_columns, random_state=random_state)
-    som_clustering.fit(X)
-    assert type(som_clustering.unsuper_som_) == np.ndarray
-    assert som_clustering.unsuper_som_.shape == (n_rows, n_columns, X.shape[1])
-    assert np.allclose(som_clustering.unsuper_som_, expected, atol=1e-20)
+        n_rows=n_rows,
+        n_columns=n_columns,
+        train_mode_unsupervised=train_mode_unsupervised,
+        random_state=random_state)
+
+    # TODO remove after implementation of unsupervised batch mode
+    if train_mode_unsupervised == "batch":
+        with pytest.raises(Exception):
+            som_clustering.fit(X)
+    else:
+        som_clustering.fit(X)
+        assert type(som_clustering.unsuper_som_) == np.ndarray
+        assert som_clustering.unsuper_som_.shape == (n_rows, n_columns, X.shape[1])
+        assert np.allclose(som_clustering.unsuper_som_, expected, atol=1e-20)
 
 
 @pytest.mark.parametrize(
@@ -182,6 +203,19 @@ def test_transform(n_rows, n_columns, X):
         n_rows=n_rows, n_columns=n_columns)
     som_clustering.fit(X)
     bmus = som_clustering.transform(X)
+    assert(len(bmus) == X.shape[0])
+    assert(len(bmus[0]) == 2)
+
+
+@pytest.mark.parametrize(
+    "n_rows,n_columns,X", [
+        (2, 2, np.array([[0., 0.1, 0.2], [2.3, 2.1, 2.1],
+         [2.3, 2.1, 2.1], [2.3, 2.1, 2.1]])),
+])
+def test_fit_transform(n_rows, n_columns, X):
+    som_clustering = susi.SOMClustering(
+        n_rows=n_rows, n_columns=n_columns)
+    bmus = som_clustering.fit_transform(X)
     assert(len(bmus) == X.shape[0])
     assert(len(bmus[0]) == 2)
 

@@ -222,7 +222,7 @@ class SOMClustering():
 
         elif self.train_mode_unsupervised == "batch":
             # TODO implement batch mode
-            pass
+            raise ValueError("Unsupervised batch mode not implemented.")
 
     def calc_learning_rate(self, curr_it, mode):
         """Calculate learning rate alpha with 0 <= alpha <= 1.
@@ -324,7 +324,12 @@ class SOMClustering():
 
         Returns
         -------
-        TODO
+        n_jobs : int
+            Number of jobs
+        list of int
+            List of number of datapoints per job
+        list of int
+            List of start values for every job list
 
         """
         n_datapoints = len(X)
@@ -837,7 +842,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         elif self.train_mode_supervised == "batch":
             # TODO implement batch mode
-            pass
+            raise ValueError("Supervised batch mode not implemented.")
 
     def fit_transform(self, X, y=None):
         """Fit to the input data and transform it.

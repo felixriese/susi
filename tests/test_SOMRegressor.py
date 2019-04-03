@@ -1,4 +1,4 @@
-"""Test for SOMRegressor.py.
+"""Test for susi.SOMRegressor
 
 Usage:
 python -m pytest tests/test_SOMRegressor.py
@@ -35,17 +35,24 @@ def test_som_regressor_init(n_rows, n_columns):
         n_rows=n_rows, n_columns=n_columns)
     assert som_reg.n_rows == n_rows
     assert som_reg.n_columns == n_columns
-    # assert som_reg.radius_max == max(n_rows, n_columns) / 2
 
-@pytest.mark.parametrize("n_rows,n_columns,random_state", [
-    (3, 3, 42),
+@pytest.mark.parametrize("n_rows,n_columns,train_mode_supervised,random_state", [
+    (3, 3, "online", 42),
+    (3, 3, "batch", 42),
 ])
-def test_predict(n_rows, n_columns, random_state):
+def test_predict(n_rows, n_columns, train_mode_supervised, random_state):
     som_reg = susi.SOMRegressor(
-        n_rows=n_rows, n_columns=n_columns, random_state=random_state)
-    som_reg.fit(X_train, y_train)
-    y_pred = som_reg.predict(X_test)
-    assert(y_pred.shape == y_test.shape)
+        n_rows=n_rows, n_columns=n_columns,
+        train_mode_supervised=train_mode_supervised, random_state=random_state)
+
+    # TODO remove after implementation of supervised batch mode
+    if train_mode_supervised == "batch":
+        with pytest.raises(Exception):
+            som_reg.fit(X_train, y_train)
+    else:
+        som_reg.fit(X_train, y_train)
+        y_pred = som_reg.predict(X_test)
+        assert(y_pred.shape == y_test.shape)
 
 @pytest.mark.parametrize("estimator", [
     (susi.SOMRegressor),

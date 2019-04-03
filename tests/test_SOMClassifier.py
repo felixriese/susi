@@ -1,4 +1,4 @@
-"""Test for susi.py.
+"""Test for susi.SOMClassifier
 
 Usage:
 python -m pytest tests/test_SOMClassifier.py
@@ -60,18 +60,27 @@ def test_change_class_proba(n_rows, n_columns, learningrate,
         assert np.array_equal(new_som_array, expected.reshape((2, 2, 1)))
 
 
-@pytest.mark.parametrize("n_rows,n_columns,learningrate,dist_weight_matrix,som_array,random_state,true_vector,expected", [
+@pytest.mark.parametrize("n_rows,n_columns,learningrate,dist_weight_matrix,som_array,do_class_weighting,random_state,true_vector,expected", [
     (2, 2, 0.3, np.array([[1.3, 0.4], [2.1, 0.2]]).reshape(2, 2, 1),
-    np.array([[1.3, 0.4], [2.1, 0.2]]).reshape(2, 2, 1), 3,
+    np.array([[1.3, 0.4], [2.1, 0.2]]).reshape(2, 2, 1), True, 3,
+    np.array([1]), None),
+    (2, 2, 0.3, np.array([[1.3, 0.4], [2.1, 0.2]]).reshape(2, 2, 1),
+    np.array([[1.3, 0.4], [2.1, 0.2]]).reshape(2, 2, 1), False, 3,
     np.array([1]), None),
 ])
-def test_modify_weight_matrix_supervised(n_rows, n_columns, learningrate,
-                              dist_weight_matrix, som_array, random_state,
-                              true_vector, expected):
-    som = susi.SOMClassifier(n_rows=n_rows, n_columns=n_columns,
-                                     random_state=random_state)
+def test_modify_weight_matrix_supervised(
+        n_rows, n_columns, learningrate, dist_weight_matrix, som_array,
+        do_class_weighting, random_state, true_vector, expected):
+    som = susi.SOMClassifier(
+        n_rows=n_rows,
+        n_columns=n_columns,
+        do_class_weighting=do_class_weighting,
+        random_state=random_state)
     som.classes_ = [0, 1, 2]
     som.class_weights_ = [1., 1., 1.]
     new_som = som.modify_weight_matrix_supervised(
         som_array, learningrate, dist_weight_matrix, true_vector)
     assert(new_som.shape == (n_rows, n_columns, 1))
+
+
+
