@@ -20,8 +20,9 @@ import susi
 boston = load_boston()
 X_train_orig, X_test_orig, y_train, y_test = train_test_split(
     boston.data, boston.target, test_size=0.5, random_state=42)
+
 # preprocessing
-scaler =  StandardScaler()
+scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train_orig)
 X_test = scaler.transform(X_test_orig)
 
@@ -36,10 +37,12 @@ def test_som_regressor_init(n_rows, n_columns):
     assert som_reg.n_rows == n_rows
     assert som_reg.n_columns == n_columns
 
-@pytest.mark.parametrize("n_rows,n_columns,train_mode_supervised,random_state", [
-    (3, 3, "online", 42),
-    (3, 3, "batch", 42),
-])
+
+@pytest.mark.parametrize(
+    "n_rows,n_columns,train_mode_supervised,random_state", [
+        (3, 3, "online", 42),
+        (3, 3, "batch", 42),
+    ])
 def test_predict(n_rows, n_columns, train_mode_supervised, random_state):
     som_reg = susi.SOMRegressor(
         n_rows=n_rows, n_columns=n_columns,
@@ -54,6 +57,7 @@ def test_predict(n_rows, n_columns, train_mode_supervised, random_state):
         y_pred = som_reg.predict(X_test)
         assert(y_pred.shape == y_test.shape)
 
+
 @pytest.mark.parametrize("estimator", [
     (susi.SOMRegressor),
 ])
@@ -64,12 +68,12 @@ def test_estimator_status(estimator):
 @pytest.mark.parametrize(
     "n_rows,n_columns,unsuper_som,super_som, datapoint,expected", [
         (2, 2, np.array([[[0., 1.1, 2.1], [0.3, 2.1, 1.1]],
-               [[1., 2.1, 3.1], [-0.3, -2.1, -1.1]]]),
-               np.array([[[0], [0.5]],
-               [[1], [2]]]), np.array([0., 1.1, 2.1]).reshape(3,), np.array([0.])
-        ),
-])
-def test_calc_estimation_output(n_rows, n_columns, unsuper_som, super_som, datapoint, expected):
+                         [[1., 2.1, 3.1], [-0.3, -2.1, -1.1]]]),
+         np.array([[[0], [0.5]], [[1], [2]]]),
+         np.array([0., 1.1, 2.1]).reshape(3,), np.array([0.])),
+    ])
+def test_calc_estimation_output(n_rows, n_columns, unsuper_som, super_som,
+                                datapoint, expected):
     som = susi.SOMRegressor(n_rows=n_rows, n_columns=n_columns)
     som.unsuper_som_ = unsuper_som
     som.super_som_ = super_som

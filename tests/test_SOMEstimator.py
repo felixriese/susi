@@ -13,13 +13,11 @@ sys.path.insert(
 import susi
 
 
-np.array([[[0], [0.5]],
-               [[1], [2]]])
 @pytest.mark.parametrize(
     "super_som", [
-        (np.array([[[0], [0.5]],[[1], [2]]])),
-])
+        (np.array([[[0], [0.5]], [[1], [2]]])),
+    ])
 def test_get_estimation_map(super_som):
-    som = susi.SOMClassifier()
+    som = susi.SOMRegressor()  # works the same with SOMClassifier
     som.super_som_ = super_som
     assert np.array_equal(som.get_estimation_map(), super_som)
