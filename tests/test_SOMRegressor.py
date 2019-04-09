@@ -58,11 +58,8 @@ def test_predict(n_rows, n_columns, train_mode_supervised, random_state):
         assert(y_pred.shape == y_test.shape)
 
 
-@pytest.mark.parametrize("estimator", [
-    (susi.SOMRegressor),
-])
-def test_estimator_status(estimator):
-    check_estimator(estimator)
+def test_estimator_status():
+    check_estimator(susi.SOMRegressor)
 
 
 @pytest.mark.parametrize(
