@@ -81,8 +81,9 @@ def test_calc_estimation_output(n_rows, n_columns, unsuper_som, super_som,
 
 
 def test_mexicanhat_nbh_dist_weight_mode():
-    som = susi.SOMRegressor(
-        nbh_dist_weight_mode="mexican-hat",
-        )
+    som = susi.SOMRegressor(nbh_dist_weight_mode="mexican-hat")
     som.fit(X_train, y_train)
     som.predict(X_test)
+    with pytest.raises(Exception):
+        som = susi.SOMRegressor(nbh_dist_weight_mode="pseudogaussian")
+        som.fit(X_train, y_train)

@@ -772,9 +772,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
             Classification: the label.
             Regression: the target variable.
 
-        TODO use yield instead of return (Test!!!)
         TODO Implement handling of incomplete datapoints
-        TODO implement SOM output variances
         TODO implement "neighborhood" mode
 
         """
