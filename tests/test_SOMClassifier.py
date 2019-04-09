@@ -25,12 +25,13 @@ X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
 
-@pytest.mark.parametrize("n_rows,n_columns,do_class_weighting,random_state", [
-    (2, 2, True, 3),
-    (2, 2, False, 3),
-    (10, 20, True, 3),
+@pytest.mark.parametrize("n_rows,n_columns,do_class_weighting", [
+    (2, 2, True),
+    (2, 2, False),
+    (10, 20, True),
 ])
-def test_init_super_som(n_rows, n_columns, do_class_weighting, random_state):
+def test_init_super_som(n_rows, n_columns, do_class_weighting):
+    random_state = 3
     som = susi.SOMClassifier(
         n_rows=n_rows,
         n_columns=n_columns,
@@ -39,10 +40,18 @@ def test_init_super_som(n_rows, n_columns, do_class_weighting, random_state):
 
     som.X_ = X_train
     som.y_ = y_train
-    som.init_estimator()
     som.som_unsupervised()
     som.set_bmus(som.X_)
     som.init_super_som()
+
+    with pytest.raises(Exception):
+        som = susi.SOMClassifier(
+            init_mode_supervised="random")
+        som.X_ = X_train
+        som.y_ = y_train
+        som.som_unsupervised()
+        som.set_bmus(som.X_)
+        som.init_super_som()
 
 
 @pytest.mark.parametrize(

@@ -68,6 +68,9 @@ class SOMClustering():
     n_columns : int, optional (default=10)
         Number of columns for the SOM grid
 
+    init_mode_unsupervised : str, optional (default="random")
+        Initialization mode of the unsupervised SOM
+
     n_iter_unsupervised : int, optional (default=1000)
         Number of iterations for the unsupervised SOM
 
@@ -135,20 +138,22 @@ class SOMClustering():
     def __init__(self,
                  n_rows: int = 10,
                  n_columns: int = 10,
+                 init_mode_unsupervised: str = "random",
                  n_iter_unsupervised: int = 1000,
-                 train_mode_unsupervised="online",
-                 neighborhood_mode_unsupervised="linear",
-                 learn_mode_unsupervised="min",
-                 distance_metric="euclidean",
+                 train_mode_unsupervised: str = "online",
+                 neighborhood_mode_unsupervised: str = "linear",
+                 learn_mode_unsupervised: str = "min",
+                 distance_metric: str = "euclidean",
                  learning_rate_start=0.5,
                  learning_rate_end=0.05,
-                 nbh_dist_weight_mode="pseudo-gaussian",
+                 nbh_dist_weight_mode: str = "pseudo-gaussian",
                  n_jobs=None,
                  random_state=None,
                  verbose=0):
         """Initialize SOMClustering object."""
         self.n_rows = n_rows
         self.n_columns = n_columns
+        self.init_mode_unsupervised = init_mode_unsupervised
         self.n_iter_unsupervised = n_iter_unsupervised
         self.train_mode_unsupervised = train_mode_unsupervised
         self.neighborhood_mode_unsupervised = neighborhood_mode_unsupervised
@@ -172,7 +177,25 @@ class SOMClustering():
         self.radius_max_ = max(self.n_rows, self.n_columns)/2
         self.radius_min_ = 1
 
-        som = np.random.rand(self.n_rows, self.n_columns, self.X_.shape[1])
+        # init unsupervised SOM in the feature space
+        if self.init_mode_unsupervised == "random":
+            som = np.random.rand(self.n_rows, self.n_columns, self.X_.shape[1])
+
+        elif self.init_mode_unsupervised == "random_data":
+            indices = np.random.randint(
+                low=0, high=self.X_.shape[0], size=self.n_rows*self.n_columns)
+            som_list = self.X_[indices]
+            som = som_list.reshape(
+                self.n_rows, self.n_columns, self.X_.shape[1])
+
+        # elif self.init_mode_unsupervised == "pca":
+        #     # TODO implement PCA initialization of unsupervised SOM
+        #     pass
+
+        else:
+            raise ValueError("Invalid init_mode_unsupervised: "+str(
+                self.init_mode_unsupervised))
+
         self.unsuper_som_ = som
 
     def fit(self, X, y=None):
@@ -435,10 +458,14 @@ class SOMClustering():
         if self.nbh_dist_weight_mode == "pseudo-gaussian":
             return pseudogaussian
 
-        # TODO Implement "mexicanhat" mode (currently overflow error):
-        # elif self.nbh_dist_weight_mode == "mexicanhat":
-        #     return np.multiply(pseudogaussian, np.subtract(1, np.divide(
-        #         np.power(dist_mat, 2), np.power(neighborhood_func, 2))))
+        elif self.nbh_dist_weight_mode == "mexican-hat":
+            mexicanhat = np.multiply(pseudogaussian, np.subtract(1, np.divide(
+                np.power(dist_mat, 2), np.power(neighborhood_func, 2))))
+            return mexicanhat
+
+        else:
+            raise ValueError("Invalid nbh_dist_weight_mode: "+str(
+                self.nbh_dist_weight_mode))
 
     def modify_weight_matrix(self, som_array, learningrate, dist_weight_matrix,
                              true_vector):
@@ -462,9 +489,11 @@ class SOMClustering():
             Weight vector of the SOM after the modification
 
         """
-        return som_array + learningrate * np.multiply(
-            dist_weight_matrix.reshape((self.n_rows, self.n_columns, 1)),
-            -np.subtract(som_array, true_vector))
+        return som_array + np.multiply(
+            learningrate,
+            np.multiply(
+                dist_weight_matrix.reshape((self.n_rows, self.n_columns, 1)),
+                -np.subtract(som_array, true_vector)))
 
     def transform(self, X, y=None):
         """Transform input data.
@@ -538,6 +567,12 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
     n_columns : int, optional (default=10)
         Number of columns for the SOM grid
+
+    init_mode_unsupervised : str, optional (default="random")
+        Initialization mode of the unsupervised SOM
+
+    init_mode_supervised : str, optional (default="random")
+        Initialization mode of the supervised SOM
 
     n_iter_unsupervised : int, optional (default=1000)
         Number of iterations for the unsupervised SOM
@@ -618,24 +653,27 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
     def __init__(self,
                  n_rows: int = 10,
                  n_columns: int = 10,
+                 init_mode_unsupervised: str = "random",
+                 init_mode_supervised: str = "random",
                  n_iter_unsupervised: int = 1000,
                  n_iter_supervised: int = 1000,
-                 train_mode_unsupervised="online",
-                 train_mode_supervised="online",
-                 neighborhood_mode_unsupervised="linear",
-                 neighborhood_mode_supervised="linear",
-                 learn_mode_unsupervised="min",
-                 learn_mode_supervised="min",
-                 distance_metric="euclidean",
+                 train_mode_unsupervised: str = "online",
+                 train_mode_supervised: str = "online",
+                 neighborhood_mode_unsupervised: str = "linear",
+                 neighborhood_mode_supervised: str = "linear",
+                 learn_mode_unsupervised: str = "min",
+                 learn_mode_supervised: str = "min",
+                 distance_metric: str = "euclidean",
                  learning_rate_start=0.5,
                  learning_rate_end=0.05,
-                 nbh_dist_weight_mode="pseudo-gaussian",
+                 nbh_dist_weight_mode: str = "pseudo-gaussian",
                  n_jobs=None,
                  random_state=None,
                  verbose=0):
         """Initialize SOMEstimator object."""
         super().__init__(n_rows,
                          n_columns,
+                         init_mode_unsupervised,
                          n_iter_unsupervised,
                          train_mode_unsupervised,
                          neighborhood_mode_unsupervised,
@@ -648,10 +686,16 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
                          random_state,
                          verbose)
 
+        self.init_mode_supervised = init_mode_supervised
         self.n_iter_supervised = n_iter_supervised
         self.train_mode_supervised = train_mode_supervised
         self.neighborhood_mode_supervised = neighborhood_mode_supervised
         self.learn_mode_supervised = learn_mode_supervised
+
+    @abstractmethod
+    def init_super_som(self):
+        """Initialize map."""
+        return None
 
     def fit(self, X, y=None):
         """Fit supervised SOM to the input data.
@@ -675,49 +719,13 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         np.random.seed(seed=self.random_state)
 
-        self.init_estimator()
+        # self.init_estimator()
         self.som_unsupervised()
         self.som_supervised()
 
         self.fitted_ = True
 
         return self
-
-    @abstractmethod
-    def init_estimator(self):
-        """Initialize estimator with specific options."""
-        self.init_mode_ = None
-        return None
-
-    def init_super_som(self):
-        """Initialize map."""
-
-        # check if target variable has dimension 1 or >1
-        if len(self.y_.shape) == 1:
-            n_regression_vars = 1
-        else:
-            n_regression_vars = self.y_.shape[1]
-
-        # init supervised som
-        if self.init_mode_ == "regression":
-            som = np.random.rand(self.n_rows, self.n_columns,
-                                 n_regression_vars)
-            self.super_som_ = som
-        elif self.init_mode_ == "classification":
-            # # zeros:
-            # self.super_som_ = np.ma.zeros(
-            #     (self.n_rows, self.n_columns, 1), dtype=int)
-
-            # majority vote:
-            som = np.zeros((self.n_rows, self.n_columns, 1))
-            for node in self.node_list_:
-                dp_in_node = self.get_datapoints_from_node(node)
-                if dp_in_node != []:
-                    node_class = np.argmax(np.bincount(self.y_[dp_in_node]))
-                else:
-                    node_class = -1
-                som[node[0], node[1], 0] = node_class
-            self.super_som_ = som
 
     def predict(self, X, y=None):
         """Predict output of data X.
@@ -766,9 +774,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
             Classification: the label.
             Regression: the target variable.
 
-        TODO use yield instead of return (Test!!!)
         TODO Implement handling of incomplete datapoints
-        TODO implement SOM output variances
         TODO implement "neighborhood" mode
 
         """
@@ -872,9 +878,32 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 class SOMRegressor(SOMEstimator, RegressorMixin):
     """Supervised SOM for estimating continuous variables (= regression)."""
 
-    def init_estimator(self):
-        """Initialize estimator with regression options."""
-        self.init_mode_ = "regression"
+    def init_super_som(self):
+        """Initialize map."""
+
+        # check if target variable has dimension 1 or >1
+        if len(self.y_.shape) == 1:
+            n_regression_vars = 1
+        else:
+            n_regression_vars = self.y_.shape[1]
+
+        # initialize regression SOM
+        if self.init_mode_supervised == "random":
+            som = np.random.rand(self.n_rows, self.n_columns,
+                                 n_regression_vars)
+
+        elif self.init_mode_supervised == "random_data":
+            indices = np.random.randint(
+                low=0, high=self.y_.shape[0], size=self.n_rows*self.n_columns)
+            som_list = self.y_[indices]
+            som = som_list.reshape(
+                self.n_rows, self.n_columns, self.y_.shape[1])
+
+        else:
+            raise ValueError("Invalid reg init_mode_supervised: "+str(
+                self.init_mode_supervised))
+
+        self.super_som_ = som
 
 
 class SOMClassifier(SOMEstimator, ClassifierMixin):
@@ -888,29 +917,35 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
     n_columns : int, optional (default=10)
         Number of columns for the SOM grid
 
+    init_mode_unsupervised : str, optional (default="random")
+        Initialization mode of the unsupervised SOM
+
+    init_mode_supervised : str, optional (default="majority")
+        Initialization mode of the classification SOM
+
     n_iter_unsupervised : int, optional (default=1000)
         Number of iterations for the unsupervised SOM
 
     n_iter_supervised : int, optional (default=1000)
-        Number of iterations for the supervised SOM
+        Number of iterations for the classification SOM
 
     train_mode_unsupervised : str, optional (default="online")
         Training mode of the unsupervised SOM
 
     train_mode_supervised : str, optional (default="online")
-        Training mode of the supervised SOM
+        Training mode of the classification SOM
 
     neighborhood_mode_unsupervised : str, optional (default="linear")
         Neighborhood mode of the unsupervised SOM
 
     neighborhood_mode_supervised : str, optional (default="linear")
-        Neighborhood mode of the supervised SOM
+        Neighborhood mode of the classification SOM
 
     learn_mode_unsupervised : str, optional (default="min")
         Learning mode of the unsupervised SOM
 
     learn_mode_supervised : str, optional (default="min")
-        Learning mode of the supervised SOM
+        Learning mode of the classification SOM
 
     distance_metric : str, optional (default="euclidean")
         Distance metric to compare on feature level (not SOM grid)
@@ -969,20 +1004,22 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
     """
 
     def __init__(self,
-                 n_rows=10,
-                 n_columns=10,
-                 n_iter_unsupervised=1000,
-                 n_iter_supervised=1000,
-                 train_mode_unsupervised="online",
-                 train_mode_supervised="online",
-                 neighborhood_mode_unsupervised="linear",
-                 neighborhood_mode_supervised="linear",
-                 learn_mode_unsupervised="min",
-                 learn_mode_supervised="min",
-                 distance_metric="euclidean",
+                 n_rows: int = 10,
+                 n_columns: int = 10,
+                 init_mode_unsupervised: str = "random",
+                 init_mode_supervised: str = "majority",
+                 n_iter_unsupervised: int = 1000,
+                 n_iter_supervised: int = 1000,
+                 train_mode_unsupervised: str = "online",
+                 train_mode_supervised: str = "online",
+                 neighborhood_mode_unsupervised: str = "linear",
+                 neighborhood_mode_supervised: str = "linear",
+                 learn_mode_unsupervised: str = "min",
+                 learn_mode_supervised: str = "min",
+                 distance_metric: str = "euclidean",
                  learning_rate_start=0.5,
                  learning_rate_end=0.05,
-                 nbh_dist_weight_mode="pseudo-gaussian",
+                 nbh_dist_weight_mode: str = "pseudo-gaussian",
                  do_class_weighting=True,
                  n_jobs=None,
                  random_state=None,
@@ -990,6 +1027,8 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         """Initialize SOMClassifier object."""
         super().__init__(n_rows,
                          n_columns,
+                         init_mode_unsupervised,
+                         init_mode_supervised,
                          n_iter_unsupervised,
                          n_iter_supervised,
                          train_mode_unsupervised,
@@ -1007,9 +1046,9 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
                          verbose)
         self.do_class_weighting = do_class_weighting
 
-    def init_estimator(self):
-        """Initialize estimator with classification options."""
-        self.init_mode_ = "classification"
+    def init_super_som(self):
+        """Initialize map."""
+
         self.classes_, self.class_counts_ = np.unique(
             self.y_, return_counts=True)
 
@@ -1019,6 +1058,23 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
                 'balanced', np.unique(self.y_), self.y_)
         else:
             self.class_weights_ = np.ones(shape=self.classes_.shape)
+
+        # initialize classification SOM
+        if self.init_mode_supervised == "majority":
+            som = np.zeros((self.n_rows, self.n_columns, 1))
+            for node in self.node_list_:
+                dp_in_node = self.get_datapoints_from_node(node)
+                if dp_in_node != []:
+                    node_class = np.argmax(
+                        np.bincount(self.y_[dp_in_node]))
+                else:
+                    node_class = -1
+                som[node[0], node[1], 0] = node_class
+        else:
+            raise ValueError("Invalid reg init_mode_supervised: "+str(
+                self.init_mode_supervised))
+
+        self.super_som_ = som
 
     def modify_weight_matrix_supervised(self, som_array, learningrate,
                                         dist_weight_matrix, true_vector):

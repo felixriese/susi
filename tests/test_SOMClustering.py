@@ -109,14 +109,29 @@ def test_decreasing_rate(a_1, a_2, max_it, curr_it, mode, expected):
             a_1, a_2, max_it, curr_it, mode) == expected
 
 
-@pytest.mark.parametrize("som,expected", [
-    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), np.ndarray),
+@pytest.mark.parametrize("X,init_mode", [
+    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), "random"),
+    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), "random_data"),
+    # (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), "pca"),
 ])
-def test_init_unsuper_som(som, expected):
-    som_clustering = susi.SOMClustering()
-    som_clustering.X_ = som
+def test_init_unsuper_som(X, init_mode):
+    som_clustering = susi.SOMClustering(init_mode_unsupervised=init_mode)
+    som_clustering.X_ = X
     som_clustering.init_unsuper_som()
-    assert type(som_clustering.unsuper_som_) == expected
+
+    # test type
+    assert isinstance(som_clustering.unsuper_som_, np.ndarray)
+
+    # test shape
+    n_rows = som_clustering.n_rows
+    n_columns = som_clustering.n_columns
+    assert som_clustering.unsuper_som_.shape == (n_rows, n_columns, X.shape[1])
+
+    # TODO remove after PCA init implementation:
+    with pytest.raises(Exception):
+        som_clustering = susi.SOMClustering(init_mode_unsupervised="pca")
+        som_clustering.X_ = X
+        som_clustering.init_unsuper_som()
 
 
 @pytest.mark.parametrize("som_array,datapoint,expected", [
@@ -153,23 +168,30 @@ def test_fit(X, n_rows, n_columns, train_mode_unsupervised, random_state,
             som_clustering.fit(X)
     else:
         som_clustering.fit(X)
-        assert type(som_clustering.unsuper_som_) == np.ndarray
+        assert isinstance(som_clustering.unsuper_som_, np.ndarray)
         assert som_clustering.unsuper_som_.shape == (n_rows, n_columns,
                                                      X.shape[1])
         assert np.allclose(som_clustering.unsuper_som_, expected, atol=1e-20)
 
 
 @pytest.mark.parametrize(
-    "n_rows,n_columns,random_state,neighborhood_func,bmu_pos,X,expected", [
+    ("n_rows,n_columns,random_state,neighborhood_func,bmu_pos,X,"
+     "mode,expected"), [
         (2, 2, 42, 0.9, (0, 0),
          np.array([[0., 0.1, 0.2, 0.3], [2.3, 2.1, 2.1, 2.5]]),
+         "pseudo-gaussian",
          np.array([1., 0.53940751, 0.53940751, 0.29096046])),
+        (2, 2, 42, 0.9, (0, 0),
+         np.array([[0., 0.1, 0.2, 0.3], [2.3, 2.1, 2.1, 2.5]]),
+         "mexican-hat",
+         np.array([1., -0.12652769, -0.12652769, -0.42746043])),
     ])
 def test_get_nbh_distance_weight_matrix(n_rows, n_columns, random_state,
                                         neighborhood_func, bmu_pos, X,
-                                        expected):
+                                        mode, expected):
     som_clustering = susi.SOMClustering(
-        n_rows=n_rows, n_columns=n_columns, random_state=random_state)
+        n_rows=n_rows, n_columns=n_columns,
+        nbh_dist_weight_mode=mode, random_state=random_state)
     som_clustering.X_ = X
     som_clustering.init_unsuper_som()
     assert np.allclose(som_clustering.get_nbh_distance_weight_matrix(

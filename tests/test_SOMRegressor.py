@@ -38,6 +38,31 @@ def test_som_regressor_init(n_rows, n_columns):
     assert som_reg.n_columns == n_columns
 
 
+@pytest.mark.parametrize("X,y,init_mode", [
+    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), np.array([[3], [5]]), "random"),
+    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), np.array([[3], [5]]), "random_data"),
+])
+def test_init_super_som_regressor(X, y, init_mode):
+    som = susi.SOMRegressor(init_mode_supervised=init_mode)
+    som.X_ = X
+    som.y_ = y
+    som.init_super_som()
+
+    # test type
+    assert isinstance(som.super_som_, np.ndarray)
+
+    # test shape
+    n_rows = som.n_rows
+    n_columns = som.n_columns
+    assert som.super_som_.shape == (n_rows, n_columns, y.shape[1])
+
+    with pytest.raises(Exception):
+        som = susi.SOMRegressor(init_mode_supervised="pca")
+        som.X_ = X
+        som.y_ = y
+        som.init_super_som()
+
+
 @pytest.mark.parametrize(
     "n_rows,n_columns,train_mode_supervised,random_state", [
         (3, 3, "online", 42),
@@ -58,15 +83,12 @@ def test_predict(n_rows, n_columns, train_mode_supervised, random_state):
         assert(y_pred.shape == y_test.shape)
 
 
-@pytest.mark.parametrize("estimator", [
-    (susi.SOMRegressor),
-])
-def test_estimator_status(estimator):
-    check_estimator(estimator)
+def test_estimator_status():
+    check_estimator(susi.SOMRegressor)
 
 
 @pytest.mark.parametrize(
-    "n_rows,n_columns,unsuper_som,super_som, datapoint,expected", [
+    "n_rows,n_columns,unsuper_som,super_som,datapoint,expected", [
         (2, 2, np.array([[[0., 1.1, 2.1], [0.3, 2.1, 1.1]],
                          [[1., 2.1, 3.1], [-0.3, -2.1, -1.1]]]),
          np.array([[[0], [0.5]], [[1], [2]]]),
@@ -78,3 +100,12 @@ def test_calc_estimation_output(n_rows, n_columns, unsuper_som, super_som,
     som.unsuper_som_ = unsuper_som
     som.super_som_ = super_som
     assert np.array_equal(som.calc_estimation_output(datapoint), expected)
+
+
+def test_mexicanhat_nbh_dist_weight_mode():
+    som = susi.SOMRegressor(nbh_dist_weight_mode="mexican-hat")
+    som.fit(X_train, y_train)
+    som.predict(X_test)
+    with pytest.raises(Exception):
+        som = susi.SOMRegressor(nbh_dist_weight_mode="pseudogaussian")
+        som.fit(X_train, y_train)
