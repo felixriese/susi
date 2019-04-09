@@ -66,7 +66,7 @@ def test_estimator_status(estimator):
 
 
 @pytest.mark.parametrize(
-    "n_rows,n_columns,unsuper_som,super_som, datapoint,expected", [
+    "n_rows,n_columns,unsuper_som,super_som,datapoint,expected", [
         (2, 2, np.array([[[0., 1.1, 2.1], [0.3, 2.1, 1.1]],
                          [[1., 2.1, 3.1], [-0.3, -2.1, -1.1]]]),
          np.array([[[0], [0.5]], [[1], [2]]]),
@@ -78,3 +78,11 @@ def test_calc_estimation_output(n_rows, n_columns, unsuper_som, super_som,
     som.unsuper_som_ = unsuper_som
     som.super_som_ = super_som
     assert np.array_equal(som.calc_estimation_output(datapoint), expected)
+
+
+def test_mexicanhat_nbh_dist_weight_mode():
+    som = susi.SOMRegressor(
+        nbh_dist_weight_mode="mexican-hat",
+        )
+    som.fit(X_train, y_train)
+    som.predict(X_test)

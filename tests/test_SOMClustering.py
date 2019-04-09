@@ -160,16 +160,23 @@ def test_fit(X, n_rows, n_columns, train_mode_unsupervised, random_state,
 
 
 @pytest.mark.parametrize(
-    "n_rows,n_columns,random_state,neighborhood_func,bmu_pos,X,expected", [
+    ("n_rows,n_columns,random_state,neighborhood_func,bmu_pos,X,"
+     "mode,expected"), [
         (2, 2, 42, 0.9, (0, 0),
          np.array([[0., 0.1, 0.2, 0.3], [2.3, 2.1, 2.1, 2.5]]),
+         "pseudo-gaussian",
          np.array([1., 0.53940751, 0.53940751, 0.29096046])),
+        (2, 2, 42, 0.9, (0, 0),
+         np.array([[0., 0.1, 0.2, 0.3], [2.3, 2.1, 2.1, 2.5]]),
+         "mexican-hat",
+         np.array([1., -0.12652769, -0.12652769, -0.42746043])),
     ])
 def test_get_nbh_distance_weight_matrix(n_rows, n_columns, random_state,
                                         neighborhood_func, bmu_pos, X,
-                                        expected):
+                                        mode, expected):
     som_clustering = susi.SOMClustering(
-        n_rows=n_rows, n_columns=n_columns, random_state=random_state)
+        n_rows=n_rows, n_columns=n_columns,
+        nbh_dist_weight_mode=mode, random_state=random_state)
     som_clustering.X_ = X
     som_clustering.init_unsuper_som()
     assert np.allclose(som_clustering.get_nbh_distance_weight_matrix(

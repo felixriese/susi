@@ -435,10 +435,14 @@ class SOMClustering():
         if self.nbh_dist_weight_mode == "pseudo-gaussian":
             return pseudogaussian
 
-        # TODO Implement "mexicanhat" mode (currently overflow error):
-        # elif self.nbh_dist_weight_mode == "mexicanhat":
-        #     return np.multiply(pseudogaussian, np.subtract(1, np.divide(
-        #         np.power(dist_mat, 2), np.power(neighborhood_func, 2))))
+        elif self.nbh_dist_weight_mode == "mexican-hat":
+            mexicanhat = np.multiply(pseudogaussian, np.subtract(1, np.divide(
+                np.power(dist_mat, 2), np.power(neighborhood_func, 2))))
+            return mexicanhat
+
+        else:
+            raise ValueError("Invalid nbh_dist_weight_mode: "+str(
+                self.nbh_dist_weight_mode))
 
     def modify_weight_matrix(self, som_array, learningrate, dist_weight_matrix,
                              true_vector):
@@ -462,9 +466,11 @@ class SOMClustering():
             Weight vector of the SOM after the modification
 
         """
-        return som_array + learningrate * np.multiply(
-            dist_weight_matrix.reshape((self.n_rows, self.n_columns, 1)),
-            -np.subtract(som_array, true_vector))
+        return som_array + np.multiply(
+            learningrate,
+            np.multiply(
+                dist_weight_matrix.reshape((self.n_rows, self.n_columns, 1)),
+                -np.subtract(som_array, true_vector)))
 
     def transform(self, X, y=None):
         """Transform input data.
