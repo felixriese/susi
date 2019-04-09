@@ -188,6 +188,10 @@ class SOMClustering():
             som = som_list.reshape(
                 self.n_rows, self.n_columns, self.X_.shape[1])
 
+        # elif self.init_mode_unsupervised == "pca":
+        #     # TODO implement PCA initialization of unsupervised SOM
+        #     pass
+
         else:
             raise ValueError("Invalid init_mode_unsupervised: "+str(
                 self.init_mode_unsupervised))

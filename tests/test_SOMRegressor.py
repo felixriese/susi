@@ -49,7 +49,7 @@ def test_init_super_som_regressor(X, y, init_mode):
     som.init_super_som()
 
     # test type
-    assert type(som.super_som_) == np.ndarray
+    assert isinstance(som.super_som_, np.ndarray)
 
     # test shape
     n_rows = som.n_rows

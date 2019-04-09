@@ -120,7 +120,7 @@ def test_init_unsuper_som(X, init_mode):
     som_clustering.init_unsuper_som()
 
     # test type
-    assert type(som_clustering.unsuper_som_) == np.ndarray
+    assert isinstance(som_clustering.unsuper_som_, np.ndarray)
 
     # test shape
     n_rows = som_clustering.n_rows
@@ -168,7 +168,7 @@ def test_fit(X, n_rows, n_columns, train_mode_unsupervised, random_state,
             som_clustering.fit(X)
     else:
         som_clustering.fit(X)
-        assert type(som_clustering.unsuper_som_) == np.ndarray
+        assert isinstance(som_clustering.unsuper_som_, np.ndarray)
         assert som_clustering.unsuper_som_.shape == (n_rows, n_columns,
                                                      X.shape[1])
         assert np.allclose(som_clustering.unsuper_som_, expected, atol=1e-20)
