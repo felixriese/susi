@@ -188,10 +188,6 @@ class SOMClustering():
             som = som_list.reshape(
                 self.n_rows, self.n_columns, self.X_.shape[1])
 
-        # elif self.init_mode_unsupervised[:3] == "pca":
-        #     # TODO implement pca init for unsuper SOM
-        #     pass
-
         else:
             raise ValueError("Invalid init_mode_unsupervised: "+str(
                 self.init_mode_unsupervised))
@@ -692,6 +688,11 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         self.neighborhood_mode_supervised = neighborhood_mode_supervised
         self.learn_mode_supervised = learn_mode_supervised
 
+    @abstractmethod
+    def init_super_som(self):
+        """Initialize map."""
+        return None
+
     def fit(self, X, y=None):
         """Fit supervised SOM to the input data.
 
@@ -714,61 +715,13 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         np.random.seed(seed=self.random_state)
 
-        self.init_estimator()
+        # self.init_estimator()
         self.som_unsupervised()
         self.som_supervised()
 
         self.fitted_ = True
 
         return self
-
-    @abstractmethod
-    def init_estimator(self):
-        """Initialize estimator with specific options."""
-        self.init_mode_ = None
-        return None
-
-    def init_super_som(self):
-        """Initialize map."""
-
-        # check if target variable has dimension 1 or >1
-        if len(self.y_.shape) == 1:
-            n_regression_vars = 1
-        else:
-            n_regression_vars = self.y_.shape[1]
-
-        # initialize regression SOM
-        if self.init_mode_ == "regression":
-            if self.init_mode_supervised == "random":
-                som = np.random.rand(self.n_rows, self.n_columns,
-                                     n_regression_vars)
-
-            # elif self.init_mode_supervised == "random_data":
-            #     # TODO implement random data initialization for super-SOM
-            #     pass
-
-            else:
-                raise ValueError("Invalid reg init_mode_supervised: "+str(
-                    self.init_mode_supervised))
-
-        # initialize classification SOM
-        elif self.init_mode_ == "classification":
-
-            if self.init_mode_supervised == "majority":
-                som = np.zeros((self.n_rows, self.n_columns, 1))
-                for node in self.node_list_:
-                    dp_in_node = self.get_datapoints_from_node(node)
-                    if dp_in_node != []:
-                        node_class = np.argmax(
-                            np.bincount(self.y_[dp_in_node]))
-                    else:
-                        node_class = -1
-                    som[node[0], node[1], 0] = node_class
-            else:
-                raise ValueError("Invalid reg init_mode_supervised: "+str(
-                    self.init_mode_supervised))
-
-        self.super_som_ = som
 
     def predict(self, X, y=None):
         """Predict output of data X.
@@ -921,9 +874,29 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 class SOMRegressor(SOMEstimator, RegressorMixin):
     """Supervised SOM for estimating continuous variables (= regression)."""
 
-    def init_estimator(self):
-        """Initialize estimator with regression options."""
-        self.init_mode_ = "regression"
+    def init_super_som(self):
+        """Initialize map."""
+
+        # check if target variable has dimension 1 or >1
+        if len(self.y_.shape) == 1:
+            n_regression_vars = 1
+        else:
+            n_regression_vars = self.y_.shape[1]
+
+        # initialize regression SOM
+        if self.init_mode_supervised == "random":
+            som = np.random.rand(self.n_rows, self.n_columns,
+                                    n_regression_vars)
+
+        # elif self.init_mode_supervised == "random_data":
+        #     # TODO implement random data initialization for super-SOM
+        #     pass
+
+        else:
+            raise ValueError("Invalid reg init_mode_supervised: "+str(
+                self.init_mode_supervised))
+
+        self.super_som_ = som
 
 
 class SOMClassifier(SOMEstimator, ClassifierMixin):
@@ -1066,9 +1039,9 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
                          verbose)
         self.do_class_weighting = do_class_weighting
 
-    def init_estimator(self):
-        """Initialize estimator with classification options."""
-        self.init_mode_ = "classification"
+    def init_super_som(self):
+        """Initialize map."""
+
         self.classes_, self.class_counts_ = np.unique(
             self.y_, return_counts=True)
 
@@ -1078,6 +1051,23 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
                 'balanced', np.unique(self.y_), self.y_)
         else:
             self.class_weights_ = np.ones(shape=self.classes_.shape)
+
+        # initialize classification SOM
+        if self.init_mode_supervised == "majority":
+            som = np.zeros((self.n_rows, self.n_columns, 1))
+            for node in self.node_list_:
+                dp_in_node = self.get_datapoints_from_node(node)
+                if dp_in_node != []:
+                    node_class = np.argmax(
+                        np.bincount(self.y_[dp_in_node]))
+                else:
+                    node_class = -1
+                som[node[0], node[1], 0] = node_class
+        else:
+            raise ValueError("Invalid reg init_mode_supervised: "+str(
+                self.init_mode_supervised))
+
+        self.super_som_ = som
 
     def modify_weight_matrix_supervised(self, som_array, learningrate,
                                         dist_weight_matrix, true_vector):

@@ -6,6 +6,7 @@ Change Log
 - [ADDED] Link to arXiv paper
 - [ADDED] Mexican-hat neighborhood distance weight
 - [ADDED] Possibility for different initialization modes
+- [CHANGED] Simplified initialization of estimators
 - [FIXED] URLs and styles in documentation
 - [FIXED] Colormap in Salinas example
 

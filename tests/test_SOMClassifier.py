@@ -39,7 +39,6 @@ def test_init_super_som(n_rows, n_columns, do_class_weighting, random_state):
 
     som.X_ = X_train
     som.y_ = y_train
-    som.init_estimator()
     som.som_unsupervised()
     som.set_bmus(som.X_)
     som.init_super_som()
