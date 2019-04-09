@@ -886,11 +886,14 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
         # initialize regression SOM
         if self.init_mode_supervised == "random":
             som = np.random.rand(self.n_rows, self.n_columns,
-                                    n_regression_vars)
+                                 n_regression_vars)
 
-        # elif self.init_mode_supervised == "random_data":
-        #     # TODO implement random data initialization for super-SOM
-        #     pass
+        elif self.init_mode_supervised == "random_data":
+            indices = np.random.randint(
+                low=0, high=self.y_.shape[0], size=self.n_rows*self.n_columns)
+            som_list = self.y_[indices]
+            som = som_list.reshape(
+                self.n_rows, self.n_columns, self.y_.shape[1])
 
         else:
             raise ValueError("Invalid reg init_mode_supervised: "+str(

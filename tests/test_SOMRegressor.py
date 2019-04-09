@@ -38,6 +38,31 @@ def test_som_regressor_init(n_rows, n_columns):
     assert som_reg.n_columns == n_columns
 
 
+@pytest.mark.parametrize("X,y,init_mode", [
+    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), np.array([[3], [5]]), "random"),
+    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), np.array([[3], [5]]), "random_data"),
+])
+def test_init_super_som_regressor(X, y, init_mode):
+    som = susi.SOMRegressor(init_mode_supervised=init_mode)
+    som.X_ = X
+    som.y_ = y
+    som.init_super_som()
+
+    # test type
+    assert type(som.super_som_) == np.ndarray
+
+    # test shape
+    n_rows = som.n_rows
+    n_columns = som.n_columns
+    assert som.super_som_.shape == (n_rows, n_columns, y.shape[1])
+
+    with pytest.raises(Exception):
+        som = susi.SOMRegressor(init_mode_supervised="pca")
+        som.X_ = X
+        som.y_ = y
+        som.init_super_som()
+
+
 @pytest.mark.parametrize(
     "n_rows,n_columns,train_mode_supervised,random_state", [
         (3, 3, "online", 42),
