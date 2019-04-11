@@ -22,7 +22,6 @@ def test_som_clustering_init(n_rows, n_columns):
         n_rows=n_rows, n_columns=n_columns)
     assert som_clustering.n_rows == n_rows
     assert som_clustering.n_columns == n_columns
-    # assert som_clustering.radius_max == max(n_rows, n_columns) / 2
 
 
 @pytest.mark.parametrize(
@@ -214,19 +213,51 @@ def test_get_nbh_distance_weight_matrix(n_rows, n_columns, random_state,
                    [[0.81841713, 1.28462067, 1.10945355],
                     [1.91139603, 1.59239575, 1.82413471]]])),
         ])
-def test_modify_weight_matrix(n_rows, n_columns, random_state,
-                              n_iter_unsupervised, X, learningrate,
-                              neighborhood_func, bmu_pos, dp, expected):
+def test_modify_weight_matrix_online(n_rows, n_columns, random_state,
+                                     n_iter_unsupervised, X, learningrate,
+                                     neighborhood_func, bmu_pos, dp, expected):
     som_clustering = susi.SOMClustering(
         n_rows=n_rows, n_columns=n_columns,
         n_iter_unsupervised=n_iter_unsupervised, random_state=random_state)
     som_clustering.fit(X)
-    assert np.allclose(som_clustering.modify_weight_matrix(
+    assert np.allclose(som_clustering.modify_weight_matrix_online(
         som_array=som_clustering.unsuper_som_,
         learningrate=learningrate,
         dist_weight_matrix=som_clustering.get_nbh_distance_weight_matrix(
             neighborhood_func, bmu_pos),
         true_vector=som_clustering.X_[dp]), expected, atol=1e-8)
+
+
+@pytest.mark.parametrize(
+    ("X,nbh_func,bmus,expected"), [
+        (np.array([[0., 0.1, 0.2], [2.3, 2.1, 2.1]]), 0.4,
+         np.array([[1, 1], [1, 0]]),
+         np.array([[[2.20319823, 2.01582454, 2.02003332],
+                    [0.09680177, 0.18417546, 0.27996668]],
+                   [[2.20319823, 2.01582454, 2.02003332],
+                    [0.09680177, 0.18417546, 0.27996668]]])),
+        ])
+def test_modify_weight_matrix_batch(X, nbh_func, bmus, expected):
+    som = susi.SOMClustering(
+        n_rows=2,
+        n_columns=2,
+        n_iter_unsupervised=5,
+        random_state=42)
+    som.fit(X)
+
+    # calculate distance weight matrix for all datapoints
+    dist_weight_block = np.zeros(
+        (len(X), som.n_rows, som.n_columns))
+    for i, bmu_pos in enumerate(bmus):
+        dist_weight_block[i] = som.get_nbh_distance_weight_matrix(
+            nbh_func, bmu_pos).reshape(
+                (som.n_rows, som.n_columns))
+
+    new_som = som.modify_weight_matrix_batch(
+        som_array=som.unsuper_som_,
+        dist_weight_matrix=dist_weight_block,
+        data=som.X_)
+    assert np.allclose(new_som, expected, atol=1e-8)
 
 
 @pytest.mark.parametrize(

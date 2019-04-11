@@ -12,6 +12,7 @@ import itertools
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from sklearn.utils.estimator_checks import check_estimator
 sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import susi
@@ -83,28 +84,31 @@ def test_change_class_proba(n_rows, n_columns, learningrate,
 
 @pytest.mark.parametrize(
     ("n_rows,n_columns,learningrate,dist_weight_matrix,som_array,"
-     "random_state,true_vector,expected"), [
+     "random_state,true_vector"), [
         (2, 2, 0.3, np.array([[1.3, 0.4], [2.1, 0.2]]).reshape(2, 2, 1),
          np.array([[1.3, 0.4], [2.1, 0.2]]).reshape(2, 2, 1), 3,
-         np.array([1]), None),
+         np.array([1])),
      ])
 def test_modify_weight_matrix_supervised(
         n_rows, n_columns, learningrate, dist_weight_matrix, som_array,
-        random_state, true_vector, expected):
+        random_state, true_vector):
     som = susi.SOMClassifier(
         n_rows=n_rows,
         n_columns=n_columns,
         random_state=random_state)
     som.classes_ = [0, 1, 2]
     som.class_weights_ = [1., 1., 1.]
+    som.super_som_ = som_array
     new_som = som.modify_weight_matrix_supervised(
-        som_array, learningrate, dist_weight_matrix, true_vector)
+        dist_weight_matrix=dist_weight_matrix,
+        true_vector=true_vector,
+        learningrate=learningrate)
     assert(new_som.shape == (n_rows, n_columns, 1))
 
 
 @pytest.mark.parametrize(
     "train_mode_unsupervised,train_mode_supervised",
-    itertools.product(TRAIN_MODES, ["online"]))
+    itertools.product(TRAIN_MODES, TRAIN_MODES))
 def test_fit(train_mode_unsupervised, train_mode_supervised):
     som = susi.SOMClassifier(
         n_rows=5,
@@ -114,3 +118,7 @@ def test_fit(train_mode_unsupervised, train_mode_supervised):
         random_state=3)
     som.fit(X_train, y_train)
     assert(som.score(X_test, y_test) > 0.9)
+
+
+def test_estimator_status():
+    check_estimator(susi.SOMClassifier)
