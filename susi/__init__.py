@@ -244,8 +244,49 @@ class SOMClustering():
                     self.X_[dp])
 
         elif self.train_mode_unsupervised == "batch":
-            # TODO implement batch mode
-            raise ValueError("Unsupervised batch mode not implemented.")
+
+            self.max_iterations_ = self.n_iter_unsupervised
+
+            for it in range(self.max_iterations_):
+
+                # calculate BMUs
+                bmus = self.get_bmus(self.X_, self.unsuper_som_)
+
+                # calculate neighborhood function
+                nbh_func = self.calc_neighborhood_func(
+                    curr_it=it, mode=self.neighborhood_mode_unsupervised)
+
+                # calculate distance weight matrix for all datapoints
+                dist_weight_block = np.zeros(
+                    (len(bmus), self.n_rows, self.n_columns))
+                for i, bmu_pos in enumerate(bmus):
+                    dist_weight_block[i] = self.get_nbh_distance_weight_matrix(
+                        nbh_func, bmu_pos).reshape(
+                            (self.n_rows, self.n_columns))
+
+                # calculate numerator and divisor for the batch formula
+                numerator = np.sum(
+                    [np.multiply(self.X_[i], dist_weight_block[i].reshape(
+                        (self.n_rows, self.n_columns, 1)))
+                        for i in range(len(bmus))], axis=0)
+                divisor = np.sum(dist_weight_block, axis=0).reshape(
+                    (self.n_rows, self.n_columns, 1))
+
+                # update weights
+                old_som = np.copy(self.unsuper_som_)
+                self.unsuper_som_ = np.divide(
+                    numerator,
+                    divisor,
+                    out=np.full_like(numerator, np.nan),
+                    where=(divisor != 0))
+
+                # overwrite new nans with old entries
+                self.unsuper_som_[np.isnan(self.unsuper_som_)] = old_som[
+                    np.isnan(self.unsuper_som_)]
+
+        else:
+            raise ValueError("Unsupervised mode not implemented:",
+                             self.train_mode_unsupervised)
 
     def calc_learning_rate(self, curr_it, mode):
         """Calculate learning rate alpha with 0 <= alpha <= 1.
@@ -307,7 +348,11 @@ class SOMClustering():
         a = self.get_node_distance_matrix(
             datapoint.astype(np.float64), som_array)
 
-        return np.argwhere(a == np.min(a))[0]
+        try:
+            return np.argwhere(a == np.min(a))[0]
+        except Exception:
+            print("som_array", som_array)
+            print("a", a)
 
     def get_bmus(self, X, som_array):
         """Get Best Matching Units for big datalist.
@@ -456,12 +501,12 @@ class SOMClustering():
                                 (2 * np.power(neighborhood_func, 2))))
 
         if self.nbh_dist_weight_mode == "pseudo-gaussian":
-            return pseudogaussian
+            return pseudogaussian.reshape((self.n_rows, self.n_columns, 1))
 
         elif self.nbh_dist_weight_mode == "mexican-hat":
             mexicanhat = np.multiply(pseudogaussian, np.subtract(1, np.divide(
                 np.power(dist_mat, 2), np.power(neighborhood_func, 2))))
-            return mexicanhat
+            return mexicanhat.reshape((self.n_rows, self.n_columns, 1))
 
         else:
             raise ValueError("Invalid nbh_dist_weight_mode: "+str(
@@ -492,7 +537,7 @@ class SOMClustering():
         return som_array + np.multiply(
             learningrate,
             np.multiply(
-                dist_weight_matrix.reshape((self.n_rows, self.n_columns, 1)),
+                dist_weight_matrix,
                 -np.subtract(som_array, true_vector)))
 
     def transform(self, X, y=None):
@@ -1134,8 +1179,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
             If false, the value of the respective SOM node stays the same.
 
         """
-        change_class_proba = learningrate * dist_weight_matrix.reshape(
-            (self.n_rows, self.n_columns, 1))
+        change_class_proba = learningrate * dist_weight_matrix
         change_class_proba *= class_weight
         random_matrix = np.random.rand(self.n_rows, self.n_columns, 1)
         change_class_bool = random_matrix < change_class_proba

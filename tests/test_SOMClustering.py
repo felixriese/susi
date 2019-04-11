@@ -152,26 +152,28 @@ def test_get_bmu(som_array, datapoint, expected):
                     [1.25232099, 1.18897478, 1.23452604]],
                    [[1.25232099, 1.18897478, 1.23452604],
                     [2.23083779e-9, 1.00000002e-1, 2.00000002e-1]]])),
-        (np.array([[0., 0.1, 0.2], [2.3, 2.1, 2.1]]), 2, 2, "batch", 42, 0)
+        (np.array([[0., 0.1, 0.2], [2.3, 2.1, 2.1]]), 2, 2, "batch", 42,
+         np.array([[[2.3, 2.1, 2.1],
+                    [1.14876033, 1.09917355, 1.14876033]],
+                   [[1.14876033, 1.09917355, 1.14876033],
+                    [0., 0.1, 0.2]]]))
         ])
 def test_fit(X, n_rows, n_columns, train_mode_unsupervised, random_state,
              expected):
-    som_clustering = susi.SOMClustering(
+    som = susi.SOMClustering(
         n_rows=n_rows,
         n_columns=n_columns,
         train_mode_unsupervised=train_mode_unsupervised,
         random_state=random_state)
 
-    # TODO remove after implementation of unsupervised batch mode
-    if train_mode_unsupervised == "batch":
-        with pytest.raises(Exception):
-            som_clustering.fit(X)
-    else:
-        som_clustering.fit(X)
-        assert isinstance(som_clustering.unsuper_som_, np.ndarray)
-        assert som_clustering.unsuper_som_.shape == (n_rows, n_columns,
-                                                     X.shape[1])
-        assert np.allclose(som_clustering.unsuper_som_, expected, atol=1e-20)
+    som.fit(X)
+    assert isinstance(som.unsuper_som_, np.ndarray)
+    assert som.unsuper_som_.shape == (n_rows, n_columns, X.shape[1])
+    assert np.allclose(som.unsuper_som_, expected, atol=1e-20)
+
+    with pytest.raises(Exception):
+        som = susi.SOMClustering(train_mode_unsupervised="alsdkf")
+        som.fit(X)
 
 
 @pytest.mark.parametrize(
@@ -180,11 +182,11 @@ def test_fit(X, n_rows, n_columns, train_mode_unsupervised, random_state,
         (2, 2, 42, 0.9, (0, 0),
          np.array([[0., 0.1, 0.2, 0.3], [2.3, 2.1, 2.1, 2.5]]),
          "pseudo-gaussian",
-         np.array([1., 0.53940751, 0.53940751, 0.29096046])),
+         np.array([[[1.], [0.53940751]], [[0.53940751], [0.29096046]]])),
         (2, 2, 42, 0.9, (0, 0),
          np.array([[0., 0.1, 0.2, 0.3], [2.3, 2.1, 2.1, 2.5]]),
          "mexican-hat",
-         np.array([1., -0.12652769, -0.12652769, -0.42746043])),
+         np.array([[[1.], [-0.12652769]], [[-0.12652769], [-0.42746043]]])),
     ])
 def test_get_nbh_distance_weight_matrix(n_rows, n_columns, random_state,
                                         neighborhood_func, bmu_pos, X,
@@ -194,6 +196,10 @@ def test_get_nbh_distance_weight_matrix(n_rows, n_columns, random_state,
         nbh_dist_weight_mode=mode, random_state=random_state)
     som_clustering.X_ = X
     som_clustering.init_unsuper_som()
+    print(som_clustering.get_nbh_distance_weight_matrix(
+        neighborhood_func, bmu_pos)
+        )
+    print(expected)
     assert np.allclose(som_clustering.get_nbh_distance_weight_matrix(
         neighborhood_func, bmu_pos), expected, atol=1e-8)
 

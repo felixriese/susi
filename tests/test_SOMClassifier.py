@@ -8,6 +8,7 @@ import pytest
 import os
 import sys
 import numpy as np
+import itertools
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -23,6 +24,9 @@ X_train, X_test, y_train, y_test = train_test_split(
 scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
+
+# SOM variables
+TRAIN_MODES = ["online", "batch"]
 
 
 @pytest.mark.parametrize("n_rows,n_columns,do_class_weighting", [
@@ -57,9 +61,10 @@ def test_init_super_som(n_rows, n_columns, do_class_weighting):
 @pytest.mark.parametrize(
     ("n_rows,n_columns,learningrate,dist_weight_matrix,random_state,"
      "class_weight,expected"), [
-        (2, 2, 0.3, np.array([[1.3, 0.4], [2.1, 0.2]]), 3, 1., None),
-        (2, 2, 1e-9, np.array([[1.3, 0.4], [2.1, 0.2]]), 3, 1.,
-         np.array([[False, False], [False, False]])),
+        (2, 2, 0.3, np.array([[1.3, 0.4], [2.1, 0.2]]).reshape(2, 2, 1),
+         3, 1., None),
+        (2, 2, 1e-9, np.array([[1.3, 0.4], [2.1, 0.2]]).reshape(2, 2, 1),
+         3, 1., np.array([[False, False], [False, False]])),
      ])
 def test_change_class_proba(n_rows, n_columns, learningrate,
                             dist_weight_matrix, random_state, class_weight,
@@ -95,3 +100,17 @@ def test_modify_weight_matrix_supervised(
     new_som = som.modify_weight_matrix_supervised(
         som_array, learningrate, dist_weight_matrix, true_vector)
     assert(new_som.shape == (n_rows, n_columns, 1))
+
+
+@pytest.mark.parametrize(
+    "train_mode_unsupervised,train_mode_supervised",
+    itertools.product(TRAIN_MODES, ["online"]))
+def test_fit(train_mode_unsupervised, train_mode_supervised):
+    som = susi.SOMClassifier(
+        n_rows=5,
+        n_columns=5,
+        train_mode_unsupervised=train_mode_unsupervised,
+        train_mode_supervised=train_mode_supervised,
+        random_state=3)
+    som.fit(X_train, y_train)
+    assert(som.score(X_test, y_test) > 0.9)
