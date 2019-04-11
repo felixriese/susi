@@ -59,6 +59,54 @@ def decreasing_rate(a_1, a_2, iteration_max, iteration, mode):
         raise ValueError("Invalid decreasing rate mode: "+str(mode))
 
 
+def check_estimation_input(X, y, is_classification=False):
+    """Check input arrays."""
+    if is_classification:
+        X, y = check_X_y(X, y)
+    else:
+        X, y = check_X_y(X, y, dtype=np.float64)
+
+    # TODO accept_sparse="csc"
+    X = check_array(X, ensure_2d=True, dtype=np.float64)
+    y = check_array(y, ensure_2d=False, dtype=None)
+
+    if is_classification:
+        check_classification_targets(y)
+
+    y = np.atleast_1d(y)
+
+    if y.ndim == 1:
+        y = np.reshape(y, (-1, 1))
+
+    return X, y
+
+
+def modify_weight_matrix_online(som_array, dist_weight_matrix,
+                                true_vector, learningrate):
+    """Modify weight matrix of the SOM for the online algorithm.
+
+    Parameters
+    ----------
+    som_array : np.array
+        Weight vectors of the SOM
+        shape = (self.n_rows, self.n_columns, X.shape[1])
+    dist_weight_matrix : np.array of float
+        Current distance weight of the SOM for the specific node
+    true_vector : np.array
+        True vector
+    learningrate : float
+        Current learning rate of the SOM
+
+    Returns
+    -------
+    np.array
+        Weight vector of the SOM after the modification
+
+    """
+    return som_array + np.multiply(learningrate, np.multiply(
+        dist_weight_matrix, -np.subtract(som_array, true_vector)))
+
+
 class SOMClustering():
     """Unsupervised self-organizing map for clustering.
 
@@ -242,7 +290,7 @@ class SOMClustering():
                 # calculate distance weight matrix and update weights
                 dist_weight_matrix = self.get_nbh_distance_weight_matrix(
                     nbh_func, bmu_pos)
-                self.unsuper_som_ = self.modify_weight_matrix_online(
+                self.unsuper_som_ = modify_weight_matrix_online(
                     self.unsuper_som_, dist_weight_matrix,
                     true_vector=self.X_[dp], learningrate=learning_rate)
 
@@ -257,12 +305,8 @@ class SOMClustering():
                     curr_it=it, mode=self.neighborhood_mode_unsupervised)
 
                 # calculate distance weight matrix for all datapoints
-                dist_weight_block = np.zeros(
-                    (len(bmus), self.n_rows, self.n_columns))
-                for i, bmu_pos in enumerate(bmus):
-                    dist_weight_block[i] = self.get_nbh_distance_weight_matrix(
-                        nbh_func, bmu_pos).reshape(
-                            (self.n_rows, self.n_columns))
+                dist_weight_block = self.get_nbh_distance_weight_block(
+                    nbh_func, bmus)
 
                 # update weights
                 self.unsuper_som_ = self.modify_weight_matrix_batch(
@@ -472,7 +516,7 @@ class SOMClustering():
         Returns
         -------
         np.array of float, shape=(n_rows, n_columns)
-            Neighborhood distance weight matrix between som and bmu
+            Neighborhood distance weight matrix between SOM and BMU
 
         """
         dist_mat = np.linalg.norm(self.node_list_-bmu_pos, axis=1)
@@ -492,33 +536,33 @@ class SOMClustering():
             raise ValueError("Invalid nbh_dist_weight_mode: "+str(
                 self.nbh_dist_weight_mode))
 
-    def modify_weight_matrix_online(self, som_array, dist_weight_matrix,
-                                    true_vector, learningrate):
-        """Modify weight matrix of the SOM for the online algorithm.
+    def get_nbh_distance_weight_block(self, nbh_func, bmus):
+        """Calculate distance weight matrix for all datapoints.
+
+        The combination of several distance weight matrices is called
+        "block" in the following.
 
         Parameters
         ----------
-        som_array : np.array
-            Weight vectors of the SOM
-            shape = (self.n_rows, self.n_columns, X.shape[1])
-        dist_weight_matrix : np.array of float
-            Current distance weight of the SOM for the specific node
-        true_vector : np.array
-            True vector
-        learningrate : float
-            Current learning rate of the SOM
+        neighborhood_func : float
+            Current neighborhood function
+        bmu_pos : tuple, shape=(int, int)
+            Position of calculated BMU of the current datapoint
 
         Returns
         -------
-        np.array
-            Weight vector of the SOM after the modification
+        dist_weight_block : np.array of float, shape=(n_rows, n_columns)
+            Neighborhood distance weight block between SOM and BMUs
 
         """
-        return som_array + np.multiply(
-            learningrate,
-            np.multiply(
-                dist_weight_matrix,
-                -np.subtract(som_array, true_vector)))
+        dist_weight_block = np.zeros(
+            (len(bmus), self.n_rows, self.n_columns))
+
+        for i, bmu_pos in enumerate(bmus):
+            dist_weight_block[i] = self.get_nbh_distance_weight_matrix(
+                nbh_func, bmu_pos).reshape((self.n_rows, self.n_columns))
+
+        return dist_weight_block
 
     def modify_weight_matrix_batch(self, som_array, dist_weight_matrix, data):
         """Modify weight matrix of the SOM for the online algorithm.
@@ -778,23 +822,17 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         self : object
 
         """
-        X, y = check_X_y(X, y, dtype=np.float64)
+        X, y = check_estimation_input(X, y)
 
-        # TODO accept_sparse="csc"
-        X = check_array(X, ensure_2d=True, dtype=np.float64)
-        y = check_array(y, ensure_2d=False, dtype=None)
+        return self.fit_estimator(X, y)
 
-        y = np.atleast_1d(y)
-
-        if y.ndim == 1:
-            y = np.reshape(y, (-1, 1))
-
+    def fit_estimator(self, X, y):
+        """Fit supervised SOM."""
         self.X_ = X
         self.y_ = y
 
         np.random.seed(seed=self.random_state)
 
-        # self.init_estimator()
         self.som_unsupervised()
         self.som_supervised()
 
@@ -893,30 +931,15 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         """
         if self.train_mode_supervised == "online":
-            return self.modify_weight_matrix_online(
+            return modify_weight_matrix_online(
                 self.super_som_, dist_weight_matrix, true_vector=true_vector,
                 learningrate=learningrate)
 
         elif self.train_mode_supervised == "batch":
-            # calculate numerator and divisor for the batch formula
-            numerator = np.sum(
-                [np.multiply(self.y_[i], dist_weight_matrix[i].reshape(
-                    (self.n_rows, self.n_columns, 1)))
-                    for i in range(len(self.y_))], axis=0)
-            divisor = np.sum(dist_weight_matrix, axis=0).reshape(
-                (self.n_rows, self.n_columns, 1))
-
-            # update weights
-            old_som = np.copy(self.super_som_)
-            new_som = np.divide(
-                numerator,
-                divisor,
-                out=np.full_like(numerator, np.nan),
-                where=(divisor != 0))
-
-            # overwrite new nans with old entries
-            new_som[np.isnan(new_som)] = old_som[np.isnan(new_som)]
-            return new_som
+            return self.modify_weight_matrix_batch(
+                som_array=self.super_som_,
+                dist_weight_matrix=dist_weight_matrix,
+                data=self.y_)
 
     def som_supervised(self):
         """Train supervised SOM."""
@@ -958,12 +981,8 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
                     curr_it=it, mode=self.neighborhood_mode_supervised)
 
                 # calculate distance weight matrix for all datapoints
-                dist_weight_block = np.zeros(
-                    (len(bmus), self.n_rows, self.n_columns))
-                for i, bmu_pos in enumerate(bmus):
-                    dist_weight_block[i] = self.get_nbh_distance_weight_matrix(
-                        nbh_func, bmu_pos).reshape(
-                            (self.n_rows, self.n_columns))
+                dist_weight_block = self.get_nbh_distance_weight_block(
+                    nbh_func, bmus)
 
                 self.super_som_ = self.modify_weight_matrix_supervised(
                     dist_weight_matrix=dist_weight_block)
@@ -1221,30 +1240,9 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         self : object
 
         """
-        X, y = check_X_y(X, y)
+        X, y = check_estimation_input(X, y, is_classification=True)
 
-        # TODO accept_sparse="csc"
-        X = check_array(X, dtype=np.float64)
-        y = check_array(y, ensure_2d=False, dtype=None)
-
-        check_classification_targets(y)
-        y = np.atleast_1d(y)
-
-        if y.ndim == 1:
-            y = np.reshape(y, (-1, 1))
-
-        self.X_ = X
-        self.y_ = y
-
-        np.random.seed(seed=self.random_state)
-
-        # self.init_estimator()
-        self.som_unsupervised()
-        self.som_supervised()
-
-        self.fitted_ = True
-
-        return self
+        return self.fit_estimator(X, y)
 
     def modify_weight_matrix_supervised(self, dist_weight_matrix,
                                         true_vector=None,

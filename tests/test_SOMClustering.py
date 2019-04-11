@@ -220,7 +220,7 @@ def test_modify_weight_matrix_online(n_rows, n_columns, random_state,
         n_rows=n_rows, n_columns=n_columns,
         n_iter_unsupervised=n_iter_unsupervised, random_state=random_state)
     som_clustering.fit(X)
-    assert np.allclose(som_clustering.modify_weight_matrix_online(
+    assert np.allclose(susi.modify_weight_matrix_online(
         som_array=som_clustering.unsuper_som_,
         learningrate=learningrate,
         dist_weight_matrix=som_clustering.get_nbh_distance_weight_matrix(
