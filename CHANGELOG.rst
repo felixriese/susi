@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+[1.0.4] - 2019-XX-XX
+------------------------
+- [ADDED] Batch algorithm for unsupervised and supervised SOM
+- [FIXED] Added estimator_check of sklearn and fixed recognized issues
+
 [1.0.3] - 2019-04-09
 ------------------------
 - [ADDED] Link to arXiv paper

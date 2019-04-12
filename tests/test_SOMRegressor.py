@@ -7,6 +7,7 @@ python -m pytest tests/test_SOMRegressor.py
 import pytest
 import os
 import sys
+import itertools
 import numpy as np
 from sklearn.datasets import load_boston
 from sklearn.model_selection import train_test_split
@@ -26,6 +27,9 @@ scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train_orig)
 X_test = scaler.transform(X_test_orig)
 
+# SOM variables
+TRAIN_MODES = ["online", "batch"]
+
 
 @pytest.mark.parametrize("n_rows,n_columns", [
     (10, 10),
@@ -39,8 +43,10 @@ def test_som_regressor_init(n_rows, n_columns):
 
 
 @pytest.mark.parametrize("X,y,init_mode", [
-    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), np.array([[3], [5]]), "random"),
-    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), np.array([[3], [5]]), "random_data"),
+    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), np.array([[3], [5]]),
+     "random"),
+    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), np.array([[3], [5]]),
+     "random_data"),
 ])
 def test_init_super_som_regressor(X, y, init_mode):
     som = susi.SOMRegressor(init_mode_supervised=init_mode)
@@ -64,23 +70,21 @@ def test_init_super_som_regressor(X, y, init_mode):
 
 
 @pytest.mark.parametrize(
-    "n_rows,n_columns,train_mode_supervised,random_state", [
-        (3, 3, "online", 42),
-        (3, 3, "batch", 42),
-    ])
-def test_predict(n_rows, n_columns, train_mode_supervised, random_state):
+    "train_mode_unsupervised,train_mode_supervised",
+    itertools.product(TRAIN_MODES, TRAIN_MODES))
+def test_predict(train_mode_unsupervised, train_mode_supervised):
     som_reg = susi.SOMRegressor(
-        n_rows=n_rows, n_columns=n_columns,
-        train_mode_supervised=train_mode_supervised, random_state=random_state)
+        n_rows=3,
+        n_columns=3,
+        train_mode_unsupervised=train_mode_unsupervised,
+        train_mode_supervised=train_mode_supervised,
+        n_iter_unsupervised=100,
+        n_iter_supervised=100,
+        random_state=42)
 
-    # TODO remove after implementation of supervised batch mode
-    if train_mode_supervised == "batch":
-        with pytest.raises(Exception):
-            som_reg.fit(X_train, y_train)
-    else:
-        som_reg.fit(X_train, y_train)
-        y_pred = som_reg.predict(X_test)
-        assert(y_pred.shape == y_test.shape)
+    som_reg.fit(X_train, y_train)
+    y_pred = som_reg.predict(X_test)
+    assert(y_pred.shape == y_test.shape)
 
 
 def test_estimator_status():
@@ -92,14 +96,16 @@ def test_estimator_status():
         (2, 2, np.array([[[0., 1.1, 2.1], [0.3, 2.1, 1.1]],
                          [[1., 2.1, 3.1], [-0.3, -2.1, -1.1]]]),
          np.array([[[0], [0.5]], [[1], [2]]]),
-         np.array([0., 1.1, 2.1]).reshape(3,), np.array([0.])),
+         np.array([0., 1.1, 2.1]).reshape(3,), 0.),
     ])
 def test_calc_estimation_output(n_rows, n_columns, unsuper_som, super_som,
                                 datapoint, expected):
     som = susi.SOMRegressor(n_rows=n_rows, n_columns=n_columns)
     som.unsuper_som_ = unsuper_som
     som.super_som_ = super_som
-    assert np.array_equal(som.calc_estimation_output(datapoint), expected)
+    output = som.calc_estimation_output(datapoint)
+    print(output)
+    assert np.array_equal(output, expected)
 
 
 def test_mexicanhat_nbh_dist_weight_mode():
