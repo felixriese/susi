@@ -706,6 +706,19 @@ class SOMClustering():
             U-matrix containing the distances between all nodes of the
             unsupervised SOM. Shape = (n_rows*2-1, n_columns*2-1)
 
+        Examples
+        --------
+        Fit your SOM to input data `X` and then calculate the u-matrix with
+        `get_u_matrix()`. You can plot the u-matrix then with e.g.
+        `pyplot.imshow()`.
+
+        >>> import susi
+        >>> import matplotlib.pyplot as plt
+        >>> som = susi.SOMClustering()
+        >>> som.fit(X)
+        >>> umat = som.get_u_matrix()
+        >>> plt.imshow(umat)
+
         """
         u_matrix = np.zeros(shape=(self.n_rows*2-1, self.n_columns*2-1, 1),
                             dtype=float)
@@ -725,7 +738,6 @@ class SOMClustering():
                     self.unsuper_som_[u_node[0]//2][u_node[1]//2] -
                     self.unsuper_som_[u_node[0]//2+1][u_node[1]//2],
                     axis=0)
-                pass
 
         # step 2: fill values at SOM nodes and on diagonals
         for u_node in itertools.product(range(self.n_rows*2-1),

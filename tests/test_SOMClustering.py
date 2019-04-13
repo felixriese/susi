@@ -363,9 +363,13 @@ def test_get_u_mean():
     assert(result == np.max(randomlist))
 
 
-def test_get_u_matrix():
-    n_rows = 8
-    n_columns = 4
+@pytest.mark.parametrize("n_rows,n_columns", [
+    (3, 3),
+    (10, 5),
+    (100, 3),
+    (30, 30),
+])
+def test_get_u_matrix(n_rows, n_columns):
     som = susi.SOMClustering(n_rows=n_rows, n_columns=n_columns)
     som.fit(X)
     u_matrix = som.get_u_matrix()
