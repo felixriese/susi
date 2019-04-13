@@ -136,10 +136,10 @@ Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regress
         title = {SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python},
         year = {2019},
         notes = {Submitted to an ISPRS conference},
-	    archivePrefix = {arXiv},
-   	    eprint = {1903.11114},
-   	    primaryClass = {cs.LG},
-   	    url = {https://arxiv.org/abs/1903.11114}
+        archivePrefix = {arXiv},
+        eprint = {1903.11114},
+        primaryClass = {cs.LG},
+        url = {https://arxiv.org/abs/1903.11114}
     }
 
 **Code:**

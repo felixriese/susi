@@ -13,7 +13,8 @@ sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import susi
 
-X, _, _ = make_biclusters((100,10), 3)
+X, _, _ = make_biclusters((100, 10), 3)
+
 
 @pytest.mark.parametrize("n_rows,n_columns", [
     (10, 10),
@@ -343,35 +344,23 @@ def test_get_datapoints_from_node(n_rows, n_columns, som_array, X, node,
     assert(np.array_equal(som.get_datapoints_from_node(node), expected))
 
 
-def test_get_u_mean():
-    randomlist = np.random.rand(50)
-
-    result = susi.get_u_mean(randomlist, "mean")
-    assert(isinstance(result, float))
-    assert(result == np.mean(randomlist))
-
-    result = susi.get_u_mean(randomlist, "median")
-    assert(isinstance(result, float))
-    assert(result == np.median(randomlist))
-
-    result = susi.get_u_mean(randomlist, "min")
-    assert(isinstance(result, float))
-    assert(result == np.min(randomlist))
-
-    result = susi.get_u_mean(randomlist, "max")
-    assert(isinstance(result, float))
-    assert(result == np.max(randomlist))
-
-
-@pytest.mark.parametrize("n_rows,n_columns", [
-    (3, 3),
-    (10, 5),
-    (100, 3),
-    (30, 30),
+@pytest.mark.parametrize("n_rows,n_columns,mode", [
+    (3, 3, "mean"),
+    (10, 5, "median"),
+    (100, 3, "min"),
+    (30, 30, "max"),
 ])
-def test_get_u_matrix(n_rows, n_columns):
+def test_get_u_matrix(n_rows, n_columns, mode):
     som = susi.SOMClustering(n_rows=n_rows, n_columns=n_columns)
     som.fit(X)
-    u_matrix = som.get_u_matrix()
+    u_matrix = som.get_u_matrix(mode=mode)
     assert(isinstance(u_matrix, np.ndarray))
     assert(u_matrix.shape == (n_rows*2-1, n_columns*2-1, 1))
+
+
+def test_get_clusters():
+    som = susi.SOMClustering()
+    som.fit(X)
+    clusters = som.get_clusters(X)
+    assert(len(clusters) == len(X))
+    assert(len(clusters[0]) == 2)

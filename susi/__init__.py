@@ -107,32 +107,6 @@ def modify_weight_matrix_online(som_array, dist_weight_matrix,
         dist_weight_matrix, -np.subtract(som_array, true_vector)))
 
 
-def get_u_mean(nodelist, mode="mean"):
-    """Calculate a mean value of the node entries in `nodelist`.
-
-    Parameters
-    ----------
-    nodelist : list of float
-        List of nodes on the u-matrix containing distance values
-    mode : str, optional (default="mean)
-        Choice of the averaging algorithm
-
-    Returns
-    -------
-    float
-        Mean value
-
-    """
-    if mode == "mean":
-        return np.mean(nodelist)
-    elif mode == "median":
-        return np.median(nodelist)
-    elif mode == "min":
-        return np.min(nodelist)
-    elif mode == "max":
-        return np.max(nodelist)
-
-
 class SOMClustering():
     """Unsupervised self-organizing map for clustering.
 
@@ -291,11 +265,11 @@ class SOMClustering():
         """
         np.random.seed(seed=self.random_state)
         self.X_ = check_array(X, dtype=np.float64)  # TODO accept_sparse
-        self.som_unsupervised()
+        self.train_unsupervised_som()
         self.fitted_ = True
         return self
 
-    def som_unsupervised(self):
+    def train_unsupervised_som(self):
         """Train unsupervised SOM."""
 
         self.init_unsuper_som()
@@ -692,6 +666,22 @@ class SOMClustering():
                 datapoints.append(i)
         return datapoints
 
+    def get_clusters(self, X):
+        """Calculate the SOM nodes on the unsupervised SOM grid per datapoint.
+
+        Parameters
+        ----------
+        X : np.ndarray
+            Input data
+
+        Returns
+        -------
+        list of tuples (int, int)
+            List of SOM nodes, one for each input datapoint
+
+        """
+        return self.get_bmus(X, self.unsuper_som_)
+
     def get_u_matrix(self, mode="mean"):
         """Calculate unified distance matrix (u-matrix).
 
@@ -713,33 +703,45 @@ class SOMClustering():
         `pyplot.imshow()`.
 
         >>> import susi
+        >>> import numpy as np
         >>> import matplotlib.pyplot as plt
         >>> som = susi.SOMClustering()
         >>> som.fit(X)
         >>> umat = som.get_u_matrix()
-        >>> plt.imshow(umat)
+        >>> plt.imshow(np.squeeze(umat))
 
         """
-        u_matrix = np.zeros(shape=(self.n_rows*2-1, self.n_columns*2-1, 1),
-                            dtype=float)
+        self.u_mean_mode_ = mode
+
+        self.u_matrix = np.zeros(
+            shape=(self.n_rows*2-1, self.n_columns*2-1, 1),
+            dtype=float)
 
         # step 1: fill values between SOM nodes
+        self.calc_u_matrix_distances()
+
+        # step 2: fill values at SOM nodes and on diagonals
+        self.calc_u_matrix_means()
+
+        return self.u_matrix
+
+    def calc_u_matrix_distances(self):
         for u_node in itertools.product(range(self.n_rows*2-1),
                                         range(self.n_columns*2-1)):
 
             if not (u_node[0] % 2) and (u_node[1] % 2):
                 # mean horizontally
-                u_matrix[u_node] = np.linalg.norm(
+                self.u_matrix[u_node] = np.linalg.norm(
                     self.unsuper_som_[u_node[0]//2][u_node[1]//2] -
                     self.unsuper_som_[u_node[0]//2][u_node[1]//2+1])
             elif (u_node[0] % 2) and not (u_node[1] % 2):
                 # mean vertically
-                u_matrix[u_node] = np.linalg.norm(
+                self.u_matrix[u_node] = np.linalg.norm(
                     self.unsuper_som_[u_node[0]//2][u_node[1]//2] -
                     self.unsuper_som_[u_node[0]//2+1][u_node[1]//2],
                     axis=0)
 
-        # step 2: fill values at SOM nodes and on diagonals
+    def calc_u_matrix_means(self):
         for u_node in itertools.product(range(self.n_rows*2-1),
                                         range(self.n_columns*2-1)):
 
@@ -748,26 +750,49 @@ class SOMClustering():
 
                 nodelist = []
                 if u_node[0] > 0:
-                    nodelist.append(u_matrix[u_node[0]-1][u_node[1]])
+                    nodelist.append((u_node[0]-1, u_node[1]))
                 if u_node[0] < self.n_rows*2-2:
-                    nodelist.append(u_matrix[u_node[0]+1][u_node[1]])
+                    nodelist.append((u_node[0]+1, u_node[1]))
                 if u_node[1] > 0:
-                    nodelist.append(u_matrix[u_node[0]][u_node[1]-1])
+                    nodelist.append((u_node[0], u_node[1]-1))
                 if u_node[1] < self.n_columns*2-2:
-                    nodelist.append(u_matrix[u_node[0]][u_node[1]+1])
-                u_matrix[u_node] = get_u_mean(nodelist, mode=mode)
+                    nodelist.append((u_node[0], u_node[1]+1))
+                self.u_matrix[u_node] = self.get_u_mean(nodelist)
 
             elif (u_node[0] % 2) and (u_node[1] % 2):
                 # mean over four
 
-                u_matrix[u_node] = get_u_mean([
-                    u_matrix[u_node[0]-1][u_node[1]],
-                    u_matrix[u_node[0]+1][u_node[1]],
-                    u_matrix[u_node[0]][u_node[1]-1],
-                    u_matrix[u_node[0]][u_node[1]+1]],
-                    mode=mode)
+                self.u_matrix[u_node] = self.get_u_mean([
+                    (u_node[0]-1, u_node[1]),
+                    (u_node[0]+1, u_node[1]),
+                    (u_node[0], u_node[1]-1),
+                    (u_node[0], u_node[1]+1)])
 
-        return u_matrix
+    def get_u_mean(self, nodelist):
+        """Calculate a mean value of the node entries in `nodelist`.
+
+        Parameters
+        ----------
+        nodelist : list of tuple (int, int)
+            List of nodes on the u-matrix containing distance values
+
+        Returns
+        -------
+        float
+            Mean value
+
+        """
+        print(nodelist)
+        meanlist = [self.u_matrix[u_node] for u_node in nodelist]
+
+        if self.u_mean_mode_ == "mean":
+            return np.mean(meanlist)
+        elif self.u_mean_mode_ == "median":
+            return np.median(meanlist)
+        elif self.u_mean_mode_ == "min":
+            return np.min(meanlist)
+        elif self.u_mean_mode_ == "max":
+            return np.max(meanlist)
 
 
 class SOMEstimator(SOMClustering, BaseEstimator, ABC):
@@ -936,8 +961,8 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         np.random.seed(seed=self.random_state)
 
-        self.som_unsupervised()
-        self.som_supervised()
+        self.train_unsupervised_som()
+        self.train_supervised_som()
 
         self.fitted_ = True
 
@@ -1044,7 +1069,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
                 dist_weight_matrix=dist_weight_matrix,
                 data=self.y_)
 
-    def som_supervised(self):
+    def train_supervised_som(self):
         """Train supervised SOM."""
 
         self.set_bmus(self.X_)
