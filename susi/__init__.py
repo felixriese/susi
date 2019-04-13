@@ -107,6 +107,32 @@ def modify_weight_matrix_online(som_array, dist_weight_matrix,
         dist_weight_matrix, -np.subtract(som_array, true_vector)))
 
 
+def get_u_mean(nodelist, mode="mean"):
+    """Calculate a mean value of the node entries in `nodelist`.
+
+    Parameters
+    ----------
+    nodelist : list of float
+        List of nodes on the u-matrix containing distance values
+    mode : str, optional (default="mean)
+        Choice of the averaging algorithm
+
+    Returns
+    -------
+    float
+        Mean value
+
+    """
+    if mode == "mean":
+        return np.mean(nodelist)
+    elif mode == "median":
+        return np.median(nodelist)
+    elif mode == "min":
+        return np.min(nodelist)
+    elif mode == "max":
+        return np.max(nodelist)
+
+
 class SOMClustering():
     """Unsupervised self-organizing map for clustering.
 
@@ -665,6 +691,71 @@ class SOMClustering():
             if np.array_equal(self.bmus_[i], node):
                 datapoints.append(i)
         return datapoints
+
+    def get_u_matrix(self, mode="mean"):
+        """Calculate unified distance matrix (u-matrix).
+
+        Parameters
+        ----------
+        mode : str, optional (default="mean)
+            Choice of the averaging algorithm
+
+        Returns
+        -------
+        np.array
+            U-matrix containing the distances between all nodes of the
+            unsupervised SOM. Shape = (n_rows*2-1, n_columns*2-1)
+
+        """
+        u_matrix = np.zeros(shape=(self.n_rows*2-1, self.n_columns*2-1, 1),
+                            dtype=float)
+
+        # step 1: fill values between SOM nodes
+        for u_node in itertools.product(range(self.n_rows*2-1),
+                                        range(self.n_columns*2-1)):
+
+            if not (u_node[0] % 2) and (u_node[1] % 2):
+                # mean horizontally
+                u_matrix[u_node] = np.linalg.norm(
+                    self.unsuper_som_[u_node[0]//2][u_node[1]//2] -
+                    self.unsuper_som_[u_node[0]//2][u_node[1]//2+1])
+            elif (u_node[0] % 2) and not (u_node[1] % 2):
+                # mean vertically
+                u_matrix[u_node] = np.linalg.norm(
+                    self.unsuper_som_[u_node[0]//2][u_node[1]//2] -
+                    self.unsuper_som_[u_node[0]//2+1][u_node[1]//2],
+                    axis=0)
+                pass
+
+        # step 2: fill values at SOM nodes and on diagonals
+        for u_node in itertools.product(range(self.n_rows*2-1),
+                                        range(self.n_columns*2-1)):
+
+            if not (u_node[0] % 2) and not (u_node[1] % 2):
+                # SOM nodes -> mean over 2-4 values
+
+                nodelist = []
+                if u_node[0] > 0:
+                    nodelist.append(u_matrix[u_node[0]-1][u_node[1]])
+                if u_node[0] < self.n_rows*2-2:
+                    nodelist.append(u_matrix[u_node[0]+1][u_node[1]])
+                if u_node[1] > 0:
+                    nodelist.append(u_matrix[u_node[0]][u_node[1]-1])
+                if u_node[1] < self.n_columns*2-2:
+                    nodelist.append(u_matrix[u_node[0]][u_node[1]+1])
+                u_matrix[u_node] = get_u_mean(nodelist, mode=mode)
+
+            elif (u_node[0] % 2) and (u_node[1] % 2):
+                # mean over four
+
+                u_matrix[u_node] = get_u_mean([
+                    u_matrix[u_node[0]-1][u_node[1]],
+                    u_matrix[u_node[0]+1][u_node[1]],
+                    u_matrix[u_node[0]][u_node[1]-1],
+                    u_matrix[u_node[0]][u_node[1]+1]],
+                    mode=mode)
+
+        return u_matrix
 
 
 class SOMEstimator(SOMClustering, BaseEstimator, ABC):
