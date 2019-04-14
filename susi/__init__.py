@@ -35,6 +35,12 @@ def decreasing_rate(a_1, a_2, iteration_max, iteration, mode):
     float
         Decreasing rate
 
+    Examples
+    --------.
+
+    >>> import susi
+    >>> susi.decreasing_rate(0.8, 0.1, 100, 5, "exp")
+
     """
     if mode == "min":
         return a_1 * np.power(a_2 / a_1, iteration / iteration_max)
@@ -60,7 +66,27 @@ def decreasing_rate(a_1, a_2, iteration_max, iteration, mode):
 
 
 def check_estimation_input(X, y, is_classification=False):
-    """Check input arrays."""
+    """Check input arrays.
+
+    This function is adapted from sklearn.utils.validation.
+
+    Parameters
+    ----------
+    X : nd-array or list
+        Input data.
+    y : nd-array, list
+        Labels.
+    is_classification : boolean (default=`False`)
+        Wether the data is used for classification or regression tasks.
+
+    Returns
+    -------
+    X : object
+        The converted and validated `X`.
+    y : object
+        The converted and validated `y`.
+
+    """
     if is_classification:
         X, y = check_X_y(X, y)
     else:
@@ -175,7 +201,7 @@ class SOMClustering():
     X_ : np.array
         Input data
 
-    fitted_ : bool
+    fitted_ : boolean
         States if estimator is fitted to X
 
     max_iterations_ : int
@@ -262,6 +288,14 @@ class SOMClustering():
         -------
         self : object
 
+        Examples
+        --------
+        Load the SOM and fit it to your input data `X` with:
+
+        >>> import susi
+        >>> som = susi.SOMClustering()
+        >>> som.fit(X)
+
         """
         np.random.seed(seed=self.random_state)
         self.X_ = check_array(X, dtype=np.float64)  # TODO accept_sparse
@@ -298,7 +332,7 @@ class SOMClustering():
             for it in range(self.n_iter_unsupervised):
 
                 # calculate BMUs
-                bmus = self.get_bmus(self.X_, self.unsuper_som_)
+                bmus = self.get_bmus(self.X_)
 
                 # calculate neighborhood function
                 nbh_func = self.calc_neighborhood_func(
@@ -378,14 +412,14 @@ class SOMClustering():
 
         return np.argwhere(a == np.min(a))[0]
 
-    def get_bmus(self, X, som_array):
+    def get_bmus(self, X, som_array=None):
         """Get Best Matching Units for big datalist.
 
         Parameters
         ----------
         X : np.array
             List of datapoints
-        som_array : np.array
+        som_array : np.array, optional (default=`None`)
             Weight vectors of the SOM
             shape = (self.n_rows, self.n_columns, X.shape[1])
 
@@ -394,7 +428,22 @@ class SOMClustering():
         list of (int, int) tuples
             Position of best matching units (row, column) for each datapoint
 
+        Examples
+        --------
+        Load the SOM, fit it to your input data `X` and transform your input
+        data with:
+
+        >>> import susi
+        >>> import matplotlib.pyplot as plt
+        >>> som = susi.SOMClustering()
+        >>> som.fit(X)
+        >>> bmu_list = som.get_bmus(X)
+        >>> plt.hist2d([x[0] for x in bmu_list], [x[1] for x in bmu_list]
+
         """
+        if som_array is None:
+            som_array = self.unsuper_som_
+
         if self.n_jobs == 1:
             return [tuple(self.get_bmu(dp, som_array)) for dp in X]
         else:
@@ -447,8 +496,6 @@ class SOMClustering():
             shape = (self.n_rows, self.n_columns, X.shape[1])
 
         """
-        if som_array is None:
-            som_array = self.unsuper_som_
         self.bmus_ = self.get_bmus(X=X, som_array=som_array)
 
     def get_node_distance_matrix(self, datapoint, som_array):
@@ -457,9 +504,9 @@ class SOMClustering():
         Parameters
         ----------
         datapoint : np.array, shape=(X.shape[1])
-            Datapoint = one row of the dataset X
+            Datapoint = one row of the dataset `X`
         som_array : np.array
-            Weight vectors of the SOM
+            Weight vectors of the SOM,
             shape = (self.n_rows, self.n_columns, X.shape[1])
 
         Returns
@@ -620,10 +667,20 @@ class SOMClustering():
         np.array of tuples (int, int)
             Predictions including the BMUs of each datapoint
 
+        Examples
+        --------
+        Load the SOM, fit it to your input data `X` and transform your input
+        data with:
+
+        >>> import susi
+        >>> som = susi.SOMClustering()
+        >>> som.fit(X)
+        >>> X_transformed = som.transform(X)
+
         """
         # assert(self.fitted_ is True)
         self.X_ = check_array(X, dtype=np.float64)
-        return np.array(self.get_bmus(self.X_, self.unsuper_som_))
+        return np.array(self.get_bmus(self.X_))
 
     def fit_transform(self, X, y=None):
         """Fit to the input data and transform it.
@@ -639,6 +696,15 @@ class SOMClustering():
         -------
         np.array of tuples (int, int)
             Predictions including the BMUs of each datapoint
+
+        Examples
+        --------
+        Load the SOM, fit it to your input data `X` and transform your input
+        data with:
+
+        >>> import susi
+        >>> som = susi.SOMClustering()
+        >>> X_transformed = som.fit_transform(X)
 
         """
         self.fit(X)
@@ -680,7 +746,7 @@ class SOMClustering():
             List of SOM nodes, one for each input datapoint
 
         """
-        return self.get_bmus(X, self.unsuper_som_)
+        return self.get_bmus(X)
 
     def get_u_matrix(self, mode="mean"):
         """Calculate unified distance matrix (u-matrix).
@@ -726,6 +792,7 @@ class SOMClustering():
         return self.u_matrix
 
     def calc_u_matrix_distances(self):
+        """Calculate the Eucl. distances between all neighbored SOM nodes."""
         for u_node in itertools.product(range(self.n_rows*2-1),
                                         range(self.n_columns*2-1)):
 
@@ -742,6 +809,14 @@ class SOMClustering():
                     axis=0)
 
     def calc_u_matrix_means(self):
+        """Calculate the missing parts of the u-matrix.
+
+        After `calc_u_matrix_distances()`, there are two kinds of entries
+        missing: the entries at the positions of the actual SOM nodes and the
+        entries in between the distance nodes. Both types of entries are
+        calculated in this function.
+
+        """
         for u_node in itertools.product(range(self.n_rows*2-1),
                                         range(self.n_columns*2-1)):
 
@@ -778,7 +853,7 @@ class SOMClustering():
 
         Returns
         -------
-        float
+        `float`
             Mean value
 
         """
@@ -949,13 +1024,30 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         -------
         self : object
 
+        Examples
+        --------
+        Load the SOM and fit it to your input data `X` and the labels `y` with:
+
+        >>> import susi
+        >>> som = susi.SOMRegressor()
+        >>> som.fit(X, y)
+
         """
         X, y = check_estimation_input(X, y)
 
         return self.fit_estimator(X, y)
 
     def fit_estimator(self, X, y):
-        """Fit supervised SOM."""
+        """Fit supervised SOM to the (checked) input data.
+
+        Parameters
+        ----------
+        X : array-like matrix of shape = [n_samples, n_features]
+            The prediction input samples.
+        y : array-like matrix of shape = [n_samples, 1]
+            The labels (ground truth) of the input samples
+
+        """
         self.X_ = X
         self.y_ = y
 
@@ -982,6 +1074,15 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         -------
         y_pred : list of float
             List of predicted values.
+
+        Examples
+        --------
+        Fit the SOM on your data `X, y`:
+
+        >>> import susi
+        >>> som = susi.SOMClassifier()
+        >>> som.fit(X, y)
+        >>> y_pred = som.predict(X)
 
         """
         # Check is fit had been called
@@ -1101,8 +1202,8 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         elif self.train_mode_supervised == "batch":
             for it in range(self.n_iter_supervised):
 
-                # calculate BMUs
-                bmus = self.get_bmus(self.X_, self.unsuper_som_)
+                # calculate BMUs with the unsupervised (!) SOM
+                bmus = self.get_bmus(self.X_)
 
                 # calculate neighborhood function
                 nbh_func = self.calc_neighborhood_func(
@@ -1130,13 +1231,35 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         np.array of tuples (int, int)
             Predictions including the BMUs of each datapoint
 
+        Examples
+        --------
+        Load the SOM, fit it to your input data `X` and transform your input
+        data with:
+
+        >>> import susi
+        >>> som = susi.SOMClassifier()
+        >>> tuples = som.fit_transform(X, y)
+
         """
         self.fit(X, y)
         self.X_ = check_array(X, dtype=np.float64)
         return self.transform(X, y)
 
     def get_estimation_map(self):
-        """Return SOM grid with the estimated value on each node."""
+        """Return SOM grid with the estimated value on each node.
+
+        Examples
+        --------.
+        Fit the SOM on your data `X, y`:
+
+        >>> import susi
+        >>> import matplotlib.pyplot as plt
+        >>> som = susi.SOMClassifier()
+        >>> som.fit(X, y)
+        >>> estimation_map = som.get_estimation_map()
+        >>> plt.imshow(np.squeeze(estimation_map,) cmap="viridis_r")
+
+        """
         return self.super_som_
 
 
@@ -1366,6 +1489,14 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         Returns
         -------
         self : object
+
+        Examples
+        --------
+        Load the SOM and fit it to your input data `X` and the labels `y` with:
+
+        >>> import susi
+        >>> som = susi.SOMClassifier()
+        >>> som.fit(X, y)
 
         """
         X, y = check_estimation_input(X, y, is_classification=True)
