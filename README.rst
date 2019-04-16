@@ -81,19 +81,18 @@ Manually:
     cd susi/
     python setup.py install
 
-**Dependencies**
+.. role:: bash(code)
+   :language: bash
 
-Python 3 with:
+.. role:: python(code)
+   :language: python3
 
-* joblib
-* numpy
-* scikit-learn
-* scipy
+**Dependencies:** Python 3 with :python:`joblib`, :python:`numpy`, :python:`scikit-learn` and :python:`scipy`.
 
 Usage
 -----
 
-Regression in  python3:
+Regression in  :bash:`python3`:
 
 .. code:: python3
 
@@ -104,7 +103,7 @@ Regression in  python3:
     print(som.score(X_test, y_test))
 
 
-Classification in  `python3`:
+Classification in  :bash:`python3`:
 
 .. code:: python3
 
@@ -116,6 +115,7 @@ Classification in  `python3`:
 
 Code examples as Jupyter Notebooks:
 
+* `examples/SOMClustering <examples/SOMClustering.ipynb>`_
 * `examples/SOMRegressor_Hyperspectral <examples/SOMRegressor_Hyperspectral.ipynb>`_
 * `examples/SOMClassifier <examples/SOMClassifier.ipynb>`_
 * `examples/SOMClassifier_Salinas <examples/SOMClassifier_Salinas.ipynb>`_
