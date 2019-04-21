@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-[1.0.4] - 2019-XX-XX
+[1.0.4] - 2019-04-21
 ------------------------
 - [ADDED] Batch algorithm for unsupervised and supervised SOM
 - [ADDED] Calculation of the unified distance matrix (u-matrix)
