@@ -114,7 +114,7 @@ def test_decreasing_rate(a_1, a_2, max_it, curr_it, mode, expected):
 @pytest.mark.parametrize("X,init_mode", [
     (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), "random"),
     (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), "random_data"),
-    # (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), "pca"),
+    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), "pca"),
 ])
 def test_init_unsuper_som(X, init_mode):
     som_clustering = susi.SOMClustering(init_mode_unsupervised=init_mode)
@@ -128,12 +128,6 @@ def test_init_unsuper_som(X, init_mode):
     n_rows = som_clustering.n_rows
     n_columns = som_clustering.n_columns
     assert som_clustering.unsuper_som_.shape == (n_rows, n_columns, X.shape[1])
-
-    # TODO remove after PCA init implementation:
-    with pytest.raises(Exception):
-        som_clustering = susi.SOMClustering(init_mode_unsupervised="pca")
-        som_clustering.X_ = X
-        som_clustering.init_unsuper_som()
 
 
 @pytest.mark.parametrize("som_array,datapoint,expected", [

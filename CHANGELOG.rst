@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+[1.0.5] - 2019-XX-XX
+------------------------
+- [ADDED] PCA initialization of the SOM weights with 2 principal components
+
 [1.0.4] - 2019-04-21
 ------------------------
 - [ADDED] Batch algorithm for unsupervised and supervised SOM
