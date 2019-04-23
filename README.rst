@@ -57,7 +57,10 @@ The class structure is set up as follows:
     see `Citation`_ and in the `bibtex <bibliography.bib>`_ file
 
 :Documentation:
-    `read the docs <https://susi.readthedocs.io/en/latest/readme.html>`_
+    `read the docs <https://susi.readthedocs.io/en/latest/index.html>`_
+
+:Installation:
+    `Installation guidelines <https://susi.readthedocs.io/en/latest/install.html>`_
 
 :Paper:
     `arXiv:1903.11114 <https://arxiv.org/abs/1903.11114>`_
@@ -66,54 +69,17 @@ The class structure is set up as follows:
 Installation
 ------------
 
-With PyPi:
-
 .. code:: bash
 
     pip3 install susi
 
+More information can be found in the `installation guidelines <https://susi.readthedocs.io/en/latest/install.html>`_.
 
-Manually:
+Examples
+--------
 
-.. code:: bash
-
-    git clone https://github.com/felixriese/susi.git
-    cd susi/
-    python setup.py install
-
-.. role:: bash(code)
-   :language: bash
-
-.. role:: python(code)
-   :language: python3
-
-**Dependencies:** Python 3 with :python:`joblib`, :python:`numpy`, :python:`scikit-learn` and :python:`scipy`.
-
-Usage
------
-
-Regression in  :bash:`python3`:
-
-.. code:: python3
-
-    import susi
-
-    som = susi.SOMRegressor()
-    som.fit(X_train, y_train)
-    print(som.score(X_test, y_test))
-
-
-Classification in  :bash:`python3`:
-
-.. code:: python3
-
-    import susi
-
-    som = susi.SOMClassifier()
-    som.fit(X_train, y_train)
-    print(som.score(X_test, y_test))
-
-Code examples as Jupyter Notebooks:
+A collection of code examples can be found in `the documentation <https://susi.readthedocs.io/en/latest/examples.html>`_.
+Code examples as Jupyter Notebooks can be found here:
 
 * `examples/SOMClustering <examples/SOMClustering.ipynb>`_
 * `examples/SOMRegressor_Hyperspectral <examples/SOMRegressor_Hyperspectral.ipynb>`_

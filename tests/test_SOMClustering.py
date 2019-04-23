@@ -115,20 +115,26 @@ def test_decreasing_rate(a_1, a_2, max_it, curr_it, mode, expected):
     (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), "random"),
     (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), "random_data"),
     (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), "pca"),
+    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), "rrandom"),
 ])
 def test_init_unsuper_som(X, init_mode):
     som_clustering = susi.SOMClustering(init_mode_unsupervised=init_mode)
     som_clustering.X_ = X
-    som_clustering.init_unsuper_som()
 
-    # test type
-    assert isinstance(som_clustering.unsuper_som_, np.ndarray)
+    if init_mode in ["random", "random_data", "pca"]:
+        som_clustering.init_unsuper_som()
 
-    # test shape
-    n_rows = som_clustering.n_rows
-    n_columns = som_clustering.n_columns
-    assert som_clustering.unsuper_som_.shape == (n_rows, n_columns, X.shape[1])
+        # test type
+        assert isinstance(som_clustering.unsuper_som_, np.ndarray)
 
+        # test shape
+        n_rows = som_clustering.n_rows
+        n_columns = som_clustering.n_columns
+        assert som_clustering.unsuper_som_.shape == (n_rows, n_columns, X.shape[1])
+
+    else:
+        with pytest.raises(Exception):
+            som_clustering.init_unsuper_som()
 
 @pytest.mark.parametrize("som_array,datapoint,expected", [
     (np.array([[[0., 1.1, 2.1], [0.3, 2.1, 1.1]],

@@ -17,23 +17,22 @@ It includes a fully functional SOM for unsupervised and supervised tasks.
 
 :Citation: see `Citation <https://github.com/felixriese/susi#citation>`_ and in the `bibtex <https://github.com/felixriese/susi/blob/master/bibliography.bib>`_ file
 
-
-:Documentation:
-    `read the docs <https://susi.readthedocs.io/en/latest/readme.html>`_
-
 :Paper:
     `arXiv:1903.11114 <https://arxiv.org/abs/1903.11114>`_
 
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
    Home <self>
 
    Overview <readme.rst>
 
    Changelog <changelog.rst>
+
+   Installation <install.rst>
+
+   Examples <examples.rst>
 
 .. toctree::
    :maxdepth: 2
