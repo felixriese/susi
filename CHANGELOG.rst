@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-[1.0.5] - 2019-XX-XX
+[1.0.5] - 2019-04-23
 ------------------------
 - [ADDED] PCA initialization of the SOM weights with 2 principal components
 - [ADDED] Variable variance

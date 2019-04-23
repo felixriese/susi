@@ -54,10 +54,10 @@ The class structure is set up as follows:
     `Felix M. Riese <mailto:github@felixriese.de>`_
 
 :Citation:
-    see `Citation`_ and in the `bibtex <bibliography.bib>`_ file
+    see `Citation`_ and in the `bibtex <https://github.com/felixriese/susi/blob/master/bibliography.bib>`_ file
 
 :Documentation:
-    `read the docs <https://susi.readthedocs.io/en/latest/index.html>`_
+    `Documentation <https://susi.readthedocs.io/en/latest/index.html>`_
 
 :Installation:
     `Installation guidelines <https://susi.readthedocs.io/en/latest/install.html>`_
@@ -81,15 +81,15 @@ Examples
 A collection of code examples can be found in `the documentation <https://susi.readthedocs.io/en/latest/examples.html>`_.
 Code examples as Jupyter Notebooks can be found here:
 
-* `examples/SOMClustering <examples/SOMClustering.ipynb>`_
-* `examples/SOMRegressor_Hyperspectral <examples/SOMRegressor_Hyperspectral.ipynb>`_
-* `examples/SOMClassifier <examples/SOMClassifier.ipynb>`_
-* `examples/SOMClassifier_Salinas <examples/SOMClassifier_Salinas.ipynb>`_
+* `examples/SOMClustering <https://github.com/felixriese/susi/blob/master/examples/SOMClustering.ipynb>`_
+* `examples/SOMRegressor_Hyperspectral <https://github.com/felixriese/susi/blob/master/examples/SOMRegressor_Hyperspectral.ipynb>`_
+* `examples/SOMClassifier <https://github.com/felixriese/susi/blob/master/examples/SOMClassifier.ipynb>`_
+* `examples/SOMClassifier_Salinas <https://github.com/felixriese/susi/blob/master/examples/SOMClassifier_Salinas.ipynb>`_
 
 Citation
 --------
 
-The bibtex file including both references is available `here <bibliography.bib>`_.
+The bibtex file including both references is available `here <https://github.com/felixriese/susi/blob/master/bibliography.bib>`_.
 
 **Paper:**
 
