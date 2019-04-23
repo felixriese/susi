@@ -358,3 +358,9 @@ def test_get_clusters():
     clusters = som.get_clusters(X)
     assert(len(clusters) == len(X))
     assert(len(clusters[0]) == 2)
+
+
+def test_calc_variances():
+    som = susi.SOMClustering()
+    som.fit(X)
+    assert len(som.variances_) == X.shape[1]

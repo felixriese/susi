@@ -210,6 +210,9 @@ class SOMClustering():
 
     bmus_ :  list of (int, int) tuples
         List of best matching units (BMUs) of the dataset X
+
+    variances_ : array of float
+        Standard deviations of every feature
     """
 
     def __init__(self,
@@ -364,6 +367,8 @@ class SOMClustering():
         else:
             raise ValueError("Unsupervised mode not implemented:",
                              self.train_mode_unsupervised)
+
+        self.calc_variances()
 
     def calc_learning_rate(self, curr_it, mode):
         """Calculate learning rate alpha with 0 <= alpha <= 1.
@@ -883,6 +888,18 @@ class SOMClustering():
             return np.min(meanlist)
         elif self.u_mean_mode_ == "max":
             return np.max(meanlist)
+
+    def calc_variances(self):
+        """Calculate standard deviation for all features of the dataset `X`.
+
+        These deviations can be used as measure for a feature importance or
+        a variable significance.
+
+        """
+        std = np.std(self.unsuper_som_.reshape(
+            (self.n_rows*self.n_columns, self.X_.shape[1])), axis=0)
+        std = std / np.linalg.norm(std)
+        self.variances_ = std
 
 
 class SOMEstimator(SOMClustering, BaseEstimator, ABC):
