@@ -877,7 +877,6 @@ class SOMClustering():
             Mean value
 
         """
-        print(nodelist)
         meanlist = [self.u_matrix[u_node] for u_node in nodelist]
 
         if self.u_mean_mode_ == "mean":
@@ -898,7 +897,7 @@ class SOMClustering():
         """
         std = np.std(self.unsuper_som_.reshape(
             (self.n_rows*self.n_columns, self.X_.shape[1])), axis=0)
-        std = std / np.linalg.norm(std)
+        std = std / np.linalg.norm(std.flatten(), axis=0)
         self.variances_ = std
 
 
@@ -1228,8 +1227,6 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
                     dist_weight_matrix=dist_weight_matrix,
                     true_vector=self.y_[dp],
                     learningrate=learning_rate)
-
-                # print(np.min(self.super_som_), np.max(self.super_som_))
 
         elif self.train_mode_supervised == "batch":
             for it in range(self.n_iter_supervised):
