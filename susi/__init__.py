@@ -301,6 +301,8 @@ class SOMClustering():
         ----------
         X : array-like matrix of shape = [n_samples, n_features]
             The training input samples.
+        y : None
+            Not used in this class.
 
         Returns
         -------

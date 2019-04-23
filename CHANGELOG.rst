@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+[1.0.6] - 2019-XX-XX
+------------------------
+- [FIXED] Code looks better in documentation with sphinx.ext.napoleon
+
+
 [1.0.5] - 2019-04-23
 ------------------------
 - [ADDED] PCA initialization of the SOM weights with 2 principal components
