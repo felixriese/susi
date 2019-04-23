@@ -35,8 +35,8 @@ In  :bash:`python3`:
     print(som.score(X_test, y_test))
 
 
-More code examples
-------------------
+More examples
+-------------
 
 * `examples/SOMClustering <https://github.com/felixriese/susi/blob/master/examples/SOMClustering.ipynb>`_
 * `examples/SOMRegressor_Hyperspectral <https://github.com/felixriese/susi/blob/master/examples/SOMRegressor_Hyperspectral.ipynb>`_

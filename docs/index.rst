@@ -15,20 +15,20 @@ It includes a fully functional SOM for unsupervised and supervised tasks.
 :Author:
     `Felix M. Riese <mailto:github@felixriese.de>`_
 
-:Citation: see `Citation <https://github.com/felixriese/susi#citation>`_ and in the `bibtex <https://github.com/felixriese/susi/blob/master/bibliography.bib>`_ file
+:Citation: see `Citation <citation.rst>`_ and in the `bibtex <https://github.com/felixriese/susi/blob/master/bibliography.bib>`_ file
 
 :Paper:
     `arXiv:1903.11114 <https://arxiv.org/abs/1903.11114>`_
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    Home <self>
 
-   Overview <readme.rst>
-
    Changelog <changelog.rst>
+
+   Citation <citation.rst>
 
    Installation <install.rst>
 
