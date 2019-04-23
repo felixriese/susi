@@ -54,10 +54,13 @@ The class structure is set up as follows:
     `Felix M. Riese <mailto:github@felixriese.de>`_
 
 :Citation:
-    see `Citation`_ and in the `bibtex <bibliography.bib>`_ file
+    see `Citation`_ and in the `bibtex <https://github.com/felixriese/susi/blob/master/bibliography.bib>`_ file
 
 :Documentation:
-    `read the docs <https://susi.readthedocs.io/en/latest/readme.html>`_
+    `Documentation <https://susi.readthedocs.io/en/latest/index.html>`_
+
+:Installation:
+    `Installation guidelines <https://susi.readthedocs.io/en/latest/install.html>`_
 
 :Paper:
     `arXiv:1903.11114 <https://arxiv.org/abs/1903.11114>`_
@@ -66,64 +69,27 @@ The class structure is set up as follows:
 Installation
 ------------
 
-With PyPi:
-
 .. code:: bash
 
     pip3 install susi
 
+More information can be found in the `installation guidelines <https://susi.readthedocs.io/en/latest/install.html>`_.
 
-Manually:
+Examples
+--------
 
-.. code:: bash
+A collection of code examples can be found in `the documentation <https://susi.readthedocs.io/en/latest/examples.html>`_.
+Code examples as Jupyter Notebooks can be found here:
 
-    git clone https://github.com/felixriese/susi.git
-    cd susi/
-    python setup.py install
-
-.. role:: bash(code)
-   :language: bash
-
-.. role:: python(code)
-   :language: python3
-
-**Dependencies:** Python 3 with :python:`joblib`, :python:`numpy`, :python:`scikit-learn` and :python:`scipy`.
-
-Usage
------
-
-Regression in  :bash:`python3`:
-
-.. code:: python3
-
-    import susi
-
-    som = susi.SOMRegressor()
-    som.fit(X_train, y_train)
-    print(som.score(X_test, y_test))
-
-
-Classification in  :bash:`python3`:
-
-.. code:: python3
-
-    import susi
-
-    som = susi.SOMClassifier()
-    som.fit(X_train, y_train)
-    print(som.score(X_test, y_test))
-
-Code examples as Jupyter Notebooks:
-
-* `examples/SOMClustering <examples/SOMClustering.ipynb>`_
-* `examples/SOMRegressor_Hyperspectral <examples/SOMRegressor_Hyperspectral.ipynb>`_
-* `examples/SOMClassifier <examples/SOMClassifier.ipynb>`_
-* `examples/SOMClassifier_Salinas <examples/SOMClassifier_Salinas.ipynb>`_
+* `examples/SOMClustering <https://github.com/felixriese/susi/blob/master/examples/SOMClustering.ipynb>`_
+* `examples/SOMRegressor_Hyperspectral <https://github.com/felixriese/susi/blob/master/examples/SOMRegressor_Hyperspectral.ipynb>`_
+* `examples/SOMClassifier <https://github.com/felixriese/susi/blob/master/examples/SOMClassifier.ipynb>`_
+* `examples/SOMClassifier_Salinas <https://github.com/felixriese/susi/blob/master/examples/SOMClassifier_Salinas.ipynb>`_
 
 Citation
 --------
 
-The bibtex file including both references is available `here <bibliography.bib>`_.
+The bibtex file including both references is available `here <https://github.com/felixriese/susi/blob/master/bibliography.bib>`_.
 
 **Paper:**
 

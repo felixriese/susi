@@ -114,27 +114,27 @@ def test_decreasing_rate(a_1, a_2, max_it, curr_it, mode, expected):
 @pytest.mark.parametrize("X,init_mode", [
     (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), "random"),
     (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), "random_data"),
-    # (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), "pca"),
+    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), "pca"),
+    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), "rrandom"),
 ])
 def test_init_unsuper_som(X, init_mode):
     som_clustering = susi.SOMClustering(init_mode_unsupervised=init_mode)
     som_clustering.X_ = X
-    som_clustering.init_unsuper_som()
 
-    # test type
-    assert isinstance(som_clustering.unsuper_som_, np.ndarray)
-
-    # test shape
-    n_rows = som_clustering.n_rows
-    n_columns = som_clustering.n_columns
-    assert som_clustering.unsuper_som_.shape == (n_rows, n_columns, X.shape[1])
-
-    # TODO remove after PCA init implementation:
-    with pytest.raises(Exception):
-        som_clustering = susi.SOMClustering(init_mode_unsupervised="pca")
-        som_clustering.X_ = X
+    if init_mode in ["random", "random_data", "pca"]:
         som_clustering.init_unsuper_som()
 
+        # test type
+        assert isinstance(som_clustering.unsuper_som_, np.ndarray)
+
+        # test shape
+        n_rows = som_clustering.n_rows
+        n_columns = som_clustering.n_columns
+        assert som_clustering.unsuper_som_.shape == (n_rows, n_columns, X.shape[1])
+
+    else:
+        with pytest.raises(Exception):
+            som_clustering.init_unsuper_som()
 
 @pytest.mark.parametrize("som_array,datapoint,expected", [
     (np.array([[[0., 1.1, 2.1], [0.3, 2.1, 1.1]],
@@ -364,3 +364,9 @@ def test_get_clusters():
     clusters = som.get_clusters(X)
     assert(len(clusters) == len(X))
     assert(len(clusters[0]) == 2)
+
+
+def test_calc_variances():
+    som = susi.SOMClustering()
+    som.fit(X)
+    assert len(som.variances_) == X.shape[1]

@@ -7,11 +7,12 @@ import numpy as np
 import scipy.spatial.distance as dist
 from scipy.special import softmax
 from sklearn.base import BaseEstimator, RegressorMixin, ClassifierMixin
-from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
-from sklearn.utils.fixes import parallel_helper
-from sklearn.utils import class_weight
+from sklearn.decomposition import PCA
 from sklearn.preprocessing import binarize, LabelBinarizer
+from sklearn.utils import class_weight
+from sklearn.utils.fixes import parallel_helper
 from sklearn.utils.multiclass import check_classification_targets
+from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 
 
 def decreasing_rate(a_1, a_2, iteration_max, iteration, mode):
@@ -209,6 +210,9 @@ class SOMClustering():
 
     bmus_ :  list of (int, int) tuples
         List of best matching units (BMUs) of the dataset X
+
+    variances_ : array of float
+        Standard deviations of every feature
     """
 
     def __init__(self,
@@ -266,9 +270,23 @@ class SOMClustering():
             som = som_list.reshape(
                 self.n_rows, self.n_columns, self.X_.shape[1])
 
-        # elif self.init_mode_unsupervised == "pca":
-        #     # TODO implement PCA initialization of unsupervised SOM
-        #     pass
+        elif self.init_mode_unsupervised == "pca":
+
+            # fixed number of components
+            pca = PCA(n_components=2, random_state=self.random_state)
+
+            pca_comp = pca.fit(self.X_).components_
+
+            a_row = np.linspace(-1., 1., self.n_rows)
+            a_col = np.linspace(-1., 1., self.n_columns)
+
+            som = np.zeros(
+                shape=(self.n_rows, self.n_columns, self.X_.shape[1]))
+
+            for node in self.node_list_:
+                som[node[0], node[1], :] = np.add(
+                    np.multiply(a_row[node[0]], pca_comp[0]),
+                    np.multiply(a_col[node[1]], pca_comp[1]))
 
         else:
             raise ValueError("Invalid init_mode_unsupervised: "+str(
@@ -349,6 +367,8 @@ class SOMClustering():
         else:
             raise ValueError("Unsupervised mode not implemented:",
                              self.train_mode_unsupervised)
+
+        self.calc_variances()
 
     def calc_learning_rate(self, curr_it, mode):
         """Calculate learning rate alpha with 0 <= alpha <= 1.
@@ -857,7 +877,6 @@ class SOMClustering():
             Mean value
 
         """
-        print(nodelist)
         meanlist = [self.u_matrix[u_node] for u_node in nodelist]
 
         if self.u_mean_mode_ == "mean":
@@ -868,6 +887,18 @@ class SOMClustering():
             return np.min(meanlist)
         elif self.u_mean_mode_ == "max":
             return np.max(meanlist)
+
+    def calc_variances(self):
+        """Calculate standard deviation for all features of the dataset `X`.
+
+        These deviations can be used as measure for a feature importance or
+        a variable significance.
+
+        """
+        std = np.std(self.unsuper_som_.reshape(
+            (self.n_rows*self.n_columns, self.X_.shape[1])), axis=0)
+        std = std / np.linalg.norm(std.flatten(), axis=0)
+        self.variances_ = std
 
 
 class SOMEstimator(SOMClustering, BaseEstimator, ABC):
@@ -1196,8 +1227,6 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
                     dist_weight_matrix=dist_weight_matrix,
                     true_vector=self.y_[dp],
                     learningrate=learning_rate)
-
-                # print(np.min(self.super_som_), np.max(self.super_som_))
 
         elif self.train_mode_supervised == "batch":
             for it in range(self.n_iter_supervised):
