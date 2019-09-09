@@ -1092,6 +1092,14 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         np.random.seed(seed=self.random_state)
 
+        # supervised case
+        if self.missing_label_placeholder is None:
+            self.labeled_indices_ = list(range(len(self.y_)))
+        else:
+            self.labeled_indices_ = np.where(
+                self.y_ != self.missing_label_placeholder)[0]
+
+        # train SOMs
         self.train_unsupervised_som()
         self.train_supervised_som()
 
@@ -1206,8 +1214,8 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         elif self.train_mode_supervised == "batch":
             return self.modify_weight_matrix_batch(
                 som_array=self.super_som_,
-                dist_weight_matrix=dist_weight_matrix,
-                data=self.y_)
+                dist_weight_matrix=dist_weight_matrix[self.labeled_indices_],
+                data=self.y_[self.labeled_indices_])
 
     def train_supervised_som(self):
         """Train supervised SOM."""
@@ -1219,7 +1227,6 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
             for it in range(self.n_iter_supervised):
 
                 # select one input vector & calculate best matching unit (BMU)
-                # dp = np.random.randint(low=0, high=len(self.y_))
                 dp = self.get_random_datapoint()
                 bmu_pos = self.bmus_[dp]
 
@@ -1394,6 +1401,10 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
     nbh_dist_weight_mode : str, optional (default="pseudo-gaussian")
         Formula of the neighborhood distance weight
 
+    missing_label_placeholder : int or str or None, optional (default=None)
+        Label placeholder for datapoints with no label. This is needed for
+        semi-supervised learning.
+
     do_class_weighting : bool, optional (default=True)
         If true, classes are weighted.
 
@@ -1455,6 +1466,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
                  learning_rate_start=0.5,
                  learning_rate_end=0.05,
                  nbh_dist_weight_mode: str = "pseudo-gaussian",
+                 missing_label_placeholder=None,
                  do_class_weighting=True,
                  n_jobs=None,
                  random_state=None,
@@ -1476,6 +1488,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
                          learning_rate_start,
                          learning_rate_end,
                          nbh_dist_weight_mode,
+                         missing_label_placeholder,
                          n_jobs,
                          random_state,
                          verbose)
@@ -1589,6 +1602,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
             return new_matrix.reshape((self.n_rows, self.n_columns, 1))
 
         elif self.train_mode_supervised == "batch":
+            # transform labels
             lb = LabelBinarizer()
             y_bin = lb.fit_transform(self.y_)
 
@@ -1596,17 +1610,14 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
             numerator = np.sum(
                 [np.multiply(y_bin[i], dist_weight_matrix[i].reshape(
                     (self.n_rows, self.n_columns, 1)))
-                    for i in range(len(self.y_))], axis=0)
+                    for i in self.labeled_indices_], axis=0)
 
             # update weights
-            # old_som = np.copy(self.super_som_)
             new_som = lb.inverse_transform(
                 softmax(numerator, axis=2).reshape(
                     (self.n_rows*self.n_columns, y_bin.shape[1]))).reshape(
                     (self.n_rows, self.n_columns, 1))
 
-            # overwrite new nans with old entries
-            # new_som[np.isnan(new_som)] = old_som[np.isnan(new_som)]
             return new_som
 
     def change_class_proba(self, learningrate, dist_weight_matrix,
@@ -1635,13 +1646,3 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         random_matrix = np.random.rand(self.n_rows, self.n_columns, 1)
         change_class_bool = random_matrix < change_class_proba
         return change_class_bool
-
-
-# class SOMSemiEstimator(SOMEstimator, BaseEstimator, ABC):
-#     """Basic class for semi-supervised self-organizing maps."""
-#     pass
-
-
-# class SOMSemiRegressor(SOMRegressor, SOMSemiEstimator, RegressorMixin):
-#     """Semi-supervised SOM for regression."""
-#     pass
