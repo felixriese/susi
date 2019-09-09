@@ -956,6 +956,10 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
     nbh_dist_weight_mode : str, optional (default="pseudo-gaussian")
         Formula of the neighborhood distance weight
 
+    missing_label_placeholder : int or str or None, optional (default=None)
+        Label placeholder for datapoints with no label. This is needed for
+        semi-supervised learning.
+
     n_jobs : int or None, optional (default=None)
         The number of jobs to run in parallel.
 
@@ -1013,6 +1017,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
                  learning_rate_start=0.5,
                  learning_rate_end=0.05,
                  nbh_dist_weight_mode: str = "pseudo-gaussian",
+                 missing_label_placeholder=None,
                  n_jobs=None,
                  random_state=None,
                  verbose=0):
@@ -1037,6 +1042,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         self.train_mode_supervised = train_mode_supervised
         self.neighborhood_mode_supervised = neighborhood_mode_supervised
         self.learn_mode_supervised = learn_mode_supervised
+        self.missing_label_placeholder = missing_label_placeholder
 
     @abstractmethod
     def init_super_som(self):
@@ -1213,7 +1219,8 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
             for it in range(self.n_iter_supervised):
 
                 # select one input vector & calculate best matching unit (BMU)
-                dp = np.random.randint(low=0, high=len(self.y_))
+                # dp = np.random.randint(low=0, high=len(self.y_))
+                dp = self.get_random_datapoint()
                 bmu_pos = self.bmus_[dp]
 
                 # calculate learning rate and neighborhood function
@@ -1292,6 +1299,13 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         """
         return self.super_som_
+
+    def get_random_datapoint(self):
+        if self.missing_label_placeholder is not None:
+            return np.random.choice(
+                np.where(self.y_ != self.missing_label_placeholder)[0])
+        else:
+            return np.random.randint(low=0, high=len(self.y_))
 
 
 class SOMRegressor(SOMEstimator, RegressorMixin):
@@ -1621,3 +1635,13 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         random_matrix = np.random.rand(self.n_rows, self.n_columns, 1)
         change_class_bool = random_matrix < change_class_proba
         return change_class_bool
+
+
+# class SOMSemiEstimator(SOMEstimator, BaseEstimator, ABC):
+#     """Basic class for semi-supervised self-organizing maps."""
+#     pass
+
+
+# class SOMSemiRegressor(SOMRegressor, SOMSemiEstimator, RegressorMixin):
+#     """Semi-supervised SOM for regression."""
+#     pass
