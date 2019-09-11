@@ -17,6 +17,7 @@ sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import susi
 
+# define test dataset
 iris = load_iris()
 X_train, X_test, y_train, y_test = train_test_split(
     iris.data, iris.target, test_size=0.3, random_state=42)
@@ -25,6 +26,12 @@ X_train, X_test, y_train, y_test = train_test_split(
 scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
+
+# data with missing labels -> semi-supervised
+rng = np.random.RandomState(42)
+random_unlabeled_points = rng.rand(len(y_train)) < 0.5
+y_train_semi = np.copy(y_train)
+y_train_semi[random_unlabeled_points] = -1
 
 # SOM variables
 TRAIN_MODES = ["online", "batch"]
@@ -122,3 +129,18 @@ def test_fit(train_mode_unsupervised, train_mode_supervised):
 
 def test_estimator_status():
     check_estimator(susi.SOMClassifier)
+
+
+@pytest.mark.parametrize(
+    "train_mode_unsupervised,train_mode_supervised",
+    itertools.product(TRAIN_MODES, TRAIN_MODES))
+def test_fit_semi(train_mode_unsupervised, train_mode_supervised):
+    som = susi.SOMClassifier(
+        n_rows=5,
+        n_columns=5,
+        train_mode_unsupervised=train_mode_unsupervised,
+        train_mode_supervised=train_mode_supervised,
+        missing_label_placeholder=-1,
+        random_state=3)
+    som.fit(X_train, y_train_semi)
+    assert(som.score(X_test, y_test) > 0.5)

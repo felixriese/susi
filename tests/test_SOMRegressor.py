@@ -27,6 +27,12 @@ scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train_orig)
 X_test = scaler.transform(X_test_orig)
 
+# data with missing labels -> semi-supervised
+rng = np.random.RandomState(42)
+random_unlabeled_points = rng.rand(len(y_train)) < 0.5
+y_train_semi = np.copy(y_train)
+y_train_semi[random_unlabeled_points] = -1
+
 # SOM variables
 TRAIN_MODES = ["online", "batch"]
 
@@ -115,3 +121,23 @@ def test_mexicanhat_nbh_dist_weight_mode():
     with pytest.raises(Exception):
         som = susi.SOMRegressor(nbh_dist_weight_mode="pseudogaussian")
         som.fit(X_train, y_train)
+
+
+@pytest.mark.parametrize(
+    "train_mode_unsupervised,train_mode_supervised",
+    itertools.product(TRAIN_MODES, TRAIN_MODES))
+def test_semisupervised_regressor(train_mode_unsupervised,
+                                  train_mode_supervised):
+    som_reg = susi.SOMRegressor(
+        n_rows=3,
+        n_columns=3,
+        train_mode_unsupervised=train_mode_unsupervised,
+        train_mode_supervised=train_mode_supervised,
+        n_iter_unsupervised=100,
+        n_iter_supervised=100,
+        missing_label_placeholder=-1,
+        random_state=42)
+
+    som_reg.fit(X_train, y_train_semi)
+    y_pred = som_reg.predict(X_test)
+    assert(y_pred.shape == y_test.shape)

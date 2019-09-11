@@ -71,7 +71,7 @@ Installation
 
 .. code:: bash
 
-    pip3 install susi
+    pip install susi
 
 More information can be found in the `installation guidelines <https://susi.readthedocs.io/en/latest/install.html>`_.
 
@@ -83,8 +83,10 @@ Code examples as Jupyter Notebooks can be found here:
 
 * `examples/SOMClustering <https://github.com/felixriese/susi/blob/master/examples/SOMClustering.ipynb>`_
 * `examples/SOMRegressor_Hyperspectral <https://github.com/felixriese/susi/blob/master/examples/SOMRegressor_Hyperspectral.ipynb>`_
+* `examples/SOMRegressor_semisupervised <https://github.com/felixriese/susi/blob/master/examples/SOMRegressor_semisupervised.ipynb>`_
 * `examples/SOMClassifier <https://github.com/felixriese/susi/blob/master/examples/SOMClassifier.ipynb>`_
 * `examples/SOMClassifier_Salinas <https://github.com/felixriese/susi/blob/master/examples/SOMClassifier_Salinas.ipynb>`_
+* `examples/SOMClassifier_semisupervised <https://github.com/felixriese/susi/blob/master/examples/SOMClassifier_semisupervised.ipynb>`_
 
 Citation
 --------
@@ -101,7 +103,6 @@ Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regress
         author = {Riese, Felix~M. and Keller, Sina},
         title = {SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python},
         year = {2019},
-        notes = {Submitted to an ISPRS conference},
         archivePrefix = {arXiv},
         eprint = {1903.11114},
         primaryClass = {cs.LG},

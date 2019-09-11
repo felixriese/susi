@@ -10,12 +10,11 @@ Installation
 Dependencies
 ------------
 
-Python 3 (install e.g. via `Anaconda <https://www.anaconda.com>`_) with the following packages:
+Install Python 3, e.g. via `Anaconda <https://www.anaconda.com>`_.
 
-* :python:`joblib`
-* :python:`numpy`
-* :python:`scikit-learn`
-* :python:`scipy`.
+Install the required packages:
+
+    conda install --file requirements.txt
 
 
 Install via PyPi
@@ -23,7 +22,7 @@ Install via PyPi
 
 .. code:: bash
 
-    pip3 install susi
+    pip install susi
 
 
 Install without PyPi
