@@ -4,13 +4,17 @@ numpy==1.15.4
 scikit-learn==0.20.0
 scipy==1.2.0
 
+# for the examples
+notebook>=6.0.0
+
 # for testing
-pytest
+pytest>=5.1.1
 pytest-cov
 codecov
+nbval>=0.9.2
 
 # for the documentation
-sphinx==1.8.2
+sphinx>=1.8.2
 sphinx-autobuild
 numpydoc
 sphinx_rtd_theme
