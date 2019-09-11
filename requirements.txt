@@ -5,7 +5,7 @@ scikit-learn==0.20.0
 scipy==1.2.0
 
 # for the examples
-notebook>=5.7.8
+notebook>=6.0.0
 matplotlib
 seaborn
 pandas
