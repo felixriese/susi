@@ -71,7 +71,7 @@ Installation
 
 .. code:: bash
 
-    pip3 install susi
+    pip install susi
 
 More information can be found in the `installation guidelines <https://susi.readthedocs.io/en/latest/install.html>`_.
 
@@ -103,7 +103,6 @@ Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regress
         author = {Riese, Felix~M. and Keller, Sina},
         title = {SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python},
         year = {2019},
-        notes = {Submitted to an ISPRS conference},
         archivePrefix = {arXiv},
         eprint = {1903.11114},
         primaryClass = {cs.LG},
