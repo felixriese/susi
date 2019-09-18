@@ -31,18 +31,18 @@
 SUSI: SUpervised Self-organIzing maps in Python
 ===============================================
 
-Python package for unsupervised and supervised self-organizing maps (SOM)
+Python package for unsupervised, supervised and semi-supervised self-organizing maps (SOM)
 
 Description
 -----------
 
 We present the SUSI package for Python.
-It includes a fully functional SOM for unsupervised and supervised tasks.
+It includes a fully functional SOM for unsupervised, supervised and semi-supervised tasks.
 The class structure is set up as follows:
 
 - SOMClustering: Unsupervised SOM for clustering
 
-  - SOMEstimator: Base class for supervised SOMs
+  - SOMEstimator: Base class for supervised and semi-supervised SOMs
 
     - SOMRegressor: Regression SOM
     - SOMClassifier: Classification SOM

@@ -17,7 +17,7 @@ setuptools.setup(
     version="1.0.6",
     author="Felix M. Riese",
     author_email="github@felixriese.de",
-    description="Python package for unsupervised and supervised self-organizing maps (SOM)",
+    description="Python package for unsupervised, supervised and semi-supervised self-organizing maps (SOM)",
     long_description=long_description,
     long_description_content_type="text/x-rst",
     url="https://github.com/felixriese/susi",

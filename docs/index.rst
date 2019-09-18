@@ -7,7 +7,7 @@ Welcome to SUSI's documentation!
 ================================
 
 We present the SUSI package for Python.
-It includes a fully functional SOM for unsupervised and supervised tasks.
+It includes a fully functional SOM for unsupervised, supervised and semi-supervised tasks.
 
 :License:
     `3-Clause BSD license <https://github.com/felixriese/susi/blob/master/LICENSE>`_
@@ -35,7 +35,7 @@ It includes a fully functional SOM for unsupervised and supervised tasks.
    Examples <examples.rst>
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Code:
 
     SOMClustering <SOMClustering.rst>
@@ -45,3 +45,5 @@ It includes a fully functional SOM for unsupervised and supervised tasks.
     SOMRegressor <SOMRegressor.rst>
 
     SOMClassifier <SOMClassifier.rst>
+
+    OtherCode <OtherCode.rst>

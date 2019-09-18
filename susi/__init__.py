@@ -1,4 +1,5 @@
-"""Basic class for self-organizing maps."""
+"""SUSI: Python package for unsupervised, supervised and semi-supervised
+self-organizing maps (SOM)."""
 
 from abc import ABC, abstractmethod
 import itertools
@@ -1294,7 +1295,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         """Return SOM grid with the estimated value on each node.
 
         Examples
-        --------.
+        --------
         Fit the SOM on your data `X, y`:
 
         >>> import susi
@@ -1308,6 +1309,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         return self.super_som_
 
     def get_random_datapoint(self):
+        """Find and return random datapoint from labeled dataset."""
         if self.missing_label_placeholder is not None:
             return np.random.choice(
                 np.where(self.y_ != self.missing_label_placeholder)[0])
@@ -1319,7 +1321,7 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
     """Supervised SOM for estimating continuous variables (= regression)."""
 
     def init_super_som(self):
-        """Initialize map."""
+        """Initialize map for regression."""
 
         self.max_iterations_ = self.n_iter_supervised
 
