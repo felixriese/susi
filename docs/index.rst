@@ -46,4 +46,4 @@ It includes a fully functional SOM for unsupervised, supervised and semi-supervi
 
     SOMClassifier <SOMClassifier.rst>
 
-    OtherCode <OtherCode.rst>
+    Other Code <OtherCode.rst>

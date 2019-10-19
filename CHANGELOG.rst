@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+[1.0.7] - coming soon
+------------------------
+- [FIXED] Semi-supervised classification handling
+
 [1.0.6] - 2019-09-11
 ------------------------
 - [ADDED] Semi-supervised abilities for classifier and regressor

@@ -162,7 +162,9 @@ class SOMClustering():
         Learning mode of the unsupervised SOM
 
     distance_metric : str, optional (default="euclidean")
-        Distance metric to compare on feature level (not SOM grid)
+        Distance metric to compare on feature level (not SOM grid).
+        Possible metrics: {"euclidean", "manhattan", "mahalanobis",
+        "tanimoto"}. Note that "tanimoto" tends to be slow.
 
     learning_rate_start : float, optional (default=0.5)
         Learning rate start value
@@ -171,7 +173,8 @@ class SOMClustering():
         Learning rate end value (only needed for some lr definitions)
 
     nbh_dist_weight_mode : str, optional (default="pseudo-gaussian")
-        Formula of the neighborhood distance weight
+        Formula of the neighborhood distance weight. Possible formulas
+        are: {"pseudo-gaussian", "mexican-hat"}.
 
     n_jobs : int or None, optional (default=None)
         The number of jobs to run in parallel.
@@ -946,7 +949,9 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         Learning mode of the supervised SOM
 
     distance_metric : str, optional (default="euclidean")
-        Distance metric to compare on feature level (not SOM grid)
+        Distance metric to compare on feature level (not SOM grid).
+        Possible metrics: {"euclidean", "manhattan", "mahalanobis",
+        "tanimoto"}. Note that "tanimoto" tends to be slow.
 
     learning_rate_start : float, optional (default=0.5)
         Learning rate start value
@@ -955,7 +960,8 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         Learning rate end value (only needed for some lr definitions)
 
     nbh_dist_weight_mode : str, optional (default="pseudo-gaussian")
-        Formula of the neighborhood distance weight
+        Formula of the neighborhood distance weight. Possible formulas
+        are: {"pseudo-gaussian", "mexican-hat"}.
 
     missing_label_placeholder : int or str or None, optional (default=None)
         Label placeholder for datapoints with no label. This is needed for
@@ -1392,7 +1398,9 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         Learning mode of the classification SOM
 
     distance_metric : str, optional (default="euclidean")
-        Distance metric to compare on feature level (not SOM grid)
+        Distance metric to compare on feature level (not SOM grid).
+        Possible metrics: {"euclidean", "manhattan", "mahalanobis",
+        "tanimoto"}. Note that "tanimoto" tends to be slow.
 
     learning_rate_start : float, optional (default=0.5)
         Learning rate start value
@@ -1401,7 +1409,8 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         Learning rate end value (only needed for some lr definitions)
 
     nbh_dist_weight_mode : str, optional (default="pseudo-gaussian")
-        Formula of the neighborhood distance weight
+        Formula of the neighborhood distance weight. Possible formulas
+        are: {"pseudo-gaussian", "mexican-hat"}.
 
     missing_label_placeholder : int or str or None, optional (default=None)
         Label placeholder for datapoints with no label. This is needed for
@@ -1448,6 +1457,9 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
     bmus_ :  list of (int, int) tuples
         List of best matching units (BMUs) of the dataset X
+
+    placeholder_dict_ : dict
+        Dict of placeholders for initializing nodes without mapped class.
 
     """
 
@@ -1499,14 +1511,31 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
     def init_super_som(self):
         """Initialize map."""
 
+        # define placeholders
+        self.placeholder_dict_ = {
+            "str": "PLACEHOLDER",
+            "int": -999999,
+            "float": -99.999,
+        }
+
+        # get class information
         self.classes_, self.class_counts_ = np.unique(
-            self.y_, return_counts=True)
+            self.y_[self.labeled_indices_], return_counts=True)
         self.class_dtype_ = type(self.y_.flatten()[0])
+        self.setPlaceholder()
+
+        # check if forbidden class name exists in classes
+        if self.placeholder_ in self.classes_:
+            raise ValueError("Forbidden class:", self.placeholder_)
+        if self.placeholder_ == self.missing_label_placeholder:
+            raise ValueError("Forbidden missing_label_placeholder:",
+                             self.missing_label_placeholder)
 
         # class weighting:
         if self.do_class_weighting:
             self.class_weights_ = class_weight.compute_class_weight(
-                'balanced', np.unique(self.y_), self.y_.flatten())
+                'balanced', np.unique(self.y_[self.labeled_indices_]),
+                self.y_[self.labeled_indices_].flatten())
         else:
             self.class_weights_ = np.ones(shape=self.classes_.shape)
 
@@ -1515,7 +1544,8 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
             # define dtype
             if self.class_dtype_ in [str, np.str, np.str_]:
-                init_dtype = "U" + str(len(max(np.unique(self.y_), key=len)))
+                init_dtype = "U" + str(len(max(np.unique(
+                    self.y_[self.labeled_indices_]), key=len)))
             else:
                 init_dtype = self.class_dtype_
             som = np.empty((self.n_rows, self.n_columns, 1),
@@ -1523,18 +1553,36 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
             for node in self.node_list_:
                 dp_in_node = self.get_datapoints_from_node(node)
+
+                # if no datapoint with label is mapped on this node:
+                node_class = self.placeholder_
+
+                # if at least one datapoint with label is mapped to this node:
                 if dp_in_node != []:
-                    node_class = np.argmax(
-                        np.unique(self.y_.flatten()[dp_in_node],
-                                  return_counts=True)[1])
-                else:
-                    node_class = -1
+                    y_in_node = self.y_.flatten()[dp_in_node]
+                    if not any(y_in_node == self.missing_label_placeholder):
+                        node_class = np.argmax(
+                            np.unique(y_in_node, return_counts=True)[1])
+
                 som[node[0], node[1], 0] = node_class
         else:
             raise ValueError("Invalid reg init_mode_supervised: "+str(
                 self.init_mode_supervised))
 
         self.super_som_ = som
+
+    def setPlaceholder(self):
+        """Set placeholder depending on the class dtype."""
+        if self.class_dtype_ in [str, np.str, np.str_]:
+            self.placeholder_ = self.placeholder_dict_["str"]
+        elif self.class_dtype_ in [int, np.int, np.int_]:
+            self.placeholder_ = self.placeholder_dict_["int"]
+        elif self.class_dtype_ in [float, np.float, np.float_]:
+            self.placeholder_ = self.placeholder_dict_["float"]
+        else:
+            raise ValueError("No placeholder defined " +
+                             "for the dtype of the classes:",
+                             self.class_dtype_)
 
     def fit(self, X, y=None):
         """Fit classification SOM to the input data.
@@ -1647,4 +1695,5 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         change_class_proba *= class_weight
         random_matrix = np.random.rand(self.n_rows, self.n_columns, 1)
         change_class_bool = random_matrix < change_class_proba
+        # print(np.nonzero(self.super_som_ == self.placeholder_)[0].shape)
         return change_class_bool
