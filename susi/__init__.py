@@ -1,5 +1,9 @@
-"""SUSI: Python package for unsupervised, supervised and semi-supervised
-self-organizing maps (SOM)."""
+"""SUSI: Supervised Self-Organining Map.
+
+Python package for unsupervised, supervised and semi-supervised
+self-organizing maps (SOM).
+
+"""
 
 from abc import ABC, abstractmethod
 import itertools
@@ -17,7 +21,7 @@ from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 
 
 def decreasing_rate(a_1, a_2, iteration_max, iteration, mode):
-    """Collection of different decreasing rates.
+    """Return a decreasing rate from collection.
 
     Parameters
     ----------
@@ -34,37 +38,39 @@ def decreasing_rate(a_1, a_2, iteration_max, iteration, mode):
 
     Returns
     -------
-    float
+    rate : float
         Decreasing rate
 
     Examples
-    --------.
-
+    ---------
     >>> import susi
     >>> susi.decreasing_rate(0.8, 0.1, 100, 5, "exp")
 
     """
+    rate = None
     if mode == "min":
-        return a_1 * np.power(a_2 / a_1, iteration / iteration_max)
+        rate = a_1 * np.power(a_2 / a_1, iteration / iteration_max)
 
     elif mode == "exp":
-        return a_1 * np.exp(-5 * np.divide(iteration, iteration_max))
+        rate = a_1 * np.exp(-5 * np.divide(iteration, iteration_max))
 
     elif mode == "expsquare":
-        return a_1 * np.exp(
+        rate = a_1 * np.exp(
             -5 * np.power(np.divide(iteration, iteration_max), 2))
 
     elif mode == "linear":
-        return a_1*(1 - np.divide(iteration, iteration_max))
+        rate = a_1*(1 - np.divide(iteration, iteration_max))
 
     elif mode == "inverse":
-        return a_1 / iteration
+        rate = a_1 / iteration
 
     elif mode == "root":
-        return np.power(a_1, iteration / iteration_max)
+        rate = np.power(a_1, iteration / iteration_max)
 
     else:
         raise ValueError("Invalid decreasing rate mode: "+str(mode))
+
+    return rate
 
 
 def check_estimation_input(X, y, is_classification=False):
@@ -217,6 +223,7 @@ class SOMClustering():
 
     variances_ : array of float
         Standard deviations of every feature
+
     """
 
     def __init__(self,
@@ -329,7 +336,6 @@ class SOMClustering():
 
     def train_unsupervised_som(self):
         """Train unsupervised SOM."""
-
         self.init_unsuper_som()
 
         if self.train_mode_unsupervised == "online":
@@ -451,7 +457,7 @@ class SOMClustering():
 
         Returns
         -------
-        list of (int, int) tuples
+        bmus : list of (int, int) tuples
             Position of best matching units (row, column) for each datapoint
 
         Examples
@@ -470,8 +476,9 @@ class SOMClustering():
         if som_array is None:
             som_array = self.unsuper_som_
 
+        bmus = None
         if self.n_jobs == 1:
-            return [tuple(self.get_bmu(dp, som_array)) for dp in X]
+            bmus = [tuple(self.get_bmu(dp, som_array)) for dp in X]
         else:
             n_jobs, _, _ = self._partition_bmus(X)
             bmus = Parallel(n_jobs=n_jobs, verbose=self.verbose)(
@@ -479,7 +486,7 @@ class SOMClustering():
                     self, "get_bmu", dp, som_array)
                 for dp in X
             )
-            return bmus
+        return bmus
 
     def _partition_bmus(self, X):
         """Private function used to partition bmus between jobs.
@@ -594,20 +601,26 @@ class SOMClustering():
         """
         dist_mat = np.linalg.norm(self.node_list_-bmu_pos, axis=1)
 
+        nbh_dist_weight_mat = None
+
         pseudogaussian = np.exp(-np.divide(np.power(dist_mat, 2),
                                 (2 * np.power(neighborhood_func, 2))))
 
         if self.nbh_dist_weight_mode == "pseudo-gaussian":
-            return pseudogaussian.reshape((self.n_rows, self.n_columns, 1))
+            nbh_dist_weight_mat = pseudogaussian.reshape(
+                (self.n_rows, self.n_columns, 1))
 
         elif self.nbh_dist_weight_mode == "mexican-hat":
             mexicanhat = np.multiply(pseudogaussian, np.subtract(1, np.divide(
                 np.power(dist_mat, 2), np.power(neighborhood_func, 2))))
-            return mexicanhat.reshape((self.n_rows, self.n_columns, 1))
+            nbh_dist_weight_mat = mexicanhat.reshape(
+                (self.n_rows, self.n_columns, 1))
 
         else:
             raise ValueError("Invalid nbh_dist_weight_mode: "+str(
                 self.nbh_dist_weight_mode))
+
+        return nbh_dist_weight_mat
 
     def get_nbh_distance_weight_block(self, nbh_func, bmus):
         """Calculate distance weight matrix for all datapoints.
@@ -879,20 +892,21 @@ class SOMClustering():
 
         Returns
         -------
-        `float`
+        u_mean : `float`
             Mean value
 
         """
         meanlist = [self.u_matrix[u_node] for u_node in nodelist]
-
+        u_mean = None
         if self.u_mean_mode_ == "mean":
-            return np.mean(meanlist)
+            u_mean = np.mean(meanlist)
         elif self.u_mean_mode_ == "median":
-            return np.median(meanlist)
+            u_mean = np.median(meanlist)
         elif self.u_mean_mode_ == "min":
-            return np.min(meanlist)
+            u_mean = np.min(meanlist)
         elif self.u_mean_mode_ == "max":
-            return np.max(meanlist)
+            u_mean = np.max(meanlist)
+        return u_mean
 
     def calc_variances(self):
         """Calculate standard deviation for all features of the dataset `X`.
@@ -1007,6 +1021,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         List of best matching units (BMUs) of the dataset X
 
     """
+
     def __init__(self,
                  n_rows: int = 10,
                  n_columns: int = 10,
@@ -1165,7 +1180,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         Returns
         -------
-        object
+        estimation_output : object
             Content of SOM node which is linked to the datapoint.
             Classification: the label.
             Regression: the target variable.
@@ -1175,9 +1190,10 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         """
         bmu_pos = self.get_bmu(datapoint, self.unsuper_som_)
+        estimation_output = None
 
         if mode == "bmu":
-            return self.super_som_[bmu_pos[0], bmu_pos[1]][0]
+            estimation_output = self.super_som_[bmu_pos[0], bmu_pos[1]][0]
 
         # elif mode == "neighborhood":
         #     nbh_radius = 2.0      # TODO change
@@ -1189,11 +1205,16 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         #                  for node in nbh_nodes])
 
         #     return estimation
+        else:
+            raise ValueError("Invalid calc_estimation_output mode: "+str(
+                mode))
+
+        return estimation_output
 
     def modify_weight_matrix_supervised(self, dist_weight_matrix,
                                         true_vector=None,
                                         learningrate=None):
-        """Placeholder for the supervised mwm function.
+        """Modify weights of the supervised SOM, either online or batch.
 
         Parameters
         ----------
@@ -1209,24 +1230,30 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         Returns
         -------
-        np.array
+        modify_weight_matrix : np.array
             Weight vector of the SOM after the modification
 
         """
+        modify_weight_matrix = None
         if self.train_mode_supervised == "online":
-            return modify_weight_matrix_online(
+            modify_weight_matrix = modify_weight_matrix_online(
                 self.super_som_, dist_weight_matrix, true_vector=true_vector,
                 learningrate=learningrate)
 
         elif self.train_mode_supervised == "batch":
-            return self.modify_weight_matrix_batch(
+            modify_weight_matrix = self.modify_weight_matrix_batch(
                 som_array=self.super_som_,
                 dist_weight_matrix=dist_weight_matrix[self.labeled_indices_],
                 data=self.y_[self.labeled_indices_])
 
+        else:
+            raise ValueError("Invalid train_mode_supervised: "+str(
+                self.train_mode_supervised))
+
+        return modify_weight_matrix
+
     def train_supervised_som(self):
         """Train supervised SOM."""
-
         self.set_bmus(self.X_)
         self.init_super_som()
 
@@ -1316,11 +1343,13 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
     def get_random_datapoint(self):
         """Find and return random datapoint from labeled dataset."""
+        random_datapoint = None
         if self.missing_label_placeholder is not None:
-            return np.random.choice(
+            random_datapoint = np.random.choice(
                 np.where(self.y_ != self.missing_label_placeholder)[0])
         else:
-            return np.random.randint(low=0, high=len(self.y_))
+            random_datapoint = np.random.randint(low=0, high=len(self.y_))
+        return random_datapoint
 
 
 class SOMRegressor(SOMEstimator, RegressorMixin):
@@ -1328,7 +1357,6 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
 
     def init_super_som(self):
         """Initialize map for regression."""
-
         self.max_iterations_ = self.n_iter_supervised
 
         # check if target variable has dimension 1 or >1
@@ -1350,7 +1378,7 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
                 self.n_rows, self.n_columns, self.y_.shape[1])
 
         else:
-            raise ValueError("Invalid reg init_mode_supervised: "+str(
+            raise ValueError("Invalid init_mode_supervised: "+str(
                 self.init_mode_supervised))
 
         self.super_som_ = som
@@ -1510,8 +1538,6 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
     def init_super_som(self):
         """Initialize map."""
-
-        # define placeholders
         self.placeholder_dict_ = {
             "str": "PLACEHOLDER",
             "int": -999999,
@@ -1566,7 +1592,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
                 som[node[0], node[1], 0] = node_class
         else:
-            raise ValueError("Invalid reg init_mode_supervised: "+str(
+            raise ValueError("Invalid init_mode_supervised: "+str(
                 self.init_mode_supervised))
 
         self.super_som_ = som
@@ -1627,10 +1653,11 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
         Returns
         -------
-        np.array
+        new_matrix : np.array
             Weight vector of the SOM after the modification
 
         """
+        new_matrix = None
         if self.train_mode_supervised == "online":
             class_weight = self.class_weights_[
                 np.argwhere(self.classes_ == true_vector)[0, 0]]
@@ -1649,7 +1676,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
             new_matrix = np.copy(self.super_som_)
             new_matrix[change_mask] = true_vector
 
-            return new_matrix.reshape((self.n_rows, self.n_columns, 1))
+            new_matrix = new_matrix.reshape((self.n_rows, self.n_columns, 1))
 
         elif self.train_mode_supervised == "batch":
             # transform labels
@@ -1663,12 +1690,16 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
                     for i in self.labeled_indices_], axis=0)
 
             # update weights
-            new_som = lb.inverse_transform(
+            new_matrix = lb.inverse_transform(
                 softmax(numerator, axis=2).reshape(
                     (self.n_rows*self.n_columns, y_bin.shape[1]))).reshape(
                     (self.n_rows, self.n_columns, 1))
 
-            return new_som
+        else:
+            raise ValueError("Invalid train_mode_supervised: "+str(
+                self.train_mode_supervised))
+
+        return new_matrix
 
     def change_class_proba(self, learningrate, dist_weight_matrix,
                            class_weight):

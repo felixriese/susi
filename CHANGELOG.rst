@@ -4,15 +4,17 @@ Change Log
 [1.0.7] - coming soon
 ------------------------
 - [FIXED] Semi-supervised classification handling
+- [CHANGED] Docstrings for functions are now according to guidelines.
+- [FIXED] Code refactored according to prospector
 
 [1.0.6] - 2019-09-11
 ------------------------
 - [ADDED] Semi-supervised abilities for classifier and regressor
 - [ADDED] Example notebooks for semi-supervised applications
 - [ADDED] Tests for example notebooks
-- [FIXED] Code looks better in documentation with sphinx.ext.napoleon
 - [CHANGED] Requirements for the SUSI package
 - [REMOVED] Support for Python 3.4
+- [FIXED] Code looks better in documentation with sphinx.ext.napoleon
 
 [1.0.5] - 2019-04-23
 ------------------------
@@ -37,9 +39,9 @@ Change Log
 
 [1.0.2] - 2019-03-27
 ------------------------
+- [ADDED] Codecov, Codacy
 - [CHANGED] Moved decreasing_rate() out of SOM classes
 - [FIXED] Removed duplicate constructor for SOMRegressor, fixed fit() params
-- [ADDED] Codecov, Codacy
 
 [1.0.1] - 2019-03-26
 ------------------------
