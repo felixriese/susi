@@ -3,8 +3,10 @@ Change Log
 
 [1.0.7] - coming soon
 ------------------------
-- [FIXED] Semi-supervised classification handling
+- [ADDED] Optional tqdm visualization of the SOM training
 - [CHANGED] Docstrings for functions are now according to guidelines.
+- [FIXED] Semi-supervised classification handling
+- [FIXED] Supervised classification SOM initalization of `n_iter_supervised`
 - [FIXED] Code refactored according to prospector
 
 [1.0.6] - 2019-09-11

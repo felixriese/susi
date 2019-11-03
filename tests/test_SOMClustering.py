@@ -1,4 +1,4 @@
-"""Test for susi.SOMClustering
+"""Test for susi.SOMClustering.
 
 Usage:
 python -m pytest tests/test_SOMClustering.py
@@ -95,7 +95,7 @@ def test_calc_neighborhood_func(radius_max, radius_min, max_it, curr_it, mode,
     (0.9, 0.1, 800, 34, "min", 0.8197609052582371),
     (0.9, 0.1, 800, 34, "exp", 0.7277042846893071),
     (0.9, 0.1, 800, 34, "expsquare", 0.8919084683204536),
-    (0.9, 0.1, 800, 34, "linear", 0.86175),
+    (0.9, 0.1, 800, 34, "linear", 0.866),
     (0.9, 0.1, 800, 34, "inverse", 0.026470588235294117),
     (0.9, 0.1, 800, 34, "root", 0.9955321885817805),
     (0.9, 0.1, 800, 34, "testerror", 0.7277042846893071),
@@ -150,15 +150,15 @@ def test_get_bmu(som_array, datapoint, expected):
 @pytest.mark.parametrize(
     "X,n_rows,n_columns,train_mode_unsupervised,random_state,expected", [
         (np.array([[0., 0.1, 0.2], [2.3, 2.1, 2.1]]), 2, 2, "online", 42,
-         np.array([[[2.29999999, 2.1, 2.1],
-                    [1.25232099, 1.18897478, 1.23452604]],
-                   [[1.25232099, 1.18897478, 1.23452604],
-                    [2.23083779e-9, 1.00000002e-1, 2.00000002e-1]]])),
+        np.array([[[1.72651971, 1.60132149, 1.62625542],
+                   [1.2091674, 1.15144991, 1.19887742]],
+                  [[1.2091674, 1.15144991, 1.19887742],
+                   [0.66132515, 0.67506535, 0.74631208]]])),
         (np.array([[0., 0.1, 0.2], [2.3, 2.1, 2.1]]), 2, 2, "batch", 42,
-         np.array([[[2.3, 2.1, 2.1],
-                    [1.14876033, 1.09917355, 1.14876033]],
-                   [[1.14876033, 1.09917355, 1.14876033],
-                    [0., 0.1, 0.2]]]))
+        np.array([[[1.68143473, 1.56211716, 1.5890113 ],
+                   [1.15      , 1.1       , 1.15      ]],
+                  [[1.15      , 1.1       , 1.15      ],
+                   [0.61856527, 0.63788284, 0.7109887 ]]]))
         ])
 def test_fit(X, n_rows, n_columns, train_mode_unsupervised, random_state,
              expected):
@@ -211,10 +211,10 @@ def test_get_nbh_distance_weight_matrix(n_rows, n_columns, random_state,
      "neighborhood_func,bmu_pos,dp,expected"), [
         (2, 2, 42, 2, np.array([[0., 0.1, 0.2], [2.3, 2.1, 2.1]]), 0.7, 0.4,
          (1, 1), 1,
-         np.array([[[1.49058628, 1.61686991, 1.52492551],
-                    [1.17565903, 0.81530915, 0.81529321]],
-                   [[0.81841713, 1.28462067, 1.10945355],
-                    [1.91139603, 1.59239575, 1.82413471]]])),
+        np.array([[[1.49058628, 1.61686991, 1.52492551],
+                   [1.26125694, 0.91311475, 0.91310002]],
+                  [[0.93121244, 1.34669682, 1.18486546],
+                   [1.9329369 , 1.62053297, 1.83942631]]])),
         ])
 def test_modify_weight_matrix_online(n_rows, n_columns, random_state,
                                      n_iter_unsupervised, X, learningrate,
@@ -364,9 +364,3 @@ def test_get_clusters():
     clusters = som.get_clusters(X)
     assert(len(clusters) == len(X))
     assert(len(clusters[0]) == 2)
-
-
-def test_calc_variances():
-    som = susi.SOMClustering()
-    som.fit(X)
-    assert len(som.variances_) == X.shape[1]

@@ -5,19 +5,21 @@ self-organizing maps (SOM).
 
 """
 
-from abc import ABC, abstractmethod
 import itertools
-from joblib import effective_n_jobs, Parallel, delayed
+from abc import ABC, abstractmethod
+
 import numpy as np
 import scipy.spatial.distance as dist
+from joblib import Parallel, delayed, effective_n_jobs
 from scipy.special import softmax
-from sklearn.base import BaseEstimator, RegressorMixin, ClassifierMixin
+from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import binarize, LabelBinarizer
+from sklearn.preprocessing import LabelBinarizer, binarize
 from sklearn.utils import class_weight
 from sklearn.utils.fixes import parallel_helper
 from sklearn.utils.multiclass import check_classification_targets
-from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
+from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
+from tqdm import tqdm
 
 
 def decreasing_rate(a_1, a_2, iteration_max, iteration, mode):
@@ -59,7 +61,7 @@ def decreasing_rate(a_1, a_2, iteration_max, iteration, mode):
             -5 * np.power(np.divide(iteration, iteration_max), 2))
 
     elif mode == "linear":
-        rate = a_1*(1 - np.divide(iteration, iteration_max))
+        rate = (a_1-a_2)*(1 - np.divide(iteration, iteration_max)) + a_2
 
     elif mode == "inverse":
         rate = a_1 / iteration
@@ -69,6 +71,9 @@ def decreasing_rate(a_1, a_2, iteration_max, iteration, mode):
 
     else:
         raise ValueError("Invalid decreasing rate mode: "+str(mode))
+
+    # # prevent zero:
+    # rate = max(rate, a_2)
 
     return rate
 
@@ -270,6 +275,10 @@ class SOMClustering():
         self.radius_max_ = max(self.n_rows, self.n_columns)/2
         self.radius_min_ = 1
 
+        # tqdm paramters
+        self.tqdm_params_ = {"disable": not bool(self.verbose),
+                             "ncols": 100}
+
         # init unsupervised SOM in the feature space
         if self.init_mode_unsupervised == "random":
             som = np.random.rand(self.n_rows, self.n_columns, self.X_.shape[1])
@@ -339,7 +348,8 @@ class SOMClustering():
         self.init_unsuper_som()
 
         if self.train_mode_unsupervised == "online":
-            for it in range(self.n_iter_unsupervised):
+            for it in tqdm(range(self.n_iter_unsupervised),
+                           desc="unsuper", **self.tqdm_params_):
 
                 # select one input vector & calculate best matching unit (BMU)
                 dp = np.random.randint(low=0, high=len(self.X_))
@@ -359,7 +369,8 @@ class SOMClustering():
                     true_vector=self.X_[dp], learningrate=learning_rate)
 
         elif self.train_mode_unsupervised == "batch":
-            for it in range(self.n_iter_unsupervised):
+            for it in tqdm(range(self.n_iter_unsupervised),
+                           desc="unsuper", **self.tqdm_params_):
 
                 # calculate BMUs
                 bmus = self.get_bmus(self.X_)
@@ -379,8 +390,6 @@ class SOMClustering():
         else:
             raise ValueError("Unsupervised mode not implemented:",
                              self.train_mode_unsupervised)
-
-        self.calc_variances()
 
     def calc_learning_rate(self, curr_it, mode):
         """Calculate learning rate alpha with 0 <= alpha <= 1.
@@ -600,8 +609,6 @@ class SOMClustering():
 
         """
         dist_mat = np.linalg.norm(self.node_list_-bmu_pos, axis=1)
-
-        nbh_dist_weight_mat = None
 
         pseudogaussian = np.exp(-np.divide(np.power(dist_mat, 2),
                                 (2 * np.power(neighborhood_func, 2))))
@@ -908,18 +915,6 @@ class SOMClustering():
             u_mean = np.max(meanlist)
         return u_mean
 
-    def calc_variances(self):
-        """Calculate standard deviation for all features of the dataset `X`.
-
-        These deviations can be used as measure for a feature importance or
-        a variable significance.
-
-        """
-        std = np.std(self.unsuper_som_.reshape(
-            (self.n_rows*self.n_columns, self.X_.shape[1])), axis=0)
-        std = std / np.linalg.norm(std.flatten(), axis=0)
-        self.variances_ = std
-
 
 class SOMEstimator(SOMClustering, BaseEstimator, ABC):
     """Basic class for supervised self-organizing maps.
@@ -1160,7 +1155,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         # Input validation
         X = check_array(X, dtype=np.float64)
         y_pred_list = []
-        for dp in X:
+        for dp in tqdm(X, desc="predict", **self.tqdm_params_):
             y_pred_list.append(self.calc_estimation_output(dp, mode="bmu"))
         y_pred = np.array(y_pred_list)
         return y_pred
@@ -1254,11 +1249,12 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
     def train_supervised_som(self):
         """Train supervised SOM."""
-        self.set_bmus(self.X_)
+        self.set_bmus(self.X_[self.labeled_indices_])
         self.init_super_som()
 
         if self.train_mode_supervised == "online":
-            for it in range(self.n_iter_supervised):
+            for it in tqdm(range(self.n_iter_supervised),
+                           desc="super", **self.tqdm_params_):
 
                 # select one input vector & calculate best matching unit (BMU)
                 dp = self.get_random_datapoint()
@@ -1275,11 +1271,12 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
                     nbh_func, bmu_pos)
                 self.super_som_ = self.modify_weight_matrix_supervised(
                     dist_weight_matrix=dist_weight_matrix,
-                    true_vector=self.y_[dp],
+                    true_vector=self.y_[self.labeled_indices_][dp],
                     learningrate=learning_rate)
 
         elif self.train_mode_supervised == "batch":
-            for it in range(self.n_iter_supervised):
+            for it in tqdm(range(self.n_iter_supervised),
+                           desc="super", **self.tqdm_params_):
 
                 # calculate BMUs with the unsupervised (!) SOM
                 bmus = self.get_bmus(self.X_)
@@ -1346,7 +1343,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         random_datapoint = None
         if self.missing_label_placeholder is not None:
             random_datapoint = np.random.choice(
-                np.where(self.y_ != self.missing_label_placeholder)[0])
+                len(self.y_[self.labeled_indices_]))
         else:
             random_datapoint = np.random.randint(low=0, high=len(self.y_))
         return random_datapoint
@@ -1538,6 +1535,8 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
     def init_super_som(self):
         """Initialize map."""
+        self.max_iterations_ = self.n_iter_supervised
+
         self.placeholder_dict_ = {
             "str": "PLACEHOLDER",
             "int": -999999,
@@ -1581,7 +1580,10 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
                 dp_in_node = self.get_datapoints_from_node(node)
 
                 # if no datapoint with label is mapped on this node:
-                node_class = self.placeholder_
+                # node_class = self.placeholder_
+                node_class = np.random.choice(
+                    self.classes_,
+                    p=self.class_counts_/np.sum(self.class_counts_))
 
                 # if at least one datapoint with label is mapped to this node:
                 if dp_in_node != []:
@@ -1601,7 +1603,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         """Set placeholder depending on the class dtype."""
         if self.class_dtype_ in [str, np.str, np.str_]:
             self.placeholder_ = self.placeholder_dict_["str"]
-        elif self.class_dtype_ in [int, np.int, np.int_]:
+        elif self.class_dtype_ in [int, np.int, np.int_, np.uint8]:
             self.placeholder_ = self.placeholder_dict_["int"]
         elif self.class_dtype_ in [float, np.float, np.float_]:
             self.placeholder_ = self.placeholder_dict_["float"]
@@ -1670,9 +1672,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
             change_mask = np.multiply(change_class_bool,
                                       different_classes_matrix)
-            # new_matrix = (
-            #     np.multiply(self.super_som_, np.logical_not(change_mask)) +
-            #     np.multiply(change_mask, true_vector))
+
             new_matrix = np.copy(self.super_som_)
             new_matrix[change_mask] = true_vector
 
@@ -1726,5 +1726,4 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         change_class_proba *= class_weight
         random_matrix = np.random.rand(self.n_rows, self.n_columns, 1)
         change_class_bool = random_matrix < change_class_proba
-        # print(np.nonzero(self.super_som_ == self.placeholder_)[0].shape)
         return change_class_bool

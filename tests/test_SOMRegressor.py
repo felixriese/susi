@@ -1,4 +1,4 @@
-"""Test for susi.SOMRegressor
+"""Test for susi.SOMRegressor.
 
 Usage:
 python -m pytest tests/test_SOMRegressor.py

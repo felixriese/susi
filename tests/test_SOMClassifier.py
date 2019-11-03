@@ -1,4 +1,4 @@
-"""Test for susi.SOMClassifier
+"""Test for susi.SOMClassifier.
 
 Usage:
 python -m pytest tests/test_SOMClassifier.py
@@ -80,8 +80,6 @@ def test_change_class_proba(n_rows, n_columns, learningrate,
                             expected):
     som = susi.SOMClassifier(n_rows=n_rows, n_columns=n_columns,
                              random_state=random_state)
-    # som.classes_ = [0, 1, 2]
-    # som.class_weights_ = [1., 1., 1.]
     new_som_array = som.change_class_proba(learningrate, dist_weight_matrix,
                                            class_weight)
     assert(new_som_array.shape == (n_rows, n_columns, 1))
@@ -119,13 +117,13 @@ def test_modify_weight_matrix_supervised(
     itertools.product(TRAIN_MODES, TRAIN_MODES))
 def test_fit(train_mode_unsupervised, train_mode_supervised):
     som = susi.SOMClassifier(
-        n_rows=5,
-        n_columns=5,
+        n_rows=8,
+        n_columns=8,
         train_mode_unsupervised=train_mode_unsupervised,
         train_mode_supervised=train_mode_supervised,
         random_state=3)
     som.fit(X_train, y_train)
-    assert(som.score(X_test, y_test) > 0.9)
+    assert(som.score(X_test, y_test) >= 0.8)
 
 
 def test_estimator_status():

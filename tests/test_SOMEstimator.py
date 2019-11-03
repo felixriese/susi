@@ -1,4 +1,4 @@
-"""Test for susi.SOMEstimator
+"""Test for susi.SOMEstimator.
 
 Usage:
 python -m pytest tests/test_SOMEstimator.py

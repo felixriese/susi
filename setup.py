@@ -25,7 +25,10 @@ setuptools.setup(
     install_requires=["joblib",
                       "numpy",
                       "scikit-learn",
-                      "scipy"],
+                      "scipy",
+                      "tqdm"],
+    extras_require={"docs": ["numpydoc", "sphinx", "sphinx-autobuild",
+                             "sphinx_rtd_theme"]},
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
