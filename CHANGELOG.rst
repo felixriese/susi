@@ -4,8 +4,9 @@ Change Log
 [1.0.7] - coming soon
 ------------------------
 - [ADDED] Optional tqdm visualization of the SOM training
+- [ADDED] New `init_mode_supervised` called `random_minmax`.
 - [CHANGED] Docstrings for functions are now according to guidelines.
-- [FIXED] Semi-supervised classification handling
+- [FIXED] Semi-supervised classification handling, sample weights
 - [FIXED] Supervised classification SOM initalization of `n_iter_supervised`
 - [FIXED] Code refactored according to prospector
 

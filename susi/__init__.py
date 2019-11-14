@@ -339,8 +339,13 @@ class SOMClustering():
         """
         np.random.seed(seed=self.random_state)
         self.X_ = check_array(X, dtype=np.float64)  # TODO accept_sparse
+
+        self.sample_weights_ = np.full(
+            fill_value=1., shape=(len(self.X_), 1))
+
         self.train_unsupervised_som()
         self.fitted_ = True
+
         return self
 
     def train_unsupervised_som(self):
@@ -366,7 +371,8 @@ class SOMClustering():
                     nbh_func, bmu_pos)
                 self.unsuper_som_ = modify_weight_matrix_online(
                     self.unsuper_som_, dist_weight_matrix,
-                    true_vector=self.X_[dp], learningrate=learning_rate)
+                    true_vector=self.X_[dp],
+                    learningrate=learning_rate*self.sample_weights_[dp])
 
         elif self.train_mode_unsupervised == "batch":
             for it in tqdm(range(self.n_iter_unsupervised),
@@ -1015,6 +1021,8 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
     bmus_ :  list of (int, int) tuples
         List of best matching units (BMUs) of the dataset X
 
+    sample_weights_ : TODO
+
     """
 
     def __init__(self,
@@ -1109,12 +1117,21 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         np.random.seed(seed=self.random_state)
 
-        # supervised case
+        # supervised case:
         if self.missing_label_placeholder is None:
             self.labeled_indices_ = list(range(len(self.y_)))
+            self.sample_weights_ = np.full(
+                fill_value=1., shape=(len(self.X_), 1))
+
+        # semi-supervised case:
         else:
             self.labeled_indices_ = np.where(
                 self.y_ != self.missing_label_placeholder)[0]
+            unlabeled_weight = max(len(self.labeled_indices_) / len(self.y_),
+                                   0.1)
+            self.sample_weights_ = np.full(
+                fill_value=unlabeled_weight, shape=(len(self.X_), 1))
+            self.sample_weights_[self.labeled_indices_] = 1.0
 
         # train SOMs
         self.train_unsupervised_som()
@@ -1369,10 +1386,17 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
 
         elif self.init_mode_supervised == "random_data":
             indices = np.random.randint(
-                low=0, high=self.y_.shape[0], size=self.n_rows*self.n_columns)
-            som_list = self.y_[indices]
+                low=0, high=self.y_[self.labeled_indices_].shape[0],
+                size=self.n_rows*self.n_columns)
+            som_list = self.y_[self.labeled_indices_][indices]
             som = som_list.reshape(
                 self.n_rows, self.n_columns, self.y_.shape[1])
+
+        elif self.init_mode_supervised == "random_minmax":
+            som = np.random.uniform(
+                low=np.min(self.y_[self.labeled_indices_]),
+                high=np.max(self.y_[self.labeled_indices_]),
+                size=(self.n_rows, self.n_columns, n_regression_vars))
 
         else:
             raise ValueError("Invalid init_mode_supervised: "+str(
