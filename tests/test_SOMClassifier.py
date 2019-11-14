@@ -52,6 +52,7 @@ def test_init_super_som(n_rows, n_columns, do_class_weighting):
 
     som.X_ = X_train
     som.y_ = y_train
+    som.sample_weights_ = np.full(fill_value=1., shape=(len(som.X_), 1))
     som.train_unsupervised_som()
     som.labeled_indices_ = list(range(len(som.y_)))
     som.set_bmus(som.X_)

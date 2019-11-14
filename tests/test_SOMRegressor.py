@@ -58,6 +58,7 @@ def test_init_super_som_regressor(X, y, init_mode):
     som = susi.SOMRegressor(init_mode_supervised=init_mode)
     som.X_ = X
     som.y_ = y
+    som.labeled_indices_ = np.where(som.y_ != -1)[0]
     som.init_super_som()
 
     # test type
