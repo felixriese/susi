@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath('../'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'SUSI'
+project = 'SuSi'
 copyright = '2019, Felix M. Riese'
 author = 'Felix M. Riese'
 
@@ -143,7 +143,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'SUSI.tex', 'SUSI Documentation',
+    (master_doc, 'SuSi.tex', 'SuSi Documentation',
      'Felix M. Riese', 'manual'),
 ]
 
@@ -153,7 +153,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'susi', 'SUSI Documentation',
+    (master_doc, 'susi', 'SuSi Documentation',
      [author], 1)
 ]
 
@@ -164,8 +164,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'SUSI', 'SUSI Documentation',
-     author, 'SUSI', 'One line description of project.',
+    (master_doc, 'SuSi', 'SuSi Documentation',
+     author, 'SuSi', 'One line description of project.',
      'Miscellaneous'),
 ]
 

@@ -23,7 +23,7 @@ Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regress
 Code citation
 -------------
 
-Felix M. Riese, "SUSI: SUpervised Self-organIzing maps in Python", `10.5281/zenodo.2609130 <https://doi.org/10.5281/zenodo.2609130>`_, 2019.
+Felix M. Riese, "SuSi: SUpervised Self-organIzing maps in Python", `10.5281/zenodo.2609130 <https://doi.org/10.5281/zenodo.2609130>`_, 2019.
 
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.2609130.svg
    :target: https://doi.org/10.5281/zenodo.2609130
@@ -32,7 +32,7 @@ Felix M. Riese, "SUSI: SUpervised Self-organIzing maps in Python", `10.5281/zeno
 
     @misc{riese2019susicode,
         author = {Riese, Felix~M.},
-        title = {{SUSI: SUpervised Self-organIzing maps in Python}},
+        title = {{SuSi: SUpervised Self-organIzing maps in Python}},
         year = {2019},
         DOI = {10.5281/zenodo.2609130},
         publisher = {Zenodo},

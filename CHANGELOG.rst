@@ -5,6 +5,7 @@ Change Log
 ------------------------
 - [ADDED] Optional tqdm visualization of the SOM training
 - [ADDED] New `init_mode_supervised` called `random_minmax`.
+- [CHANGED] Official name of package changes from `SUSI` to `SuSi`.
 - [CHANGED] Docstrings for functions are now according to guidelines.
 - [FIXED] Semi-supervised classification handling, sample weights
 - [FIXED] Supervised classification SOM initalization of `n_iter_supervised`
@@ -15,7 +16,7 @@ Change Log
 - [ADDED] Semi-supervised abilities for classifier and regressor
 - [ADDED] Example notebooks for semi-supervised applications
 - [ADDED] Tests for example notebooks
-- [CHANGED] Requirements for the SUSI package
+- [CHANGED] Requirements for the SuSi package
 - [REMOVED] Support for Python 3.4
 - [FIXED] Code looks better in documentation with sphinx.ext.napoleon
 

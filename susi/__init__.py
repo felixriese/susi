@@ -1,4 +1,4 @@
-"""SUSI: Supervised Self-Organining Map.
+"""SuSi: Supervised Self-Organining Map.
 
 Python package for unsupervised, supervised and semi-supervised
 self-organizing maps (SOM).
