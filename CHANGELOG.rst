@@ -10,6 +10,7 @@ Change Log
 - [FIXED] Semi-supervised classification handling, sample weights
 - [FIXED] Supervised classification SOM initalization of `n_iter_supervised`
 - [FIXED] Code refactored according to prospector
+- [FIXED] Resolved bug in `get_datapoints_from_node()` for unsupervised SOM.
 
 [1.0.6] - 2019-09-11
 ------------------------

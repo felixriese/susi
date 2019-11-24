@@ -395,7 +395,9 @@ class SOMClustering():
 
         else:
             raise NotImplementedError("Unsupervised mode not implemented:",
-                             self.train_mode_unsupervised)
+                                      self.train_mode_unsupervised)
+
+        self.set_bmus(self.X_)
 
     def calc_learning_rate(self, curr_it, mode):
         """Calculate learning rate alpha with 0 <= alpha <= 1.
