@@ -394,7 +394,7 @@ class SOMClustering():
                     self.unsuper_som_, dist_weight_block, self.X_)
 
         else:
-            raise ValueError("Unsupervised mode not implemented:",
+            raise NotImplementedError("Unsupervised mode not implemented:",
                              self.train_mode_unsupervised)
 
     def calc_learning_rate(self, curr_it, mode):
