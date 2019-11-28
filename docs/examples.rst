@@ -39,8 +39,7 @@ More examples
 -------------
 
 * `examples/SOMClustering <https://github.com/felixriese/susi/blob/master/examples/SOMClustering.ipynb>`_
-* `examples/SOMRegressor_Hyperspectral <https://github.com/felixriese/susi/blob/master/examples/SOMRegressor_Hyperspectral.ipynb>`_
+* `examples/SOMRegressor <https://github.com/felixriese/susi/blob/master/examples/SOMRegressor.ipynb>`_
 * `examples/SOMRegressor_semisupervised <https://github.com/felixriese/susi/blob/master/examples/SOMRegressor_semisupervised.ipynb>`_
 * `examples/SOMClassifier <https://github.com/felixriese/susi/blob/master/examples/SOMClassifier.ipynb>`_
-* `examples/SOMClassifier_Salinas <https://github.com/felixriese/susi/blob/master/examples/SOMClassifier_Salinas.ipynb>`_
 * `examples/SOMClassifier_semisupervised <https://github.com/felixriese/susi/blob/master/examples/SOMClassifier_semisupervised.ipynb>`_

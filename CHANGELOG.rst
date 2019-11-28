@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-[1.0.7] - coming soon
+[1.0.7] - 2019-11-28
 ------------------------
 - [ADDED] Optional tqdm visualization of the SOM training
 - [ADDED] New `init_mode_supervised` called `random_minmax`.
