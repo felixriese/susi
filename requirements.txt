@@ -15,7 +15,7 @@ pandas>=0.25.2
 pytest>=5.3.0
 pytest-cov>=2.7.1
 codecov>=2.0.15
-nbval>=0.9.3
+nbval==0.9.3
 
 # for the documentation
 sphinx>=2.2.1
