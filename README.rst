@@ -63,7 +63,7 @@ The class structure is set up as follows:
     `Installation guidelines <https://susi.readthedocs.io/en/latest/install.html>`_
 
 :Paper:
-    `arXiv:1903.11114 <https://arxiv.org/abs/1903.11114>`_
+    `F. M. Riese, S. Keller and S. Hinz in Remote Sensing <https://www.mdpi.com/2072-4292/12/1/7>`_
 
 
 Installation
@@ -94,23 +94,30 @@ The bibtex file including both references is available `here <https://github.com
 
 **Paper:**
 
-Felix M. Riese and S. Keller, "SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python", `arXiv:1903.11114 <https://arxiv.org/abs/1903.11114>`_, 2019. Submitted to an ISPRS conference.
+F. M. Riese, S. Keller and S. Hinz, "Supervised and Semi-Supervised Self-Organizing
+Maps for Regression and Classification Focusing on Hyperspectral Data",
+*Remote Sensing*, vol. 12, no. 1, 2019.
 
 .. code:: bibtex
 
-    @article{riesekeller2019susi,
-        author = {Riese, Felix~M. and Keller, Sina},
-        title = {SUSI: Supervised Self-Organizing Maps for Regression and Classification in Python},
+    @article{riese2019supervised,
+        author = {Riese, Felix~M. and Keller, Sina and Hinz, Stefan},
+        title = {{Supervised and Semi-Supervised Self-Organizing Maps for
+                  Regression and Classification Focusing on Hyperspectral Data}},
+        journal = {Remote Sensing},
         year = {2019},
-        archivePrefix = {arXiv},
-        eprint = {1903.11114},
-        primaryClass = {cs.LG},
-        url = {https://arxiv.org/abs/1903.11114}
+        volume = {12},
+        number = {1},
+        article-number = {7},
+        URL = {https://www.mdpi.com/2072-4292/12/1/7},
+        ISSN = {2072-4292},
+        DOI = {10.3390/rs12010007}
     }
 
 **Code:**
 
-Felix M. Riese, "SuSi: SUpervised Self-organIzing maps in Python", `10.5281/zenodo.2609130 <https://doi.org/10.5281/zenodo.2609130>`_, 2019.
+Felix M. Riese, "SuSi: SUpervised Self-organIzing maps in Python",
+`10.5281/zenodo.2609130 <https://doi.org/10.5281/zenodo.2609130>`_, 2019.
 
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.2609130.svg
    :target: https://doi.org/10.5281/zenodo.2609130
