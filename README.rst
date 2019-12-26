@@ -63,7 +63,7 @@ The class structure is set up as follows:
     `Installation guidelines <https://susi.readthedocs.io/en/latest/install.html>`_
 
 :Paper:
-    `F. M. Riese, S. Keller and S. Hinz in Remote Sensing <https://www.mdpi.com/2072-4292/12/1/7>`_
+    `F. M. Riese, S. Keller and S. Hinz in Remote Sensing, 2020 <https://www.mdpi.com/2072-4292/12/1/7>`_
 
 
 Installation
@@ -96,16 +96,16 @@ The bibtex file including both references is available `here <https://github.com
 
 F. M. Riese, S. Keller and S. Hinz, "Supervised and Semi-Supervised Self-Organizing
 Maps for Regression and Classification Focusing on Hyperspectral Data",
-*Remote Sensing*, vol. 12, no. 1, 2019.
+*Remote Sensing*, vol. 12, no. 1, 2020.
 
 .. code:: bibtex
 
-    @article{riese2019supervised,
+    @article{riese2020supervised,
         author = {Riese, Felix~M. and Keller, Sina and Hinz, Stefan},
         title = {{Supervised and Semi-Supervised Self-Organizing Maps for
                   Regression and Classification Focusing on Hyperspectral Data}},
         journal = {Remote Sensing},
-        year = {2019},
+        year = {2020},
         volume = {12},
         number = {1},
         article-number = {7},

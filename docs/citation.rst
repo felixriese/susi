@@ -8,16 +8,16 @@ Paper citation
 
 F. M. Riese, S. Keller and S. Hinz, "Supervised and Semi-Supervised Self-Organizing
 Maps for Regression and Classification Focusing on Hyperspectral Data",
-*Remote Sensing*, vol. 12, no. 1, 2019.
+*Remote Sensing*, vol. 12, no. 1, 2020.
 
 .. code:: bibtex
 
-    @article{riese2019supervised,
+    @article{riese2020supervised,
         author = {Riese, Felix~M. and Keller, Sina and Hinz, Stefan},
         title = {{Supervised and Semi-Supervised Self-Organizing Maps for
                   Regression and Classification Focusing on Hyperspectral Data}},
         journal = {Remote Sensing},
-        year = {2019},
+        year = {2020},
         volume = {12},
         number = {1},
         article-number = {7},

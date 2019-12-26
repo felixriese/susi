@@ -18,7 +18,7 @@ It includes a fully functional SOM for unsupervised, supervised and semi-supervi
 :Citation: see `Citation <citation.rst>`_ and in the `bibtex <https://github.com/felixriese/susi/blob/master/bibliography.bib>`_ file
 
 :Paper:
-    `F. M. Riese, S. Keller and S. Hinz in Remote Sensing <https://www.mdpi.com/2072-4292/12/1/7>`_
+    `F. M. Riese, S. Keller and S. Hinz in Remote Sensing, 2020 <https://www.mdpi.com/2072-4292/12/1/7>`_
 
 
 .. toctree::
