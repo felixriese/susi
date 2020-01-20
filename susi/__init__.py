@@ -499,8 +499,7 @@ class SOMClustering():
         else:
             n_jobs, _, _ = self._partition_bmus(X)
             bmus = Parallel(n_jobs=n_jobs, verbose=self.verbose)(
-                delayed(parallel_helper)(
-                    self, "get_bmu", dp, som_array)
+                delayed(self.get_bmu)(dp, som_array)
                 for dp in X
             )
         return bmus
