@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+[1.0.8] - 2020-01-20
+------------------------
+- [FIXED] Replaced scikit-learn `sklearn.utils.fixes.parallel_helper`, see #12.
+
 [1.0.7] - 2019-11-28
 ------------------------
 - [ADDED] Optional tqdm visualization of the SOM training
