@@ -16,7 +16,6 @@ from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import LabelBinarizer, binarize
 from sklearn.utils import class_weight
-from sklearn.utils.fixes import parallel_helper
 from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 from tqdm import tqdm
