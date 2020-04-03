@@ -34,6 +34,8 @@ It includes a fully functional SOM for unsupervised, supervised and semi-supervi
 
    Examples <examples.rst>
 
+   Hyperparameters <hyperparameters.rst>
+
 .. toctree::
    :maxdepth: 1
    :caption: Code:

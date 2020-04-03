@@ -28,7 +28,7 @@
 
 |
 
-SuSi: SUpervised Self-organIzing maps in Python
+SuSi: Supervised Self-organizing maps in Python
 ===============================================
 
 Python package for unsupervised, supervised and semi-supervised self-organizing maps (SOM)
@@ -87,6 +87,19 @@ Code examples as Jupyter Notebooks can be found here:
 * `examples/SOMClassifier <https://github.com/felixriese/susi/blob/master/examples/SOMClassifier.ipynb>`_
 * `examples/SOMClassifier_semisupervised <https://github.com/felixriese/susi/blob/master/examples/SOMClassifier_semisupervised.ipynb>`_
 
+FAQs
+-----
+
+- **How should I set the initial hyperparameters of a SOM?** For more details
+  on the hyperparameters, see in `documentation/hyperparameters <https://susi.readthedocs.io/en/latest/hyperparameters.html>`_.
+- **How can I optimize the hyperparameters?** Because the SuSi package is
+  developed according to several scikit-learn guidelines, it can be used with,
+  for example, `scikit-learn.model_selection.GridSearchCV <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html>`_.
+
+
+------------
+
+
 Citation
 --------
 
@@ -126,7 +139,7 @@ Felix M. Riese, "SuSi: SUpervised Self-organIzing maps in Python",
 
     @misc{riese2019susicode,
         author = {Riese, Felix~M.},
-        title = {{SuSi: SUpervised Self-organIzing maps in Python}},
+        title = {{SuSi: Supervised Self-Organizing Maps in Python}},
         year = {2019},
         DOI = {10.5281/zenodo.2609130},
         publisher = {Zenodo},
