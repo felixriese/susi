@@ -1,4 +1,4 @@
-SOMClassifier
+SOMRegressor
 =============
 
 .. automodule:: susi

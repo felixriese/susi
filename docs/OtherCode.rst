@@ -1,6 +1,5 @@
 Other Code
 =============
 
-.. automodule:: susi
+.. automodule:: susi.SOMUtils
     :members:
-    :exclude-members: SOMClassifier, SOMClustering, SOMEstimator, SOMRegressor

@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+[1.0.9] - 2020-XX-XX
+------------------------
+- [ADDED] Documentation of the hyperparameters.
+
 [1.0.8] - 2020-01-20
 ------------------------
 - [FIXED] Replaced scikit-learn `sklearn.utils.fixes.parallel_helper`, see #12.
