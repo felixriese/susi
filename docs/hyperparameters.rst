@@ -11,6 +11,7 @@ Hyperparameters
 In the following, the most important hyperparameters of the SuSi package are
 described. The default hyperparameter settings are a good start, but can
 always be optimized. You can do that yourself or through an optimization.
+The commonly used hyperparameter settings are taken from [RieseEtAl2020]_.
 
 
 Grid Size (n_rows, n_columns)
@@ -27,15 +28,12 @@ The choice of the grid size depends on several trade-offs.
 - More possible overtraining (possibly bad)
 - Larger training time (bad if very limited resources)
 
-**In the Article:**
-    In [RieseEtAl2020]_, we apply SOMs with grid sizes of :bash:`50 x 50`,
-    :bash:`50 x 60`, :bash:`60 x 60`, and :bash:`80 x 80`.
-
 **Our Recommendation:**
     We suggest to start with a small grid, meaning :bash:`5 x 5`, and extending
     this grid size while tracking the test and training error metrics.
     We consider SOM grids as "large" with a grid size of about :bash:`100 x 100`
     and more. Non-square SOM grids can also be helpful for specific problems.
+    Commonly used grid sizes are :bash:`50 x 50` to :bash:`80 x 80`.
 
 
 Number of iterations and training mode
@@ -45,27 +43,13 @@ The number of iterations (:bash:`n_iter_unsupervised` and
 :bash:`n_iter_supervised`) depends on the training mode (
 :bash:`train_mode_unsupervised` and :bash:`train_mode_supervised`).
 
-Online mode
-^^^^^^^^^^^^^
-
-In the following, we give recommendations for the *online* mode.
-
-**In the Article:**
-    For the training mode in [RieseEtAl2020]_, we apply the online mode. The number of
-    iterations for the unsupervised SOM varies from 10 000 to 60 000. For the
-    (semi-)supervised SOM, the number of iterations varies from 20 000 to
-    70 000.
-
-**Our Recommendation:**
+**Our Recommendation (Online Mode)**
     Use the *online* mode. If your dataset is small (< 1000 datapoints), use
     10 000 iterations for the unsupervised SOM and 5000 iterations for the
     supervised SOM as start values. If your dataset is significantly larger,
-    use significantly more iterations.
-
-Batch mode
-^^^^^^^^^^^^^
-
-In the following, we give recommendations for the *online* mode.
+    use significantly more iterations. Commonly used value ranges are  for the
+    unsupervised SOM 10 000 to 60 000 and for the (semi-)supervised SOM about
+    20 000 to 70 000 in the *online* mode.
 
 .. todo:: Add recommendations for the batch mode.
 
@@ -80,31 +64,16 @@ and the learning rate (:bash:`learn_mode_unsupervised`,
 :bash:`nbh_dist_weight_mode`. Two different modes are implemented so far:
 :bash:`pseudo-gaussian` and :bash:`mexican-hat`.
 
-Pseudo Gaussian
-^^^^^^^^^^^^^^^^^
-
-In the following, we give recommendations for the :bash:`pseudo-gaussian`
-mode.
-
-**In the Article:**
-    In [RieseEtAl2020]_, we apply the :bash:`pseudo-gaussian` neighborhood distance weight.
-    As neighborhood mode, we use :bash:`linear` and :bash:`min`. As formula for
-    the learning rate mode, :bash:`min` and :bash:`exp` are applied. For the
-    start value of the learning rate, we use values between 0.3 and 0.8, for
-    the end values 0.1 to 0.005.
-
-**Our Recommendation:**
+**Our Recommendation (Pseudo-Gaussian):**
     Use the :bash:`pseudo-gaussian` neighborhood distance weight with the
     default formulas for the neighborhood mode and the learning rate. The most
     influence, from our experiences, comes from the start (and end) value of
     the learning rate (:bash:`learning_rate_start`, and
-    :bash:`learning_rate_end`). They should be optimized.
+    :bash:`learning_rate_end`). They should be optimized. Commonly used
+    formula are :bash:`linear` and :bash:`min` for the neighborhood mode,
+    :bash:`min` and :bash:`exp` for the learning rate mode, start values from
+    0.3 to 0.8 and end values from 0.1 to 0.005.
 
-Mexican Hat
-^^^^^^^^^^^^^^^^^
-
-In the following, we give recommendations for the :bash:`mexican-hat`
-mode.
 
 .. todo:: Add recommendations for the mexican hat distance weight.
 
