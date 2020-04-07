@@ -1,9 +1,11 @@
 Change Log
 ==========
 
-[1.0.9] - 2020-XX-XX
+[1.0.9] - 2020-04-07
 ------------------------
 - [ADDED] Documentation of the hyperparameters.
+- [ADDED] Plot scripts.
+- [CHANGED] Structure of the module files.
 
 [1.0.8] - 2020-01-20
 ------------------------
