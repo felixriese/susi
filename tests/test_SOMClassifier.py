@@ -58,14 +58,40 @@ def test_init_super_som(n_rows, n_columns, do_class_weighting):
     som.set_bmus(som.X_)
     som.init_super_som()
 
-    with pytest.raises(Exception):
-        som = susi.SOMClassifier(
-            init_mode_supervised="random")
+
+def test_init_super_som_raises():
+    # initialize without sample_weights:
+    with pytest.raises(AttributeError):
+        som = susi.SOMClassifier()
         som.X_ = X_train
         som.y_ = y_train
         som.train_unsupervised_som()
         som.set_bmus(som.X_)
         som.init_super_som()
+
+    # initialize with placeholder in class list
+    with pytest.raises(ValueError):
+        som = susi.SOMClassifier()
+        som.X_ = X_train
+        som.placeholder_ = -1
+        som.y_ = np.full(shape=y_train.shape, fill_value="PLACEHOLDER")
+        som.sample_weights_ = np.full(fill_value=1., shape=(len(som.X_), 1))
+        som.labeled_indices_ = list(range(len(som.y_)))
+        som.train_unsupervised_som()
+        som.set_bmus(som.X_)
+        som.init_super_som()
+
+    # initialize with placeholder = missing_label_placeholder
+    with pytest.raises(ValueError):
+        som = susi.SOMClassifier(missing_label_placeholder=-999999)
+        som.X_ = X_train
+        som.y_ = y_train
+        som.sample_weights_ = np.full(fill_value=1., shape=(len(som.X_), 1))
+        som.labeled_indices_ = list(range(len(som.y_)))
+        som.train_unsupervised_som()
+        som.set_bmus(som.X_)
+        som.init_super_som()
+        print(y_train)
 
 
 @pytest.mark.parametrize(
@@ -144,3 +170,22 @@ def test_fit_semi(train_mode_unsupervised, train_mode_supervised):
         random_state=3)
     som.fit(X_train, y_train_semi)
     assert(som.score(X_test, y_test) > 0.5)
+
+
+@pytest.mark.parametrize(
+    ("class_dtype"),
+    [str, int, float, dict])
+def test_set_placeholder(class_dtype):
+    som = susi.SOMClassifier()
+    som.placeholder_dict_ = {
+            "str": "PLACEHOLDER",
+            "int": -999999,
+            "float": -99.999,
+        }
+    som.class_dtype_ = class_dtype
+    if class_dtype != dict:
+        som.set_placeholder()
+        assert(type(som.placeholder_) == class_dtype)
+    else:
+        with pytest.raises(ValueError):
+            som.set_placeholder()

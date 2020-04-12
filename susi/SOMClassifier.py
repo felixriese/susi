@@ -176,7 +176,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         self.classes_, self.class_counts_ = np.unique(
             self.y_[self.labeled_indices_], return_counts=True)
         self.class_dtype_ = type(self.y_.flatten()[0])
-        self.setPlaceholder()
+        self.set_placeholder()
 
         # check if forbidden class name exists in classes
         if self.placeholder_ in self.classes_:
@@ -228,7 +228,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
         self.super_som_ = som
 
-    def setPlaceholder(self):
+    def set_placeholder(self):
         """Set placeholder depending on the class dtype."""
         if self.class_dtype_ in [str, np.str, np.str_]:
             self.placeholder_ = self.placeholder_dict_["str"]
