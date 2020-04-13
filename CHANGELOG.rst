@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+[1.0.10] - not yet released on PyPi
+------------------------------------
+- [ADDED] Support for Python 3.8.x.
+- [ADDED] Test coverage.
+- [CHANGED] Function `setPlaceholder` to `set_placeholder`.
+
 [1.0.9] - 2020-04-07
 ------------------------
 - [ADDED] Documentation of the hyperparameters.

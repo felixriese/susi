@@ -44,8 +44,8 @@ TRAIN_MODES = ["online", "batch"]
 def test_som_regressor_init(n_rows, n_columns):
     som_reg = susi.SOMRegressor(
         n_rows=n_rows, n_columns=n_columns)
-    assert som_reg.n_rows == n_rows
-    assert som_reg.n_columns == n_columns
+    assert(som_reg.n_rows == n_rows)
+    assert(som_reg.n_columns == n_columns)
 
 
 @pytest.mark.parametrize("X,y,init_mode", [
@@ -53,6 +53,10 @@ def test_som_regressor_init(n_rows, n_columns):
      "random"),
     (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), np.array([[3], [5]]),
      "random_data"),
+    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), np.array([[3], [5]]),
+     "random_minmax"),
+    (np.array([[0., 1.1, 2.1], [0.3, 2.1, 1.1]]), np.array([5, 5]),
+     "random"),
 ])
 def test_init_super_som_regressor(X, y, init_mode):
     som = susi.SOMRegressor(init_mode_supervised=init_mode)
@@ -67,7 +71,7 @@ def test_init_super_som_regressor(X, y, init_mode):
     # test shape
     n_rows = som.n_rows
     n_columns = som.n_columns
-    assert som.super_som_.shape == (n_rows, n_columns, y.shape[1])
+    assert som.super_som_.shape == (n_rows, n_columns, som.n_regression_vars_)
 
     with pytest.raises(Exception):
         som = susi.SOMRegressor(init_mode_supervised="pca")
@@ -113,6 +117,9 @@ def test_calc_estimation_output(n_rows, n_columns, unsuper_som, super_som,
     output = som.calc_estimation_output(datapoint)
     print(output)
     assert np.array_equal(output, expected)
+
+    with pytest.raises(ValueError):
+        som.calc_estimation_output(datapoint, mode="wrong")
 
 
 def test_mexicanhat_nbh_dist_weight_mode():

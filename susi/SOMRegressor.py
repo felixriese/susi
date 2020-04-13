@@ -107,22 +107,26 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
 
     sample_weights_ : TODO
 
+    n_regression_vars_ : int
+        Number of regression variables. In most examples, this equals one.
+
     """
 
     def init_super_som(self):
         """Initialize map for regression."""
         self.max_iterations_ = self.n_iter_supervised
+        self.n_regression_vars_ = None
 
         # check if target variable has dimension 1 or >1
         if len(self.y_.shape) == 1:
-            n_regression_vars = 1
+            self.n_regression_vars_ = 1
         else:
-            n_regression_vars = self.y_.shape[1]
+            self.n_regression_vars_ = self.y_.shape[1]
 
         # initialize regression SOM
         if self.init_mode_supervised == "random":
             som = np.random.rand(self.n_rows, self.n_columns,
-                                 n_regression_vars)
+                                 self.n_regression_vars_)
 
         elif self.init_mode_supervised == "random_data":
             indices = np.random.randint(
@@ -136,7 +140,7 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
             som = np.random.uniform(
                 low=np.min(self.y_[self.labeled_indices_]),
                 high=np.max(self.y_[self.labeled_indices_]),
-                size=(self.n_rows, self.n_columns, n_regression_vars))
+                size=(self.n_rows, self.n_columns, self.n_regression_vars_))
 
         else:
             raise ValueError("Invalid init_mode_supervised: "+str(
