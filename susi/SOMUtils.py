@@ -1,4 +1,9 @@
-"""SOMUtils functions."""
+"""SOMUtils functions.
+
+Copyright (c) 2019-2020, Felix M. Riese.
+All rights reserved.
+
+"""
 
 import numpy as np
 from sklearn.utils.multiclass import check_classification_targets

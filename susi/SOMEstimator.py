@@ -1,4 +1,9 @@
-"""SOMEstimator class."""
+"""SOMEstimator class.
+
+Copyright (c) 2019-2020, Felix M. Riese.
+All rights reserved.
+
+"""
 
 from abc import ABC, abstractmethod
 

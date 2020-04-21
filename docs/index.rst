@@ -10,7 +10,7 @@ It includes a fully functional SOM for unsupervised, supervised and semi-supervi
 :Author:
     `Felix M. Riese <mailto:github@felixriese.de>`_
 
-:Citation: see `Citation <citation.rst>`_ and in the `bibtex <https://github.com/felixriese/susi/blob/master/bibliography.bib>`_ file
+:Citation: see `Citation <citation.html>`_ and in the `bibtex <https://github.com/felixriese/susi/blob/master/bibliography.bib>`_ file
 
 :Paper:
     `F. M. Riese, S. Keller and S. Hinz in Remote Sensing, 2020 <https://www.mdpi.com/2072-4292/12/1/7>`_

@@ -71,7 +71,7 @@ Installation
 
 .. code:: bash
 
-    pip install susi
+    pip3 install susi
 
 More information can be found in the `installation guidelines <https://susi.readthedocs.io/en/latest/install.html>`_.
 
@@ -91,10 +91,13 @@ FAQs
 -----
 
 - **How should I set the initial hyperparameters of a SOM?** For more details
-  on the hyperparameters, see in `documentation/hyperparameters <https://susi.readthedocs.io/en/latest/hyperparameters.html>`_.
-- **How can I optimize the hyperparameters?** Because the SuSi package is
-  developed according to several scikit-learn guidelines, it can be used with,
-  for example, `scikit-learn.model_selection.GridSearchCV <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html>`_.
+  on the hyperparameters, see in `documentation/hyperparameters
+  <https://susi.readthedocs.io/en/latest/hyperparameters.html>`_.
+- **How can I optimize the hyperparameters?** The SuSi hyperparameters
+    can be optimized, for example, with `scikit-learn.model_selection.GridSearchCV
+    <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html>`_,
+    since the SuSi package is developed according to several scikit-learn
+    guidelines.
 
 
 ------------

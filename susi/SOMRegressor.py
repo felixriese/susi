@@ -1,4 +1,9 @@
-"""SOMRegressor class."""
+"""SOMRegressor class.
+
+Copyright (c) 2019-2020, Felix M. Riese.
+All rights reserved.
+
+"""
 
 import numpy as np
 from sklearn.base import RegressorMixin

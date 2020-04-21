@@ -1,4 +1,9 @@
-"""SOMPlots functions."""
+"""SOMPlots functions.
+
+Copyright (c) 2019-2020, Felix M. Riese.
+All rights reserved.
+
+"""
 
 import matplotlib.pyplot as plt
 import matplotlib

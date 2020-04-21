@@ -1,4 +1,9 @@
-"""SOMClustering class."""
+"""SOMClustering class.
+
+Copyright (c) 2019-2020, Felix M. Riese.
+All rights reserved.
+
+"""
 
 import itertools
 

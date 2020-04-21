@@ -1,4 +1,9 @@
-"""SOMClassifier class."""
+"""SOMClassifier class.
+
+Copyright (c) 2019-2020, Felix M. Riese.
+All rights reserved.
+
+"""
 
 import numpy as np
 from scipy.special import softmax

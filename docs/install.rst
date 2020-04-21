@@ -22,7 +22,7 @@ Install via PyPi
 
 .. code:: bash
 
-    pip install susi
+    pip3 install susi
 
 
 Install without PyPi
