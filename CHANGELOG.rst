@@ -1,11 +1,12 @@
 Change Log
 ==========
 
-[1.0.10] - not yet released on PyPi
+[1.0.10] - 2020-04-21
 ------------------------------------
 - [ADDED] Support for Python 3.8.x.
-- [ADDED] Test coverage.
+- [ADDED] Test coverage and MultiOutput test.
 - [CHANGED] Function `setPlaceholder` to `set_placeholder`.
+- [FIXED] Documentation links
 
 [1.0.9] - 2020-04-07
 ------------------------

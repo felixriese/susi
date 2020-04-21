@@ -8,7 +8,6 @@ import os
 import sys
 
 import numpy as np
-import pytest
 from sklearn.datasets import load_boston
 from sklearn.multioutput import MultiOutputRegressor
 
