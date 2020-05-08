@@ -106,13 +106,15 @@ FAQs
 Citation
 --------
 
-The bibtex file including both references is available `here <https://github.com/felixriese/susi/blob/master/bibliography.bib>`_.
+The bibtex file including both references is available in `bibliography.bib
+<https://github.com/felixriese/susi/blob/master/bibliography.bib>`_.
 
 **Paper:**
 
 F. M. Riese, S. Keller and S. Hinz, "Supervised and Semi-Supervised Self-Organizing
 Maps for Regression and Classification Focusing on Hyperspectral Data",
-*Remote Sensing*, vol. 12, no. 1, 2020.
+*Remote Sensing*, vol. 12, no. 1, 2020. `DOI:10.3390/rs12010007
+<https://doi.org/10.3390/rs12010007>`_
 
 .. code:: bibtex
 
@@ -133,7 +135,8 @@ Maps for Regression and Classification Focusing on Hyperspectral Data",
 **Code:**
 
 Felix M. Riese, "SuSi: SUpervised Self-organIzing maps in Python",
-`10.5281/zenodo.2609130 <https://doi.org/10.5281/zenodo.2609130>`_, 2019.
+Zenodo, 2019. `DOI:10.5281/zenodo.2609130
+<https://doi.org/10.5281/zenodo.2609130>`_
 
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.2609130.svg
    :target: https://doi.org/10.5281/zenodo.2609130
