@@ -94,10 +94,10 @@ FAQs
   on the hyperparameters, see in `documentation/hyperparameters
   <https://susi.readthedocs.io/en/latest/hyperparameters.html>`_.
 - **How can I optimize the hyperparameters?** The SuSi hyperparameters
-    can be optimized, for example, with `scikit-learn.model_selection.GridSearchCV
-    <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html>`_,
-    since the SuSi package is developed according to several scikit-learn
-    guidelines.
+  can be optimized, for example, with `scikit-learn.model_selection.GridSearchCV
+  <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html>`_,
+  since the SuSi package is developed according to several scikit-learn
+  guidelines.
 
 
 ------------
