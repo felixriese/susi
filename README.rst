@@ -153,7 +153,7 @@ Zenodo, 2019. `DOI:10.5281/zenodo.2609130
 License
 -------
 
-This project is published under the 3-Clause BSD <LICENSE>.
+This project is published under the `3-Clause BSD <LICENSE>`_ license.
 
 .. image:: https://img.shields.io/pypi/l/susi.svg
     :target: https://github.com/felixriese/susi/blob/master/LICENSE
