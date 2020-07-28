@@ -6,10 +6,6 @@
     :target: https://pypi.org/project/susi/
     :alt: PyPI - Python Version
 
-.. image:: https://img.shields.io/pypi/l/susi.svg
-    :target: https://github.com/felixriese/susi/blob/master/LICENSE
-    :alt: PyPI - License
-
 .. image:: https://travis-ci.org/felixriese/susi.svg?branch=master
     :target: https://travis-ci.org/felixriese/susi
     :alt: Travis.CI Status
@@ -151,3 +147,14 @@ Zenodo, 2019. `DOI:10.5281/zenodo.2609130
         publisher = {Zenodo},
         howpublished = {\href{https://doi.org/10.5281/zenodo.2609130}{doi.org/10.5281/zenodo.2609130}}
     }
+
+-------------
+
+License
+-------
+
+This project is published under the 3-Clause BSD <LICENSE>.
+
+.. image:: https://img.shields.io/pypi/l/susi.svg
+    :target: https://github.com/felixriese/susi/blob/master/LICENSE
+    :alt: PyPI - License
