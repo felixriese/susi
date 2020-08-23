@@ -117,6 +117,9 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
     sample_weights_ : TODO
 
+    n_features_in_ : int
+        Number of input features
+
     """
 
     def __init__(self,
@@ -192,6 +195,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         """
         X, y = check_estimation_input(X, y)
+        self.n_features_in_ = X.shape[1]
 
         return self.fit_estimator(X, y)
 

@@ -466,8 +466,10 @@ class SOMClustering():
             for node in self.node_list_:
                 som_node = som_array[node[0], node[1]]
                 distmat[node] = dist.rogerstanimoto(
-                    binarize(datapoint.reshape(1, -1), threshold, copy=True),
-                    binarize(som_node.reshape(1, -1), threshold, copy=True))
+                    binarize(datapoint.reshape(1, -1), threshold=threshold,
+                             copy=True),
+                    binarize(som_node.reshape(1, -1), threshold=threshold,
+                             copy=True))
 
         return distmat
 

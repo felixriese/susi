@@ -115,6 +115,9 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
     n_regression_vars_ : int
         Number of regression variables. In most examples, this equals one.
 
+    n_features_in_ : int
+        Number of input features
+
     """
 
     def init_super_som(self):

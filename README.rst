@@ -24,6 +24,10 @@
 
 |
 
+.. raw:: html
+
+   <a href="https://github.com/felixriese/susi"><img src="https://raw.githubusercontent.com/felixriese/susi/master/docs/_static/susi_logo_small.png" align="right" /></a>
+
 SuSi: Supervised Self-organizing maps in Python
 ===============================================
 

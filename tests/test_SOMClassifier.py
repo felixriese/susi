@@ -154,7 +154,7 @@ def test_fit(train_mode_unsupervised, train_mode_supervised):
 
 
 def test_estimator_status():
-    check_estimator(susi.SOMClassifier)
+    check_estimator(susi.SOMClassifier())
 
 
 @pytest.mark.parametrize(

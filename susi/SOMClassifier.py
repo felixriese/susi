@@ -120,6 +120,9 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
     placeholder_dict_ : dict
         Dict of placeholders for initializing nodes without mapped class.
 
+    n_features_in_ : int
+        Number of input features
+
     """
 
     def __init__(self,
@@ -193,8 +196,8 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         # class weighting:
         if self.do_class_weighting:
             self.class_weights_ = class_weight.compute_class_weight(
-                'balanced', np.unique(self.y_[self.labeled_indices_]),
-                self.y_[self.labeled_indices_].flatten())
+                'balanced', classes=np.unique(self.y_[self.labeled_indices_]),
+                y=self.y_[self.labeled_indices_].flatten())
         else:
             self.class_weights_ = np.ones(shape=self.classes_.shape)
 
@@ -270,6 +273,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
         """
         X, y = check_estimation_input(X, y, is_classification=True)
+        self.n_features_in_ = X.shape[1]
 
         return self.fit_estimator(X, y)
 

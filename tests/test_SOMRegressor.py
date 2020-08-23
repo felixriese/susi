@@ -99,7 +99,7 @@ def test_predict(train_mode_unsupervised, train_mode_supervised):
 
 
 def test_estimator_status():
-    check_estimator(susi.SOMRegressor)
+    check_estimator(susi.SOMRegressor())
 
 
 @pytest.mark.parametrize(

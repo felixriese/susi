@@ -95,7 +95,9 @@ html_theme_path = ["_themes", ]
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    "style_nav_header_background": "black"
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -111,6 +113,7 @@ html_static_path = ['_static']
 # 'searchbox.html']``.
 #
 # html_sidebars = {}
+html_logo = "_static/susi_logo.png"
 
 
 # -- Options for HTMLHelp output ---------------------------------------------
