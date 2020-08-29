@@ -1,5 +1,5 @@
 SOMRegressor
 =============
 
-.. automodule:: susi
-    :members: SOMRegressor
+.. autoclass:: susi.SOMRegressor
+    :members:

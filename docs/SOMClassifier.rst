@@ -1,5 +1,5 @@
 SOMClassifier
 =============
 
-.. automodule:: susi
-    :members: SOMClassifier
+.. autoclass:: susi.SOMClassifier
+    :members:

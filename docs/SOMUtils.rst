@@ -1,4 +1,4 @@
-Other Code
+SOMUtils
 =============
 
 .. automodule:: susi.SOMUtils

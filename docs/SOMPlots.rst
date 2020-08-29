@@ -1,5 +1,5 @@
 SOMEstimator
 ============
 
-.. autoclass:: susi.SOMEstimator
+.. automodule:: susi.SOMPlots
     :members:

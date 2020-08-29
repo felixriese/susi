@@ -1,5 +1,5 @@
 SOMClustering
 =============
 
-.. automodule:: susi
-    :members: SOMClustering
+.. autoclass:: susi.SOMClustering
+    :members:
