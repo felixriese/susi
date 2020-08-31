@@ -1,9 +1,9 @@
 Change Log
 ==========
 
-[1.1.0] - 2020-XX-XX
+[1.1.0] - 2020-08-31
 --------------------
-- [ADDED] New SuSi logo.
+- [ADDED] Logo.
 - [ADDED] SOMPlots documentation.
 - [REMOVED] Python 3.5 support. Now, only 3.6-3.8 are supported.
 - [FIXED] Scikit-learn warnings regarding validation of positional arguments.
