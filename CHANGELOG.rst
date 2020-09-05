@@ -4,6 +4,7 @@ Change Log
 [1.1.1] - 202X-XX-XX
 --------------------
 - [ADDED] New distance metric "spectralangle".
+- [ADDED] FAQs.
 
 [1.1.0] - 2020-08-31
 --------------------
