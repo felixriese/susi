@@ -63,6 +63,11 @@ def test_calc_learning_rate(learning_rate_start, learning_rate_end, max_it,
                    [[1., 2.1, 3.1], [-0.3, -2.1, -1.1]]]),
          "tanimoto",
          np.array([[0.5, 0.5], [0.8, 0.8]])),
+        (np.array([0.3, 2.0, 1.0]),
+         np.array([[[0., 1.1, 2.1], [0.3, 2.1, 1.1]],
+                   [[1., 2.1, 3.1], [-0.3, -2.1, -1.1]]]),
+         "spectralangle",
+         np.array([[0.93360572, 0.93360572], [2.00637762, 2.00637762]])),
     ])
 def test_get_node_distance_matrix(datapoint, som_array, distance_metric,
                                   expected):

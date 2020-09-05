@@ -47,7 +47,7 @@ class SOMClustering():
     distance_metric : str, optional (default="euclidean")
         Distance metric to compare on feature level (not SOM grid).
         Possible metrics: {"euclidean", "manhattan", "mahalanobis",
-        "tanimoto"}. Note that "tanimoto" tends to be slow.
+        "tanimoto", "spectralangle"}. Note that "tanimoto" tends to be slow.
 
     learning_rate_start : float, optional (default=0.5)
         Learning rate start value
@@ -470,6 +470,13 @@ class SOMClustering():
                              copy=True),
                     binarize(som_node.reshape(1, -1), threshold=threshold,
                              copy=True))
+
+        elif self.distance_metric == "spectralangle":
+            for node in self.node_list_:
+                distmat[node] = np.arccos(np.divide(
+                    np.dot(som_array[node[0], node[1]], datapoint),
+                    np.multiply(np.linalg.norm(som_array),
+                                np.linalg.norm(datapoint))))
 
         return distmat
 

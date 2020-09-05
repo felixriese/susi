@@ -51,7 +51,8 @@ The number of iterations (:bash:`n_iter_unsupervised` and
     unsupervised SOM 10 000 to 60 000 and for the (semi-)supervised SOM about
     20 000 to 70 000 in the *online* mode.
 
-.. todo:: Add recommendations for the batch mode.
+**Our Recommendation (Batch Mode)**
+    To be evaluated.
 
 Neighborhood Distance Weight, Neighborhood Function, and Learning Rate
 ------------------------------------------------------------------------
@@ -75,14 +76,27 @@ and the learning rate (:bash:`learn_mode_unsupervised`,
     0.3 to 0.8 and end values from 0.1 to 0.005.
 
 
-.. todo:: Add recommendations for the mexican hat distance weight.
+**Our Recommendation (Mexican-Hat):**
+    To be evaluated.
 
 Distance Metric
 -----------------
 
-In the following, we give recommendations for the distance metric.
+In the following, we give recommendations for the different distance metrics.
+Implemented into the SuSi package are the following metrics:
 
-.. todo:: Add recommendations for the distance metric.
+* Euclidean Distance, see `Wikipedia "Euclidean Distance" <https://en.wikipedia.org/wiki/Euclidean_distance>`_
+* Manhattan Distance, see `Wikipedia "Taxicab geometry" <https://en.wikipedia.org/wiki/Taxicab_geometry>`_
+* Mahalanobis Distance, see `Wikipedia "Mahalanobis distance" <https://en.wikipedia.org/wiki/Mahalanobis_distance>`_
+* Tanimoto Distance, see `Wikipedia "Jaccard index - Tanimoto similarity and distance <https://en.wikipedia.org/wiki/Jaccard_index#Tanimoto_similarity_and_distance>`_
+* Spectral Angle Distance, see e.g. [YuhasEtAl1992]_
+
+**Our Recommendation:**
+    Depending on the bandwidth, number of channels, and overlap of the spectral
+    channels, a distance metric can have a significant impact on the training.
+    While we have solely relied on the Euclidean distance in [RieseEtAl2020]_,
+    we have seen in other, not SOM-related articles, that the Mahalanobis and
+    Spectral Angle distance were helpful in the spectral separation of classes.
 
 Hyperparameter optimization
 ---------------------------
@@ -119,6 +133,11 @@ For example, the randomized search can be applied as follows in :bash:`Python3`:
 References
 ------------
 
-.. [RieseEtAl2020] F. M. Riese, S. Keller and S. Hinz, "Supervised and Semi-Supervised
-    Self-Organizing Maps for Regression and Classification Focusing on
-    Hyperspectral Data", *Remote Sensing*, vol. 12, no. 1, 2020. `Link <https://www.mdpi.com/2072-4292/12/1/7>`_
+.. [RieseEtAl2020] F. M. Riese, S. Keller and S. Hinz, "Supervised and
+    Semi-Supervised Self-Organizing Maps for Regression and Classification
+    Focusing on Hyperspectral Data", *Remote Sensing*, vol. 12, no. 1, 2020.
+    `MDPI Link <https://www.mdpi.com/2072-4292/12/1/7>`_
+.. [YuhasEtAl1992] R. H. Yuhas, A. F. Goetz, & J. W. Boardman (1992).
+    Discrimination among semi-arid landscape endmembers using the spectral
+    angle mapper (SAM) algorithm.
+    `NASA Link <https://ntrs.nasa.gov/citations/19940012238>`_
