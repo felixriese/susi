@@ -1,7 +1,15 @@
 Citation
 ========
 
-The bibtex file including both references is available `here <https://raw.githubusercontent.com/felixriese/susi/master/bibliography.bib>`_.
+.. role:: bash(code)
+   :language: bash
+
+If you are publishing results generated with the :bash:`susi` package, we are
+first of all very pround and happy about that! :-)
+
+Please cite our paper, and, if you want, our code. How? Just copy the citation
+below or download our bibtex file which we provide
+`here <https://raw.githubusercontent.com/felixriese/susi/master/bibliography.bib>`_.
 
 Paper citation
 --------------

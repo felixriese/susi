@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+[1.1.1] - 202X-XX-XX
+--------------------
+- [ADDED] New distance metric "spectralangle".
+
 [1.1.0] - 2020-08-31
 --------------------
 - [ADDED] Logo.

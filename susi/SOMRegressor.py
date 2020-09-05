@@ -55,7 +55,7 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
     distance_metric : str, optional (default="euclidean")
         Distance metric to compare on feature level (not SOM grid).
         Possible metrics: {"euclidean", "manhattan", "mahalanobis",
-        "tanimoto"}. Note that "tanimoto" tends to be slow.
+        "tanimoto", "spectralangle"}. Note that "tanimoto" tends to be slow.
 
     learning_rate_start : float, optional (default=0.5)
         Learning rate start value
