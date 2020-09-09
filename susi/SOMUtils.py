@@ -10,7 +10,7 @@ from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.validation import check_array, check_X_y
 
 
-def decreasing_rate(a_1, a_2, iteration_max, iteration, mode):
+def decreasing_rate(a_1, a_2, *, iteration_max, iteration, mode) -> float:
     """Return a decreasing rate from collection.
 
     Parameters
@@ -66,7 +66,7 @@ def decreasing_rate(a_1, a_2, iteration_max, iteration, mode):
     return rate
 
 
-def check_estimation_input(X, y, is_classification=False):
+def check_estimation_input(X, y, *, is_classification=False):
     """Check input arrays.
 
     This function is adapted from sklearn.utils.validation.
@@ -108,7 +108,7 @@ def check_estimation_input(X, y, is_classification=False):
     return X, y
 
 
-def modify_weight_matrix_online(som_array, dist_weight_matrix,
+def modify_weight_matrix_online(som_array, *, dist_weight_matrix,
                                 true_vector, learningrate):
     """Modify weight matrix of the SOM for the online algorithm.
 

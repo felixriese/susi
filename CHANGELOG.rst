@@ -5,6 +5,7 @@ Change Log
 --------------------
 - [ADDED] New distance metric "spectralangle".
 - [ADDED] FAQs.
+- [ADDED] Separate between positional and keyword parameters.
 
 [1.1.0] - 2020-08-31
 --------------------

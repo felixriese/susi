@@ -49,6 +49,9 @@ class SOMClustering():
         Possible metrics: {"euclidean", "manhattan", "mahalanobis",
         "tanimoto", "spectralangle"}. Note that "tanimoto" tends to be slow.
 
+        .. versionadded:: 1.1.1
+            Spectral angle metric.
+
     learning_rate_start : float, optional (default=0.5)
         Learning rate start value
 
@@ -105,7 +108,7 @@ class SOMClustering():
 
     def __init__(self,
                  n_rows: int = 10,
-                 n_columns: int = 10,
+                 n_columns: int = 10, *,
                  init_mode_unsupervised: str = "random",
                  n_iter_unsupervised: int = 1000,
                  train_mode_unsupervised: str = "online",
@@ -242,7 +245,8 @@ class SOMClustering():
                 dist_weight_matrix = self.get_nbh_distance_weight_matrix(
                     nbh_func, bmu_pos)
                 self.unsuper_som_ = modify_weight_matrix_online(
-                    self.unsuper_som_, dist_weight_matrix,
+                    som_array=self.unsuper_som_,
+                    dist_weight_matrix=dist_weight_matrix,
                     true_vector=self.X_[dp],
                     learningrate=learning_rate*self.sample_weights_[dp])
 
@@ -288,8 +292,11 @@ class SOMClustering():
 
         """
         return decreasing_rate(
-            self.learning_rate_start, self.learning_rate_end,
-            self.max_iterations_, curr_it, mode)
+            self.learning_rate_start,
+            self.learning_rate_end,
+            iteration_max=self.max_iterations_,
+            iteration=curr_it,
+            mode=mode)
 
     def calc_neighborhood_func(self, curr_it, mode):
         """Calculate neighborhood function (= radius).
@@ -308,8 +315,11 @@ class SOMClustering():
 
         """
         return decreasing_rate(
-            self.radius_max_, self.radius_min_, self.max_iterations_,
-            curr_it, mode)
+            self.radius_max_,
+            self.radius_min_,
+            iteration_max=self.max_iterations_,
+            iteration=curr_it,
+            mode=mode)
 
     def get_bmu(self, datapoint, som_array):
         """Get best matching unit (BMU) for datapoint.
@@ -730,17 +740,21 @@ class SOMClustering():
         for u_node in itertools.product(range(self.n_rows*2-1),
                                         range(self.n_columns*2-1)):
 
+            # neighbor vector
+            nb = (0, 0)
+
             if not (u_node[0] % 2) and (u_node[1] % 2):
                 # mean horizontally
-                self.u_matrix[u_node] = np.linalg.norm(
-                    self.unsuper_som_[u_node[0]//2][u_node[1]//2] -
-                    self.unsuper_som_[u_node[0]//2][u_node[1]//2+1])
+                nb = (0, 1)
+
             elif (u_node[0] % 2) and not (u_node[1] % 2):
                 # mean vertically
-                self.u_matrix[u_node] = np.linalg.norm(
-                    self.unsuper_som_[u_node[0]//2][u_node[1]//2] -
-                    self.unsuper_som_[u_node[0]//2+1][u_node[1]//2],
-                    axis=0)
+                nb = (1, 0)
+
+            self.u_matrix[u_node] = np.linalg.norm(
+                self.unsuper_som_[u_node[0]//2][u_node[1]//2] -
+                self.unsuper_som_[u_node[0]//2+nb[0]][u_node[1]//2+nb[1]],
+                axis=0)
 
     def calc_u_matrix_means(self):
         """Calculate the missing parts of the u-matrix.

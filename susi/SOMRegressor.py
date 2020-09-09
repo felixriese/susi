@@ -57,6 +57,9 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
         Possible metrics: {"euclidean", "manhattan", "mahalanobis",
         "tanimoto", "spectralangle"}. Note that "tanimoto" tends to be slow.
 
+        .. versionadded:: 1.1.1
+            Spectral angle metric.
+
     learning_rate_start : float, optional (default=0.5)
         Learning rate start value
 

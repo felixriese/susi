@@ -61,6 +61,9 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         Possible metrics: {"euclidean", "manhattan", "mahalanobis",
         "tanimoto", "spectralangle"}. Note that "tanimoto" tends to be slow.
 
+        .. versionadded:: 1.1.1
+            Spectral angle metric.
+
     learning_rate_start : float, optional (default=0.5)
         Learning rate start value
 
@@ -127,7 +130,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
     def __init__(self,
                  n_rows: int = 10,
-                 n_columns: int = 10,
+                 n_columns: int = 10, *,
                  init_mode_unsupervised: str = "random",
                  init_mode_supervised: str = "majority",
                  n_iter_unsupervised: int = 1000,
@@ -148,26 +151,28 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
                  random_state=None,
                  verbose=0):
         """Initialize SOMClassifier object."""
-        super().__init__(n_rows,
-                         n_columns,
-                         init_mode_unsupervised,
-                         init_mode_supervised,
-                         n_iter_unsupervised,
-                         n_iter_supervised,
-                         train_mode_unsupervised,
-                         train_mode_supervised,
-                         neighborhood_mode_unsupervised,
-                         neighborhood_mode_supervised,
-                         learn_mode_unsupervised,
-                         learn_mode_supervised,
-                         distance_metric,
-                         learning_rate_start,
-                         learning_rate_end,
-                         nbh_dist_weight_mode,
-                         missing_label_placeholder,
-                         n_jobs,
-                         random_state,
-                         verbose)
+        super().__init__(
+            n_rows=n_rows,
+            n_columns=n_columns,
+            init_mode_unsupervised=init_mode_unsupervised,
+            init_mode_supervised=init_mode_supervised,
+            n_iter_unsupervised=n_iter_unsupervised,
+            n_iter_supervised=n_iter_supervised,
+            train_mode_unsupervised=train_mode_unsupervised,
+            train_mode_supervised=train_mode_supervised,
+            neighborhood_mode_unsupervised=neighborhood_mode_unsupervised,
+            neighborhood_mode_supervised=neighborhood_mode_supervised,
+            learn_mode_unsupervised=learn_mode_unsupervised,
+            learn_mode_supervised=learn_mode_supervised,
+            distance_metric=distance_metric,
+            learning_rate_start=learning_rate_start,
+            learning_rate_end=learning_rate_end,
+            nbh_dist_weight_mode=nbh_dist_weight_mode,
+            missing_label_placeholder=missing_label_placeholder,
+            n_jobs=n_jobs,
+            random_state=random_state,
+            verbose=verbose)
+
         self.do_class_weighting = do_class_weighting
 
     def init_super_som(self):

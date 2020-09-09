@@ -62,6 +62,9 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         Possible metrics: {"euclidean", "manhattan", "mahalanobis",
         "tanimoto", "spectralangle"}. Note that "tanimoto" tends to be slow.
 
+        .. versionadded:: 1.1.1
+            Spectral angle metric.
+
     learning_rate_start : float, optional (default=0.5)
         Learning rate start value
 
@@ -124,7 +127,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
     def __init__(self,
                  n_rows: int = 10,
-                 n_columns: int = 10,
+                 n_columns: int = 10, *,
                  init_mode_unsupervised: str = "random",
                  init_mode_supervised: str = "random",
                  n_iter_unsupervised: int = 1000,
@@ -144,20 +147,21 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
                  random_state=None,
                  verbose=0):
         """Initialize SOMEstimator object."""
-        super().__init__(n_rows,
-                         n_columns,
-                         init_mode_unsupervised,
-                         n_iter_unsupervised,
-                         train_mode_unsupervised,
-                         neighborhood_mode_unsupervised,
-                         learn_mode_unsupervised,
-                         distance_metric,
-                         learning_rate_start,
-                         learning_rate_end,
-                         nbh_dist_weight_mode,
-                         n_jobs,
-                         random_state,
-                         verbose)
+        super().__init__(
+            n_rows=n_rows,
+            n_columns=n_columns,
+            init_mode_unsupervised=init_mode_unsupervised,
+            n_iter_unsupervised=n_iter_unsupervised,
+            train_mode_unsupervised=train_mode_unsupervised,
+            neighborhood_mode_unsupervised=neighborhood_mode_unsupervised,
+            learn_mode_unsupervised=learn_mode_unsupervised,
+            distance_metric=distance_metric,
+            learning_rate_start=learning_rate_start,
+            learning_rate_end=learning_rate_end,
+            nbh_dist_weight_mode=nbh_dist_weight_mode,
+            n_jobs=n_jobs,
+            random_state=random_state,
+            verbose=verbose)
 
         self.init_mode_supervised = init_mode_supervised
         self.n_iter_supervised = n_iter_supervised
@@ -347,7 +351,9 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         modify_weight_matrix = None
         if self.train_mode_supervised == "online":
             modify_weight_matrix = modify_weight_matrix_online(
-                self.super_som_, dist_weight_matrix, true_vector=true_vector,
+                som_array=self.super_som_,
+                dist_weight_matrix=dist_weight_matrix,
+                true_vector=true_vector,
                 learningrate=learningrate)
 
         elif self.train_mode_supervised == "batch":

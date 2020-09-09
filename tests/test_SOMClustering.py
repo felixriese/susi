@@ -109,11 +109,13 @@ def test_decreasing_rate(a_1, a_2, max_it, curr_it, mode, expected):
     if mode == "testerror":
         with pytest.raises(Exception):
             assert susi.decreasing_rate(
-                a_1, a_2, max_it, curr_it, mode) == expected
+                a_1, a_2, iteration_max=max_it, iteration=curr_it,
+                mode=mode) == expected
 
     else:
         assert susi.decreasing_rate(
-            a_1, a_2, max_it, curr_it, mode) == expected
+            a_1, a_2, iteration_max=max_it, iteration=curr_it,
+            mode=mode) == expected
 
 
 @pytest.mark.parametrize("X,init_mode", [
@@ -135,11 +137,13 @@ def test_init_unsuper_som(X, init_mode):
         # test shape
         n_rows = som_clustering.n_rows
         n_columns = som_clustering.n_columns
-        assert som_clustering.unsuper_som_.shape == (n_rows, n_columns, X.shape[1])
+        assert som_clustering.unsuper_som_.shape == (
+            n_rows, n_columns, X.shape[1])
 
     else:
         with pytest.raises(Exception):
             som_clustering.init_unsuper_som()
+
 
 @pytest.mark.parametrize("som_array,datapoint,expected", [
     (np.array([[[0., 1.1, 2.1], [0.3, 2.1, 1.1]],
@@ -155,15 +159,15 @@ def test_get_bmu(som_array, datapoint, expected):
 @pytest.mark.parametrize(
     "X,n_rows,n_columns,train_mode_unsupervised,random_state,expected", [
         (np.array([[0., 0.1, 0.2], [2.3, 2.1, 2.1]]), 2, 2, "online", 42,
-        np.array([[[1.72651971, 1.60132149, 1.62625542],
-                   [1.2091674, 1.15144991, 1.19887742]],
-                  [[1.2091674, 1.15144991, 1.19887742],
-                   [0.66132515, 0.67506535, 0.74631208]]])),
+         np.array([[[1.72651971, 1.60132149, 1.62625542],
+                    [1.2091674, 1.15144991, 1.19887742]],
+                   [[1.2091674, 1.15144991, 1.19887742],
+                    [0.66132515, 0.67506535, 0.74631208]]])),
         (np.array([[0., 0.1, 0.2], [2.3, 2.1, 2.1]]), 2, 2, "batch", 42,
-        np.array([[[1.68143473, 1.56211716, 1.5890113 ],
-                   [1.15      , 1.1       , 1.15      ]],
-                  [[1.15      , 1.1       , 1.15      ],
-                   [0.61856527, 0.63788284, 0.7109887 ]]]))
+         np.array([[[1.68143473, 1.56211716, 1.5890113],
+                    [1.15, 1.1, 1.15]],
+                   [[1.15, 1.1, 1.15],
+                    [0.61856527, 0.63788284, 0.7109887]]]))
         ])
 def test_fit(X, n_rows, n_columns, train_mode_unsupervised, random_state,
              expected):
@@ -216,10 +220,10 @@ def test_get_nbh_distance_weight_matrix(n_rows, n_columns, random_state,
      "neighborhood_func,bmu_pos,dp,expected"), [
         (2, 2, 42, 2, np.array([[0., 0.1, 0.2], [2.3, 2.1, 2.1]]), 0.7, 0.4,
          (1, 1), 1,
-        np.array([[[1.49058628, 1.61686991, 1.52492551],
-                   [1.26125694, 0.91311475, 0.91310002]],
-                  [[0.93121244, 1.34669682, 1.18486546],
-                   [1.9329369 , 1.62053297, 1.83942631]]])),
+         np.array([[[1.49058628, 1.61686991, 1.52492551],
+                    [1.26125694, 0.91311475, 0.91310002]],
+                   [[0.93121244, 1.34669682, 1.18486546],
+                    [1.9329369, 1.62053297, 1.83942631]]])),
         ])
 def test_modify_weight_matrix_online(n_rows, n_columns, random_state,
                                      n_iter_unsupervised, X, learningrate,
