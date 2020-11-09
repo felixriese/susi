@@ -76,6 +76,10 @@ Installation
 
 More information can be found in the `installation guidelines <https://susi.readthedocs.io/en/latest/install.html>`_.
 
+.. image:: https://static.pepy.tech/personalized-badge/susi?period=total&units=international_system&left_color=black&right_color=blue&left_text=Downloads
+	:target: https://pepy.tech/project/susi
+	:alt: Downloads
+
 Examples
 --------
 
