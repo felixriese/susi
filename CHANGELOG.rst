@@ -6,6 +6,7 @@ Change Log
 - [ADDED] New distance metric "spectralangle".
 - [ADDED] FAQs.
 - [ADDED] Separate between positional and keyword parameters.
+- [ADDED] Plot script for neighborhood distance weight matrix.
 
 [1.1.0] - 2020-08-31
 --------------------

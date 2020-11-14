@@ -12,7 +12,7 @@ import numpy as np
 
 def plot_estimation_map(estimation_map, cbar_label="Variable in unit",
                         cmap="viridis", fontsize=20):
-    """[summary]
+    """Plot estimation map.
 
     Parameters
     ----------
@@ -158,5 +158,43 @@ def plot_umatrix(u_matrix, n_rows, n_colums, cmap="Greys", fontsize=18):
     cbar.ax.set_ylabel('Distance measure (a.u.)', rotation=90,
                        fontsize=fontsize, labelpad=20)
     cbar.ax.tick_params(labelsize=fontsize)
+
+    return ax
+
+
+def plot_nbh_dist_weight_matrix(som, it_frac=0.1):
+    """Plot neighborhood distance weight matrix in 3D.
+
+    Parameters
+    ----------
+    som : susi.SOMClustering or related
+        Trained (un)supervised SOM
+    it_frac : float, optional (default=0.1)
+        Fraction of `som.n_iter_unsupervised` for the plot state.
+
+    Returns
+    -------
+    ax : pyplot.axis
+        Plot axis
+
+    """
+    nbh_func = som.calc_neighborhood_func(
+        curr_it=som.n_iter_unsupervised*it_frac,
+        mode=som.neighborhood_mode_unsupervised)
+    dist_weight_matrix = som.get_nbh_distance_weight_matrix(
+        neighborhood_func=nbh_func, bmu_pos=[som.n_rows//2, som.n_columns//2])
+
+    fig = plt.figure(figsize=(10, 10))
+    ax = fig.add_subplot(111, projection='3d')
+
+    x = np.arange(som.n_rows)
+    y = np.arange(som.n_columns)
+    X, Y = np.meshgrid(x, y)
+    Z = dist_weight_matrix.reshape(som.n_rows, som.n_columns)
+
+    surf = ax.plot_surface(
+        X, Y, Z, cmap=matplotlib.cm.coolwarm, antialiased=False,
+        rstride=1, cstride=1, linewidth=0)
+    fig.colorbar(surf, shrink=0.5, aspect=10)
 
     return ax
