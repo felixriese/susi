@@ -53,10 +53,10 @@ def test_init_super_som(n_rows, n_columns, do_class_weighting):
     som.X_ = X_train
     som.y_ = y_train
     som.sample_weights_ = np.full(fill_value=1., shape=(len(som.X_), 1))
-    som.train_unsupervised_som()
+    som._train_unsupervised_som()
     som.labeled_indices_ = list(range(len(som.y_)))
-    som.set_bmus(som.X_)
-    som.init_super_som()
+    som._set_bmus(som.X_)
+    som._init_super_som()
 
 
 def test_init_super_som_raises():
@@ -65,9 +65,9 @@ def test_init_super_som_raises():
         som = susi.SOMClassifier()
         som.X_ = X_train
         som.y_ = y_train
-        som.train_unsupervised_som()
-        som.set_bmus(som.X_)
-        som.init_super_som()
+        som._train_unsupervised_som()
+        som._set_bmus(som.X_)
+        som._init_super_som()
 
     # initialize with placeholder in class list
     with pytest.raises(ValueError):
@@ -77,9 +77,9 @@ def test_init_super_som_raises():
         som.y_ = np.full(shape=y_train.shape, fill_value="PLACEHOLDER")
         som.sample_weights_ = np.full(fill_value=1., shape=(len(som.X_), 1))
         som.labeled_indices_ = list(range(len(som.y_)))
-        som.train_unsupervised_som()
-        som.set_bmus(som.X_)
-        som.init_super_som()
+        som._train_unsupervised_som()
+        som._set_bmus(som.X_)
+        som._init_super_som()
 
     # initialize with placeholder = missing_label_placeholder
     with pytest.raises(ValueError):
@@ -88,9 +88,9 @@ def test_init_super_som_raises():
         som.y_ = y_train
         som.sample_weights_ = np.full(fill_value=1., shape=(len(som.X_), 1))
         som.labeled_indices_ = list(range(len(som.y_)))
-        som.train_unsupervised_som()
-        som.set_bmus(som.X_)
-        som.init_super_som()
+        som._train_unsupervised_som()
+        som._set_bmus(som.X_)
+        som._init_super_som()
         print(y_train)
 
 
@@ -107,7 +107,7 @@ def test_change_class_proba(n_rows, n_columns, learningrate,
                             expected):
     som = susi.SOMClassifier(n_rows=n_rows, n_columns=n_columns,
                              random_state=random_state)
-    new_som_array = som.change_class_proba(learningrate, dist_weight_matrix,
+    new_som_array = som._change_class_proba(learningrate, dist_weight_matrix,
                                            class_weight)
     assert(new_som_array.shape == (n_rows, n_columns, 1))
     assert(new_som_array.dtype == bool)
@@ -132,7 +132,7 @@ def test_modify_weight_matrix_supervised(
     som.classes_ = [0, 1, 2]
     som.class_weights_ = [1., 1., 1.]
     som.super_som_ = som_array
-    new_som = som.modify_weight_matrix_supervised(
+    new_som = som._modify_weight_matrix_supervised(
         dist_weight_matrix=dist_weight_matrix,
         true_vector=true_vector,
         learningrate=learningrate)
@@ -184,8 +184,8 @@ def test_set_placeholder(class_dtype):
         }
     som.class_dtype_ = class_dtype
     if class_dtype != dict:
-        som.set_placeholder()
+        som._set_placeholder()
         assert(type(som.placeholder_) == class_dtype)
     else:
         with pytest.raises(ValueError):
-            som.set_placeholder()
+            som._set_placeholder()

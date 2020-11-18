@@ -175,7 +175,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
         self.do_class_weighting = do_class_weighting
 
-    def init_super_som(self):
+    def _init_super_som(self):
         """Initialize map."""
         self.max_iterations_ = self.n_iter_supervised
 
@@ -189,7 +189,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         self.classes_, self.class_counts_ = np.unique(
             self.y_[self.labeled_indices_], return_counts=True)
         self.class_dtype_ = type(self.y_.flatten()[0])
-        self.set_placeholder()
+        self._set_placeholder()
 
         # check if forbidden class name exists in classes
         if self.placeholder_ in self.classes_:
@@ -241,7 +241,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
         self.super_som_ = som
 
-    def set_placeholder(self):
+    def _set_placeholder(self):
         """Set placeholder depending on the class dtype."""
         if self.class_dtype_ in [str, np.str, np.str_]:
             self.placeholder_ = self.placeholder_dict_["str"]
@@ -280,9 +280,9 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         X, y = check_estimation_input(X, y, is_classification=True)
         self.n_features_in_ = X.shape[1]
 
-        return self.fit_estimator(X, y)
+        return self._fit_estimator(X, y)
 
-    def modify_weight_matrix_supervised(self, dist_weight_matrix,
+    def _modify_weight_matrix_supervised(self, dist_weight_matrix,
                                         true_vector=None,
                                         learningrate=None):
         """Modify weight matrix of the SOM.
@@ -306,7 +306,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         if self.train_mode_supervised == "online":
             class_weight = self.class_weights_[
                 np.argwhere(self.classes_ == true_vector)[0, 0]]
-            change_class_bool = self.change_class_proba(
+            change_class_bool = self._change_class_proba(
                 learningrate, dist_weight_matrix, class_weight)
 
             different_classes_matrix = (
@@ -344,7 +344,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
         return new_matrix
 
-    def change_class_proba(self, learningrate, dist_weight_matrix,
+    def _change_class_proba(self, learningrate, dist_weight_matrix,
                            class_weight):
         """Calculate probability of changing class in a node.
 
@@ -365,8 +365,8 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
             If false, the value of the respective SOM node stays the same.
 
         """
-        change_class_proba = learningrate * dist_weight_matrix
-        change_class_proba *= class_weight
+        _change_class_proba = learningrate * dist_weight_matrix
+        _change_class_proba *= class_weight
         random_matrix = np.random.rand(self.n_rows, self.n_columns, 1)
-        change_class_bool = random_matrix < change_class_proba
+        change_class_bool = random_matrix < _change_class_proba
         return change_class_bool

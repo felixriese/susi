@@ -1,4 +1,4 @@
-SOMEstimator
+SOMPlots
 ============
 
 .. automodule:: susi.SOMPlots

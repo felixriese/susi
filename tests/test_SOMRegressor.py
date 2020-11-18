@@ -63,7 +63,7 @@ def test_init_super_som_regressor(X, y, init_mode):
     som.X_ = X
     som.y_ = y
     som.labeled_indices_ = np.where(som.y_ != -1)[0]
-    som.init_super_som()
+    som._init_super_som()
 
     # test type
     assert isinstance(som.super_som_, np.ndarray)
@@ -77,7 +77,7 @@ def test_init_super_som_regressor(X, y, init_mode):
         som = susi.SOMRegressor(init_mode_supervised="pca")
         som.X_ = X
         som.y_ = y
-        som.init_super_som()
+        som._init_super_som()
 
 
 @pytest.mark.parametrize(
@@ -114,12 +114,12 @@ def test_calc_estimation_output(n_rows, n_columns, unsuper_som, super_som,
     som = susi.SOMRegressor(n_rows=n_rows, n_columns=n_columns)
     som.unsuper_som_ = unsuper_som
     som.super_som_ = super_som
-    output = som.calc_estimation_output(datapoint)
+    output = som._calc_estimation_output(datapoint)
     print(output)
     assert np.array_equal(output, expected)
 
     with pytest.raises(ValueError):
-        som.calc_estimation_output(datapoint, mode="wrong")
+        som._calc_estimation_output(datapoint, mode="wrong")
 
 
 def test_mexicanhat_nbh_dist_weight_mode():

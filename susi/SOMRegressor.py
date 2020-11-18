@@ -123,7 +123,7 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
 
     """
 
-    def init_super_som(self):
+    def _init_super_som(self):
         """Initialize map for regression."""
         self.max_iterations_ = self.n_iter_supervised
         self.n_regression_vars_ = None

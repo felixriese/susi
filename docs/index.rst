@@ -39,8 +39,6 @@ It includes a fully functional SOM for unsupervised, supervised and semi-supervi
 
     SOMClustering <SOMClustering.rst>
 
-    SOMEstimator <SOMEstimator.rst>
-
     SOMRegressor <SOMRegressor.rst>
 
     SOMClassifier <SOMClassifier.rst>

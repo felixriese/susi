@@ -178,10 +178,10 @@ def plot_nbh_dist_weight_matrix(som, it_frac=0.1):
         Plot axis
 
     """
-    nbh_func = som.calc_neighborhood_func(
+    nbh_func = som._calc_neighborhood_func(
         curr_it=som.n_iter_unsupervised*it_frac,
         mode=som.neighborhood_mode_unsupervised)
-    dist_weight_matrix = som.get_nbh_distance_weight_matrix(
+    dist_weight_matrix = som._get_nbh_distance_weight_matrix(
         neighborhood_func=nbh_func, bmu_pos=[som.n_rows//2, som.n_columns//2])
 
     fig = plt.figure(figsize=(10, 10))

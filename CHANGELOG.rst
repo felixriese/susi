@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+[1.1.2] - tbd
+--------------------
+- [CHANGED] Function names for private use now start with an underscore.
+
 [1.1.1] - 2020-11-18
 --------------------
 - [ADDED] New distance metric "spectralangle".
@@ -21,7 +25,7 @@ Change Log
 ------------------------------------
 - [ADDED] Support for Python 3.8.x.
 - [ADDED] Test coverage and MultiOutput test.
-- [CHANGED] Function `setPlaceholder` to `set_placeholder`.
+- [CHANGED] Function `setPlaceholder` to `_set_placeholder`.
 - [FIXED] Documentation links
 
 [1.0.9] - 2020-04-07

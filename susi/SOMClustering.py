@@ -137,7 +137,7 @@ class SOMClustering():
         self.random_state = random_state
         self.verbose = verbose
 
-    def init_unsuper_som(self):
+    def _init_unsuper_som(self):
         """Initialize map."""
         # init node list
         self.node_list_ = np.array(list(
@@ -218,14 +218,14 @@ class SOMClustering():
         self.sample_weights_ = np.full(
             fill_value=1., shape=(len(self.X_), 1))
 
-        self.train_unsupervised_som()
+        self._train_unsupervised_som()
         self.fitted_ = True
 
         return self
 
-    def train_unsupervised_som(self):
+    def _train_unsupervised_som(self):
         """Train unsupervised SOM."""
-        self.init_unsuper_som()
+        self._init_unsuper_som()
 
         if self.train_mode_unsupervised == "online":
             for it in tqdm(range(self.n_iter_unsupervised),
@@ -236,13 +236,13 @@ class SOMClustering():
                 bmu_pos = self.get_bmu(self.X_[dp], self.unsuper_som_)
 
                 # calculate learning rate and neighborhood function
-                learning_rate = self.calc_learning_rate(
+                learning_rate = self._calc_learning_rate(
                     curr_it=it, mode=self.learn_mode_unsupervised)
-                nbh_func = self.calc_neighborhood_func(
+                nbh_func = self._calc_neighborhood_func(
                     curr_it=it, mode=self.neighborhood_mode_unsupervised)
 
                 # calculate distance weight matrix and update weights
-                dist_weight_matrix = self.get_nbh_distance_weight_matrix(
+                dist_weight_matrix = self._get_nbh_distance_weight_matrix(
                     nbh_func, bmu_pos)
                 self.unsuper_som_ = modify_weight_matrix_online(
                     som_array=self.unsuper_som_,
@@ -258,24 +258,24 @@ class SOMClustering():
                 bmus = self.get_bmus(self.X_)
 
                 # calculate neighborhood function
-                nbh_func = self.calc_neighborhood_func(
+                nbh_func = self._calc_neighborhood_func(
                     curr_it=it, mode=self.neighborhood_mode_unsupervised)
 
                 # calculate distance weight matrix for all datapoints
-                dist_weight_block = self.get_nbh_distance_weight_block(
+                dist_weight_block = self._get_nbh_distance_weight_block(
                     nbh_func, bmus)
 
                 # update weights
-                self.unsuper_som_ = self.modify_weight_matrix_batch(
+                self.unsuper_som_ = self._modify_weight_matrix_batch(
                     self.unsuper_som_, dist_weight_block, self.X_)
 
         else:
             raise NotImplementedError("Unsupervised mode not implemented:",
                                       self.train_mode_unsupervised)
 
-        self.set_bmus(self.X_)
+        self._set_bmus(self.X_)
 
-    def calc_learning_rate(self, curr_it, mode):
+    def _calc_learning_rate(self, curr_it, mode):
         """Calculate learning rate alpha with 0 <= alpha <= 1.
 
         Parameters
@@ -298,7 +298,7 @@ class SOMClustering():
             iteration=curr_it,
             mode=mode)
 
-    def calc_neighborhood_func(self, curr_it, mode):
+    def _calc_neighborhood_func(self, curr_it, mode):
         """Calculate neighborhood function (= radius).
 
         Parameters
@@ -338,7 +338,7 @@ class SOMClustering():
             Position of best matching unit (row, column)
 
         """
-        a = self.get_node_distance_matrix(
+        a = self._get_node_distance_matrix(
             datapoint.astype(np.float64), som_array)
 
         return np.argwhere(a == np.min(a))[0]
@@ -415,7 +415,7 @@ class SOMClustering():
 
         return n_jobs, n_datapoints_per_job.tolist(), [0] + starts.tolist()
 
-    def set_bmus(self, X, som_array=None):
+    def _set_bmus(self, X, som_array=None):
         """Set BMUs in the current SOM object.
 
         Parameters
@@ -429,7 +429,7 @@ class SOMClustering():
         """
         self.bmus_ = self.get_bmus(X=X, som_array=som_array)
 
-    def get_node_distance_matrix(self, datapoint, som_array):
+    def _get_node_distance_matrix(self, datapoint, som_array):
         """Get distance of datapoint and node using Euclidean distance.
 
         Parameters
@@ -490,7 +490,7 @@ class SOMClustering():
 
         return distmat
 
-    def get_nbh_distance_weight_matrix(self, neighborhood_func, bmu_pos):
+    def _get_nbh_distance_weight_matrix(self, neighborhood_func, bmu_pos):
         """Calculate neighborhood distance weight.
 
         Parameters
@@ -527,7 +527,7 @@ class SOMClustering():
 
         return nbh_dist_weight_mat
 
-    def get_nbh_distance_weight_block(self, nbh_func, bmus):
+    def _get_nbh_distance_weight_block(self, nbh_func, bmus):
         """Calculate distance weight matrix for all datapoints.
 
         The combination of several distance weight matrices is called
@@ -550,12 +550,12 @@ class SOMClustering():
             (len(bmus), self.n_rows, self.n_columns))
 
         for i, bmu_pos in enumerate(bmus):
-            dist_weight_block[i] = self.get_nbh_distance_weight_matrix(
+            dist_weight_block[i] = self._get_nbh_distance_weight_matrix(
                 nbh_func, bmu_pos).reshape((self.n_rows, self.n_columns))
 
         return dist_weight_block
 
-    def modify_weight_matrix_batch(self, som_array, dist_weight_matrix, data):
+    def _modify_weight_matrix_batch(self, som_array, dist_weight_matrix, data):
         """Modify weight matrix of the SOM for the online algorithm.
 
         Parameters
@@ -728,14 +728,14 @@ class SOMClustering():
             dtype=float)
 
         # step 1: fill values between SOM nodes
-        self.calc_u_matrix_distances()
+        self._calc_u_matrix_distances()
 
         # step 2: fill values at SOM nodes and on diagonals
-        self.calc_u_matrix_means()
+        self._calc_u_matrix_means()
 
         return self.u_matrix
 
-    def calc_u_matrix_distances(self):
+    def _calc_u_matrix_distances(self):
         """Calculate the Eucl. distances between all neighbored SOM nodes."""
         for u_node in itertools.product(range(self.n_rows*2-1),
                                         range(self.n_columns*2-1)):
@@ -756,10 +756,10 @@ class SOMClustering():
                 self.unsuper_som_[u_node[0]//2+nb[0]][u_node[1]//2+nb[1]],
                 axis=0)
 
-    def calc_u_matrix_means(self):
+    def _calc_u_matrix_means(self):
         """Calculate the missing parts of the u-matrix.
 
-        After `calc_u_matrix_distances()`, there are two kinds of entries
+        After `_calc_u_matrix_distances()`, there are two kinds of entries
         missing: the entries at the positions of the actual SOM nodes and the
         entries in between the distance nodes. Both types of entries are
         calculated in this function.
@@ -780,18 +780,18 @@ class SOMClustering():
                     nodelist.append((u_node[0], u_node[1]-1))
                 if u_node[1] < self.n_columns*2-2:
                     nodelist.append((u_node[0], u_node[1]+1))
-                self.u_matrix[u_node] = self.get_u_mean(nodelist)
+                self.u_matrix[u_node] = self._get_u_mean(nodelist)
 
             elif (u_node[0] % 2) and (u_node[1] % 2):
                 # mean over four
 
-                self.u_matrix[u_node] = self.get_u_mean([
+                self.u_matrix[u_node] = self._get_u_mean([
                     (u_node[0]-1, u_node[1]),
                     (u_node[0]+1, u_node[1]),
                     (u_node[0], u_node[1]-1),
                     (u_node[0], u_node[1]+1)])
 
-    def get_u_mean(self, nodelist):
+    def _get_u_mean(self, nodelist):
         """Calculate a mean value of the node entries in `nodelist`.
 
         Parameters

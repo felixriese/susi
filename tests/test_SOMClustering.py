@@ -38,7 +38,7 @@ def test_calc_learning_rate(learning_rate_start, learning_rate_end, max_it,
         learning_rate_start=learning_rate_start,
         learning_rate_end=learning_rate_end)
     som_clustering.max_iterations_ = max_it
-    assert som_clustering.calc_learning_rate(curr_it, mode) == expected
+    assert som_clustering._calc_learning_rate(curr_it, mode) == expected
 
 
 @pytest.mark.parametrize(
@@ -76,9 +76,9 @@ def test_get_node_distance_matrix(datapoint, som_array, distance_metric,
     som_clustering.X_ = np.array([datapoint, datapoint])
     som_clustering.n_rows = som_array.shape[0]
     som_clustering.n_columns = som_array.shape[1]
-    som_clustering.init_unsuper_som()
+    som_clustering._init_unsuper_som()
 
-    assert np.allclose(som_clustering.get_node_distance_matrix(
+    assert np.allclose(som_clustering._get_node_distance_matrix(
         datapoint, som_array), expected, rtol=1e-2)
 
 
@@ -93,7 +93,7 @@ def test_calc_neighborhood_func(radius_max, radius_min, max_it, curr_it, mode,
     som_clustering.radius_max_ = radius_max
     som_clustering.radius_min_ = radius_min
     som_clustering.max_iterations_ = max_it
-    assert som_clustering.calc_neighborhood_func(curr_it, mode) == expected
+    assert som_clustering._calc_neighborhood_func(curr_it, mode) == expected
 
 
 @pytest.mark.parametrize("a_1,a_2,max_it,curr_it,mode,expected", [
@@ -129,7 +129,7 @@ def test_init_unsuper_som(X, init_mode):
     som_clustering.X_ = X
 
     if init_mode in ["random", "random_data", "pca"]:
-        som_clustering.init_unsuper_som()
+        som_clustering._init_unsuper_som()
 
         # test type
         assert isinstance(som_clustering.unsuper_som_, np.ndarray)
@@ -142,7 +142,7 @@ def test_init_unsuper_som(X, init_mode):
 
     else:
         with pytest.raises(Exception):
-            som_clustering.init_unsuper_som()
+            som_clustering._init_unsuper_som()
 
 
 @pytest.mark.parametrize("som_array,datapoint,expected", [
@@ -206,12 +206,12 @@ def test_get_nbh_distance_weight_matrix(n_rows, n_columns, random_state,
         n_rows=n_rows, n_columns=n_columns,
         nbh_dist_weight_mode=mode, random_state=random_state)
     som_clustering.X_ = X
-    som_clustering.init_unsuper_som()
-    print(som_clustering.get_nbh_distance_weight_matrix(
+    som_clustering._init_unsuper_som()
+    print(som_clustering._get_nbh_distance_weight_matrix(
         neighborhood_func, bmu_pos)
         )
     print(expected)
-    assert np.allclose(som_clustering.get_nbh_distance_weight_matrix(
+    assert np.allclose(som_clustering._get_nbh_distance_weight_matrix(
         neighborhood_func, bmu_pos), expected, atol=1e-8)
 
 
@@ -235,7 +235,7 @@ def test_modify_weight_matrix_online(n_rows, n_columns, random_state,
     assert np.allclose(susi.modify_weight_matrix_online(
         som_array=som_clustering.unsuper_som_,
         learningrate=learningrate,
-        dist_weight_matrix=som_clustering.get_nbh_distance_weight_matrix(
+        dist_weight_matrix=som_clustering._get_nbh_distance_weight_matrix(
             neighborhood_func, bmu_pos),
         true_vector=som_clustering.X_[dp]), expected, atol=1e-8)
 
@@ -261,11 +261,11 @@ def test_modify_weight_matrix_batch(X, nbh_func, bmus, expected):
     dist_weight_block = np.zeros(
         (len(X), som.n_rows, som.n_columns))
     for i, bmu_pos in enumerate(bmus):
-        dist_weight_block[i] = som.get_nbh_distance_weight_matrix(
+        dist_weight_block[i] = som._get_nbh_distance_weight_matrix(
             nbh_func, bmu_pos).reshape(
                 (som.n_rows, som.n_columns))
 
-    new_som = som.modify_weight_matrix_batch(
+    new_som = som._modify_weight_matrix_batch(
         som_array=som.unsuper_som_,
         dist_weight_matrix=dist_weight_block,
         data=som.X_)
@@ -330,7 +330,7 @@ def test_get_bmus(som_array, X, n_jobs, expected):
 ])
 def test_set_bmus(som_array, X, n_jobs, expected):
     som_clustering = susi.SOMClustering(n_jobs=n_jobs)
-    som_clustering.set_bmus(X, som_array)
+    som_clustering._set_bmus(X, som_array)
     assert np.array_equal(som_clustering.bmus_, expected)
 
 
@@ -349,7 +349,7 @@ def test_set_bmus(som_array, X, n_jobs, expected):
 def test_get_datapoints_from_node(n_rows, n_columns, som_array, X, node,
                                   expected):
     som = susi.SOMClustering(n_rows=n_rows, n_columns=n_columns)
-    som.set_bmus(X, som_array)
+    som._set_bmus(X, som_array)
     assert(np.array_equal(som.get_datapoints_from_node(node), expected))
 
 
