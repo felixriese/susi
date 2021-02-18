@@ -9,7 +9,7 @@ tqdm>=4.45.0
 notebook>=6.0.0
 matplotlib>=3.0.0
 seaborn>=0.9.0
-pandas>=1.2.1
+pandas>=1.1.5
 
 # for testing
 pytest>=5.4.1
