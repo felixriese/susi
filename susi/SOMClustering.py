@@ -408,7 +408,7 @@ class SOMClustering():
         n_jobs = min(effective_n_jobs(self.n_jobs), n_datapoints)
 
         n_datapoints_per_job = np.full(
-            n_jobs, n_datapoints // n_jobs, dtype=np.int)
+            n_jobs, n_datapoints // n_jobs, dtype=int)
 
         n_datapoints_per_job[:n_datapoints % n_jobs] += 1
         starts = np.cumsum(n_datapoints_per_job)

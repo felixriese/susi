@@ -210,7 +210,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         if self.init_mode_supervised == "majority":
 
             # define dtype
-            if self.class_dtype_ in [str, np.str, np.str_]:
+            if self.class_dtype_ in [str, np.str_]:
                 init_dtype = "U" + str(len(max(np.unique(
                     self.y_[self.labeled_indices_]), key=len)))
             else:
@@ -243,11 +243,11 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
     def _set_placeholder(self):
         """Set placeholder depending on the class dtype."""
-        if self.class_dtype_ in [str, np.str, np.str_]:
+        if self.class_dtype_ in [str, np.str_]:
             self.placeholder_ = self.placeholder_dict_["str"]
-        elif self.class_dtype_ in [int, np.int, np.int_, np.uint8]:
+        elif self.class_dtype_ in [int, np.uint8, np.int64]:
             self.placeholder_ = self.placeholder_dict_["int"]
-        elif self.class_dtype_ in [float, np.float, np.float_]:
+        elif self.class_dtype_ in [float, np.float_, np.float64]:
             self.placeholder_ = self.placeholder_dict_["float"]
         else:
             raise ValueError("No placeholder defined " +
