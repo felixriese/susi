@@ -468,3 +468,13 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         else:
             random_datapoint = np.random.randint(low=0, high=len(self.y_))
         return random_datapoint
+
+    def _more_tags(self):
+        """Add tags for `sklearn.utils.estimator_checks.check_estimator()`.
+
+        Source
+        ------
+        https://scikit-learn.org/stable/developers/develop.html#estimator-tags
+
+        """
+        return {"preserves_dtype": []}
