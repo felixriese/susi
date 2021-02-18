@@ -1,6 +1,6 @@
 # for the package itself
 joblib>=0.13.0
-numpy>=1.15.4
+numpy>=1.18.5
 scikit-learn>=0.21.1
 scipy>=1.3.1
 tqdm>=4.45.0
@@ -9,7 +9,7 @@ tqdm>=4.45.0
 notebook>=6.0.0
 matplotlib>=3.0.0
 seaborn>=0.9.0
-pandas>=0.25.3
+pandas>=1.2.1
 
 # for testing
 pytest>=5.4.1
