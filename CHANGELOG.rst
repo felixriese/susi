@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-[1.1.2] - tbd
+[1.1.2] - 2021-02-18
 --------------------
 - [ADDED] Python 3.9 support. Python 3.6 support will be removed soon.
 - [CHANGED] Function names for private use now start with an underscore.
