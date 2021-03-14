@@ -38,15 +38,11 @@ Description
 -----------
 
 We present the SuSi package for Python.
-It includes a fully functional SOM for unsupervised, supervised and semi-supervised tasks.
-The class structure is set up as follows:
+It includes a fully functional SOM for unsupervised, supervised and semi-supervised tasks:
 
 - SOMClustering: Unsupervised SOM for clustering
-
-  - SOMEstimator: Base class for supervised and semi-supervised SOMs
-
-    - SOMRegressor: Regression SOM
-    - SOMClassifier: Classification SOM
+- SOMRegressor: (Semi-)Supervised Regression SOM
+- SOMClassifier: (Semi-)Supervised Classification SOM
 
 :License:
     `3-Clause BSD license <LICENSE>`_
