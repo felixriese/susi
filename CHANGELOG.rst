@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+[dev] - XXXX-XX-XX
+--------------------
+- [ADDED] Landing page with vuepress.
+- [FIXED] Requirements in setup.py
+
 [1.1.2] - 2021-02-18
 --------------------
 - [ADDED] Python 3.9 support. Python 3.6 support will be removed soon.
