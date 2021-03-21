@@ -41,8 +41,14 @@ print(som.score(X_test, y_test))
 
 ### Getting started
 
-You can easily install **SuSi** via pip.
+Installation of **SuSi** via pip:
 
 ```bash
 pip install susi
+```
+
+Installation of **SuSi** via conda-forge:
+
+```bash
+conda install -c conda-forge susi
 ```
