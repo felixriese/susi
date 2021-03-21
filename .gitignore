@@ -137,3 +137,9 @@ pip-selfcheck.json
 *.pdf
 *.p
 *.mat
+
+# vuepress
+node_modules/
+guide/package.json
+guide/package-lock.json
+guide/deploy.sh
