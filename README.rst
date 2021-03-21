@@ -22,6 +22,10 @@
 	:target: https://app.codacy.com/app/felixriese/susi
 	:alt: Codacy Badge
 
+.. image:: https://anaconda.org/conda-forge/susi/badges/version.svg
+    :target: https://anaconda.org/conda-forge/susi
+    :alt: Conda-forge
+
 |
 
 .. image:: https://raw.githubusercontent.com/felixriese/susi/master/docs/_static/susi_logo_small.png
@@ -66,9 +70,19 @@ It includes a fully functional SOM for unsupervised, supervised and semi-supervi
 Installation
 ------------
 
+Pip
+~~~
+
 .. code:: bash
 
     pip3 install susi
+
+Conda
+~~~~~
+
+.. code:: bash
+
+    conda install -c conda-forge susi
 
 More information can be found in the `installation guidelines <https://susi.readthedocs.io/en/latest/install.html>`_.
 

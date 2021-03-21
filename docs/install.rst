@@ -24,9 +24,15 @@ Install via PyPi
 
     pip3 install susi
 
+Install via Conda
+-----------------
 
-Install without PyPi
---------------------
+.. code:: bash
+
+    conda install -c conda-forge susi
+
+Install manually
+----------------
 
 1. Download the package on `PyPi <https://pypi.org/project/susi/>`_
 2. Navigate to the install folder in your terminal with :bash:`cd`

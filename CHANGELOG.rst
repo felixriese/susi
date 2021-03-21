@@ -4,6 +4,7 @@ Change Log
 [dev] - XXXX-XX-XX
 --------------------
 - [ADDED] Landing page with vuepress.
+- [ADDED] Conda-forge recipe.
 - [FIXED] Requirements in setup.py
 
 [1.1.2] - 2021-02-18
