@@ -326,8 +326,8 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         return estimation_output
 
     def _modify_weight_matrix_supervised(self, dist_weight_matrix,
-                                        true_vector=None,
-                                        learningrate=None):
+                                         true_vector=None,
+                                         learningrate=None):
         """Modify weights of the supervised SOM, either online or batch.
 
         Parameters

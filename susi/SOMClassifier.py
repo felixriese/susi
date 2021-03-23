@@ -283,8 +283,8 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         return self._fit_estimator(X, y)
 
     def _modify_weight_matrix_supervised(self, dist_weight_matrix,
-                                        true_vector=None,
-                                        learningrate=None):
+                                         true_vector=None,
+                                         learningrate=None):
         """Modify weight matrix of the SOM.
 
         Parameters
@@ -345,7 +345,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         return new_matrix
 
     def _change_class_proba(self, learningrate, dist_weight_matrix,
-                           class_weight):
+                            class_weight):
         """Calculate probability of changing class in a node.
 
         Parameters
