@@ -12,7 +12,7 @@ import matplotlib
 import numpy as np
 
 
-def plot_estimation_map(estimation_map: np.array,
+def plot_estimation_map(estimation_map: np.ndarray,
                         cbar_label: str = "Variable in unit",
                         cmap: str = "viridis",
                         fontsize: int = 20) -> plt.Axes:
@@ -20,7 +20,7 @@ def plot_estimation_map(estimation_map: np.array,
 
     Parameters
     ----------
-    estimation_map : np.array
+    estimation_map : np.ndarray
         Estimation map of the size (n_rows, n_columns)
     cbar_label : str, optional
         Label of the colorbar, by default "Variable in unit"
@@ -122,7 +122,7 @@ def plot_som_histogram(bmu_list: List[Tuple[int, int]],
     return ax
 
 
-def plot_umatrix(u_matrix: np.array,
+def plot_umatrix(u_matrix: np.ndarray,
                  n_rows: int,
                  n_colums: int,
                  cmap: str = "Greys",
@@ -131,7 +131,7 @@ def plot_umatrix(u_matrix: np.array,
 
     Parameters
     ----------
-    u_matrix : np.array
+    u_matrix : np.ndarray
         U-matrix containing the distances between all nodes of the
         unsupervised SOM. Shape = (n_rows*2-1, n_columns*2-1)
     n_rows : int

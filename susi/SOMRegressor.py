@@ -88,7 +88,7 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
 
     Attributes
     ----------
-    node_list_ : np.array of (int, int) tuples
+    node_list_ : np.ndarray of (int, int) tuples
         List of 2-dimensional coordinates of SOM nodes
 
     radius_max_ : float, int
@@ -97,11 +97,11 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
     radius_min_ : float, int
         Minimum radius of the neighborhood function
 
-    unsuper_som_ : np.array
+    unsuper_som_ : np.ndarray
         Weight vectors of the unsupervised SOM
         shape = (self.n_rows, self.n_columns, X.shape[1])
 
-    X_ : np.array
+    X_ : np.ndarray
         Input data
 
     fitted_ : bool

@@ -96,7 +96,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
     Attributes
     ----------
-    node_list_ : np.array of (int, int) tuples
+    node_list_ : np.ndarray of (int, int) tuples
         List of 2-dimensional coordinates of SOM nodes
 
     radius_max_ : float, int
@@ -105,11 +105,11 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
     radius_min_ : float, int
         Minimum radius of the neighborhood function
 
-    unsuper_som_ : np.array
+    unsuper_som_ : np.ndarray
         Weight vectors of the unsupervised SOM
         shape = (self.n_rows, self.n_columns, X.shape[1])
 
-    X_ : np.array
+    X_ : np.ndarray
         Input data
 
     fitted_ : bool
@@ -288,32 +288,32 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
         """
         X, y = check_estimation_input(X, y, is_classification=True)
-        self.X_: np.array = X
-        self.y_: np.array = y
+        self.X_: np.ndarray = X
+        self.y_: np.ndarray = y
         self.n_features_in_ = self.X_.shape[1]
 
         return self._fit_estimator()
 
     def _modify_weight_matrix_supervised(
             self,
-            dist_weight_matrix: np.array,
+            dist_weight_matrix: np.ndarray,
             true_vector: Optional[np.array] = None,
             learning_rate: Optional[float] = None
-            ) -> np.array:
+            ) -> np.ndarray:
         """Modify weight matrix of the SOM.
 
         Parameters
         ----------
-        dist_weight_matrix : np.array of float
+        dist_weight_matrix : np.ndarray of float
             Current distance weight of the SOM for the specific node
         learning_rate : float, optional
             Current learning rate of the SOM
-        true_vector : np.array
+        true_vector : np.ndarray
             Datapoint = one row of the dataset X
 
         Returns
         -------
-        new_matrix : np.array
+        new_matrix : np.ndarray
             Weight vector of the SOM after the modification
 
         """
@@ -367,22 +367,22 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
     def _change_class_proba(self,
                             learning_rate: float,
-                            dist_weight_matrix: np.array,
-                            class_weight: float) -> np.array:
+                            dist_weight_matrix: np.ndarray,
+                            class_weight: float) -> np.ndarray:
         """Calculate probability of changing class in a node.
 
         Parameters
         ----------
         learning_rate : float
             Current learning rate of the SOM
-        dist_weight_matrix : np.array of float
+        dist_weight_matrix : np.ndarray of float
             Current distance weight of the SOM for the specific node
         class_weight : float
             Weight of the class of the current datapoint
 
         Returns
         -------
-        change_class_bool : np.array, shape = (n_rows, n_columns)
+        change_class_bool : np.ndarray, shape = (n_rows, n_columns)
             Matrix with one boolean for each node on the SOM node.
             If true, the value of the respective SOM node gets changed.
             If false, the value of the respective SOM node stays the same.

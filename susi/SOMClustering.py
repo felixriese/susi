@@ -77,7 +77,7 @@ class SOMClustering():
 
     Attributes
     ----------
-    node_list_ : np.array of (int, int) tuples
+    node_list_ : np.ndarray of (int, int) tuples
         List of 2-dimensional coordinates of SOM nodes
 
     radius_max_ : float, int
@@ -86,11 +86,11 @@ class SOMClustering():
     radius_min_ : float, int
         Minimum radius of the neighborhood function
 
-    unsuper_som_ : np.array
+    unsuper_som_ : np.ndarray
         Weight vectors of the unsupervised SOM
         shape = (self.n_rows, self.n_columns, X.shape[1])
 
-    X_ : np.array
+    X_ : np.ndarray
         Input data
 
     fitted_ : boolean
@@ -329,15 +329,15 @@ class SOMClustering():
             mode=mode)
 
     def get_bmu(self,
-                datapoint: np.array,
-                som_array: np.array) -> Tuple[int, int]:
+                datapoint: np.ndarray,
+                som_array: np.ndarray) -> Tuple[int, int]:
         """Get best matching unit (BMU) for datapoint.
 
         Parameters
         ----------
-        datapoint : np.array, shape=shape[1]
+        datapoint : np.ndarray, shape=shape[1]
             Datapoint = one row of the dataset X
-        som_array : np.array
+        som_array : np.ndarray
             Weight vectors of the SOM
             shape = (self.n_rows, self.n_columns, X.shape[1])
 
@@ -353,16 +353,16 @@ class SOMClustering():
         return np.argwhere(a == np.min(a))[0]
 
     def get_bmus(self,
-                 X: np.array,
+                 X: np.ndarray,
                  som_array: Optional[np.array] = None
                  ) -> Optional[List[Tuple[int, int]]]:
         """Get Best Matching Units for big datalist.
 
         Parameters
         ----------
-        X : np.array
+        X : np.ndarray
             List of datapoints
-        som_array : np.array, optional (default=`None`)
+        som_array : np.ndarray, optional (default=`None`)
             Weight vectors of the SOM
             shape = (self.n_rows, self.n_columns, X.shape[1])
 
@@ -399,12 +399,12 @@ class SOMClustering():
         return bmus
 
     def _partition_bmus(self,
-                        X: np.array) -> Tuple[float, List[int], List[int]]:
+                        X: np.ndarray) -> Tuple[float, List[int], List[int]]:
         """Private function used to partition bmus between jobs.
 
         Parameters
         ----------
-        X : np.array
+        X : np.ndarray
             List of datapoints
 
         Returns
@@ -429,7 +429,7 @@ class SOMClustering():
         return n_jobs, n_datapoints_per_job.tolist(), [0] + starts.tolist()
 
     def _set_bmus(self,
-                  X: np.array,
+                  X: np.ndarray,
                   som_array: Optional[np.array] = None) -> None:
         """Set BMUs in the current SOM object.
 
@@ -437,7 +437,7 @@ class SOMClustering():
         ----------
         X : array-like matrix of shape = [n_samples, n_features]
             The input samples.
-        som_array : np.array
+        som_array : np.ndarray
             Weight vectors of the SOM
             shape = (self.n_rows, self.n_columns, X.shape[1])
 
@@ -445,21 +445,21 @@ class SOMClustering():
         self.bmus_ = self.get_bmus(X=X, som_array=som_array)
 
     def _get_node_distance_matrix(self,
-                                  datapoint: np.array,
-                                  som_array: np.array) -> np.array:
+                                  datapoint: np.ndarray,
+                                  som_array: np.ndarray) -> np.ndarray:
         """Get distance of datapoint and node using Euclidean distance.
 
         Parameters
         ----------
-        datapoint : np.array, shape=(X.shape[1])
+        datapoint : np.ndarray, shape=(X.shape[1])
             Datapoint = one row of the dataset `X`
-        som_array : np.array
+        som_array : np.ndarray
             Weight vectors of the SOM,
             shape = (self.n_rows, self.n_columns, X.shape[1])
 
         Returns
         -------
-        distmat : np.array of float
+        distmat : np.ndarray of float
             Distance between datapoint and each SOM node
 
         """
@@ -509,7 +509,7 @@ class SOMClustering():
 
     def _get_nbh_distance_weight_matrix(self,
                                         neighborhood_func: float,
-                                        bmu_pos: Tuple[int, int]) -> np.array:
+                                        bmu_pos: Tuple[int, int]) -> np.ndarray:
         """Calculate neighborhood distance weight.
 
         Parameters
@@ -549,7 +549,7 @@ class SOMClustering():
     def _get_nbh_distance_weight_block(self,
                                        nbh_func: float,
                                        bmus: List[Tuple[int, int]]
-                                       ) -> np.array:
+                                       ) -> np.ndarray:
         """Calculate distance weight matrix for all datapoints.
 
         The combination of several distance weight matrices is called
@@ -564,7 +564,7 @@ class SOMClustering():
 
         Returns
         -------
-        dist_weight_block : np.array of float, shape=(n_rows, n_columns)
+        dist_weight_block : np.ndarray of float, shape=(n_rows, n_columns)
             Neighborhood distance weight block between SOM and BMUs
 
         """
@@ -579,19 +579,19 @@ class SOMClustering():
 
 
     def _modify_weight_matrix_batch(self,
-                                    som_array: np.array,
-                                    dist_weight_matrix: np.array,
-                                    data: np.array) -> np.array:
+                                    som_array: np.ndarray,
+                                    dist_weight_matrix: np.ndarray,
+                                    data: np.ndarray) -> np.ndarray:
         """Modify weight matrix of the SOM for the online algorithm.
 
         Parameters
         ----------
-        som_array : np.array
+        som_array : np.ndarray
             Weight vectors of the SOM
             shape = (self.n_rows, self.n_columns, X.shape[1])
-        dist_weight_matrix : np.array of float
+        dist_weight_matrix : np.ndarray of float
             Current distance weight of the SOM for the specific node
-        data : np.array
+        data : np.ndarray
             True vector(s)
         learning_rate : float
             Current learning rate of the SOM
@@ -624,7 +624,7 @@ class SOMClustering():
 
     def transform(self,
                   X: Sequence,
-                  y: Optional[Sequence] = None) -> np.array:
+                  y: Optional[Sequence] = None) -> np.ndarray:
         """Transform input data.
 
         Parameters
@@ -656,7 +656,7 @@ class SOMClustering():
 
     def fit_transform(self,
                       X: Sequence,
-                      y: Optional[Sequence] = None) -> np.array:
+                      y: Optional[Sequence] = None) -> np.ndarray:
         """Fit to the input data and transform it.
 
         Parameters
@@ -706,12 +706,12 @@ class SOMClustering():
                 datapoints.append(i)
         return datapoints
 
-    def get_clusters(self, X: np.array) -> Optional[List[Tuple[int, int]]]:
+    def get_clusters(self, X: np.ndarray) -> Optional[List[Tuple[int, int]]]:
         """Calculate the SOM nodes on the unsupervised SOM grid per datapoint.
 
         Parameters
         ----------
-        X : np.array
+        X : np.ndarray
             Input data
 
         Returns
@@ -722,7 +722,7 @@ class SOMClustering():
         """
         return self.get_bmus(X)
 
-    def get_u_matrix(self, mode: str = "mean") -> np.array:
+    def get_u_matrix(self, mode: str = "mean") -> np.ndarray:
         """Calculate unified distance matrix (u-matrix).
 
         Parameters
@@ -732,7 +732,7 @@ class SOMClustering():
 
         Returns
         -------
-        u_matrix : np.array
+        u_matrix : np.ndarray
             U-matrix containing the distances between all nodes of the
             unsupervised SOM. Shape = (n_rows*2-1, n_columns*2-1)
 

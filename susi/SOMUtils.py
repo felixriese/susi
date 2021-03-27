@@ -116,20 +116,20 @@ def check_estimation_input(X: Sequence,
     return X, y
 
 
-def modify_weight_matrix_online(som_array: np.array, *,
-                                dist_weight_matrix: np.array,
-                                true_vector: np.array,
-                                learning_rate: float) -> np.array:
+def modify_weight_matrix_online(som_array: np.ndarray, *,
+                                dist_weight_matrix: np.ndarray,
+                                true_vector: np.ndarray,
+                                learning_rate: float) -> np.ndarray:
     """Modify weight matrix of the SOM for the online algorithm.
 
     Parameters
     ----------
-    som_array : np.array
+    som_array : np.ndarray
         Weight vectors of the SOM
         shape = (self.n_rows, self.n_columns, X.shape[1])
-    dist_weight_matrix : np.array of float
+    dist_weight_matrix : np.ndarray of float
         Current distance weight of the SOM for the specific node
-    true_vector : np.array
+    true_vector : np.ndarray
         True vector
     learning_rate : float
         Current learning rate of the SOM

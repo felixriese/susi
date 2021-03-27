@@ -94,7 +94,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
     Attributes
     ----------
-    node_list_ : np.array of (int, int) tuples
+    node_list_ : np.ndarray of (int, int) tuples
         List of 2-dimensional coordinates of SOM nodes
 
     radius_max_ : float, int
@@ -103,11 +103,11 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
     radius_min_ : float, int
         Minimum radius of the neighborhood function
 
-    unsuper_som_ : np.array
+    unsuper_som_ : np.ndarray
         Weight vectors of the unsupervised SOM
         shape = (self.n_rows, self.n_columns, X.shape[1])
 
-    X_ : np.array
+    X_ : np.ndarray
         Input data
 
     fitted_ : bool
@@ -202,8 +202,8 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         """
         X, y = check_estimation_input(X, y)
-        self.X_: np.array = X
-        self.y_: np.array = y
+        self.X_: np.ndarray = X
+        self.y_: np.ndarray = y
         self.n_features_in_ = self.X_.shape[1]
 
         return self._fit_estimator()
@@ -284,7 +284,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         return y_pred
 
     def _calc_estimation_output(self,
-                                datapoint: np.array,
+                                datapoint: np.ndarray,
                                 mode: str = "bmu"):
         """Get SOM output for fixed SOM.
 
@@ -293,7 +293,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         Parameters
         ----------
-        datapoint : np.array, shape=(X.shape[1])
+        datapoint : np.ndarray, shape=(X.shape[1])
             Datapoint = one row of the dataset X
         mode : str, optional (default="bmu")
             Mode of the regression output calculation
@@ -333,17 +333,17 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
     def _modify_weight_matrix_supervised(
             self,
-            dist_weight_matrix: np.array,
+            dist_weight_matrix: np.ndarray,
             true_vector: Optional[np.array] = None,
             learning_rate: Optional[float] = None
-            ) -> np.array:
+            ) -> np.ndarray:
         """Modify weights of the supervised SOM, either online or batch.
 
         Parameters
         ----------
-        dist_weight_matrix : np.array of float
+        dist_weight_matrix : np.ndarray of float
             Current distance weight of the SOM for the specific node
-        true_vector : np.array, optional (default=None)
+        true_vector : np.ndarray, optional (default=None)
             True vector. `None` is only valid in batch mode.
         learning_rate : float, optional (default=None)
             Current learning rate of the SOM.  `None` is only valid in batch
@@ -418,7 +418,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
     def fit_transform(self,
                       X: Sequence,
-                      y: Optional[Sequence] = None) -> np.array:
+                      y: Optional[Sequence] = None) -> np.ndarray:
         """Fit to the input data and transform it.
 
         Parameters
@@ -447,12 +447,12 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         self.X_ = check_array(X, dtype=np.float64)
         return self.transform(X, y)
 
-    def get_estimation_map(self) -> np.array:
+    def get_estimation_map(self) -> np.ndarray:
         """Return SOM grid with the estimated value on each node.
 
         Returns
         -------
-        super_som_ : np.array
+        super_som_ : np.ndarray
             Supervised SOM grid with estimated value on each node.
 
         Examples
@@ -469,12 +469,12 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         """
         return self.super_som_
 
-    def _get_random_datapoint(self) -> np.array:
+    def _get_random_datapoint(self) -> np.ndarray:
         """Find and return random datapoint from labeled dataset.
 
         Returns
         -------
-        random_datapoint : np.array
+        random_datapoint : np.ndarray
             Random datapoint from labeled dataset
 
         """
