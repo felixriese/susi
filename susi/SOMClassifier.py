@@ -4,6 +4,7 @@ Copyright (c) 2019-2020, Felix M. Riese.
 All rights reserved.
 
 """
+from typing import Optional, Sequence
 
 import numpy as np
 from scipy.special import softmax
@@ -142,14 +143,14 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
                  learn_mode_unsupervised: str = "min",
                  learn_mode_supervised: str = "min",
                  distance_metric: str = "euclidean",
-                 learning_rate_start=0.5,
-                 learning_rate_end=0.05,
+                 learning_rate_start: float = 0.5,
+                 learning_rate_end: float = 0.05,
                  nbh_dist_weight_mode: str = "pseudo-gaussian",
                  missing_label_placeholder=None,
                  do_class_weighting=True,
                  n_jobs=None,
                  random_state=None,
-                 verbose=0):
+                 verbose=0) -> None:
         """Initialize SOMClassifier object."""
         super().__init__(
             n_rows=n_rows,
@@ -175,7 +176,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
         self.do_class_weighting = do_class_weighting
 
-    def _init_super_som(self):
+    def _init_super_som(self) -> None:
         """Initialize map."""
         self.max_iterations_ = self.n_iter_supervised
 
@@ -241,8 +242,15 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
         self.super_som_ = som
 
-    def _set_placeholder(self):
-        """Set placeholder depending on the class dtype."""
+    def _set_placeholder(self) -> None:
+        """Set placeholder depending on the class dtype.
+
+        Raises
+        ------
+        ValueError
+            Raised if no placeholder defined for dtype of a class.
+
+        """
         if self.class_dtype_ in [str, np.str_]:
             self.placeholder_ = self.placeholder_dict_["str"]
         elif self.class_dtype_ in [int, np.uint8, np.int64]:
@@ -254,7 +262,9 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
                              "for the dtype of the classes:",
                              self.class_dtype_)
 
-    def fit(self, X, y=None):
+    def fit(self,
+            X: Sequence,
+            y: Optional[Sequence] = None):
         """Fit classification SOM to the input data.
 
         Parameters
@@ -278,20 +288,25 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
         """
         X, y = check_estimation_input(X, y, is_classification=True)
-        self.n_features_in_ = X.shape[1]
+        self.X_: np.array = X
+        self.y_: np.array = y
+        self.n_features_in_ = self.X_.shape[1]
 
-        return self._fit_estimator(X, y)
+        return self._fit_estimator()
 
-    def _modify_weight_matrix_supervised(self, dist_weight_matrix,
-                                         true_vector=None,
-                                         learningrate=None):
+    def _modify_weight_matrix_supervised(
+            self,
+            dist_weight_matrix: np.array,
+            true_vector: Optional[np.array] = None,
+            learning_rate: Optional[float] = None
+            ) -> np.array:
         """Modify weight matrix of the SOM.
 
         Parameters
         ----------
         dist_weight_matrix : np.array of float
             Current distance weight of the SOM for the specific node
-        learningrate : float, optional
+        learning_rate : float, optional
             Current learning rate of the SOM
         true_vector : np.array
             Datapoint = one row of the dataset X
@@ -304,10 +319,16 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         """
         new_matrix = None
         if self.train_mode_supervised == "online":
+
+            # require valid values for true_vector and learning_rate
+            if (not isinstance(true_vector, np.ndarray) or
+                    not isinstance(learning_rate, float)):
+                raise ValueError("Parameters required to be not None.")
+
             class_weight = self.class_weights_[
                 np.argwhere(self.classes_ == true_vector)[0, 0]]
             change_class_bool = self._change_class_proba(
-                learningrate, dist_weight_matrix, class_weight)
+                learning_rate, dist_weight_matrix, class_weight)
 
             different_classes_matrix = (
                 self.super_som_ != true_vector).reshape(
@@ -344,13 +365,15 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
         return new_matrix
 
-    def _change_class_proba(self, learningrate, dist_weight_matrix,
-                            class_weight):
+    def _change_class_proba(self,
+                            learning_rate: float,
+                            dist_weight_matrix: np.array,
+                            class_weight: float) -> np.array:
         """Calculate probability of changing class in a node.
 
         Parameters
         ----------
-        learningrate : float
+        learning_rate : float
             Current learning rate of the SOM
         dist_weight_matrix : np.array of float
             Current distance weight of the SOM for the specific node
@@ -365,7 +388,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
             If false, the value of the respective SOM node stays the same.
 
         """
-        _change_class_proba = learningrate * dist_weight_matrix
+        _change_class_proba = learning_rate * dist_weight_matrix
         _change_class_proba *= class_weight
         random_matrix = np.random.rand(self.n_rows, self.n_columns, 1)
         change_class_bool = random_matrix < _change_class_proba

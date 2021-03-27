@@ -4,13 +4,18 @@ Copyright (c) 2019-2020, Felix M. Riese.
 All rights reserved.
 
 """
+from typing import Sequence, Tuple
 
 import numpy as np
 from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.validation import check_array, check_X_y
 
 
-def decreasing_rate(a_1, a_2, *, iteration_max, iteration, mode) -> float:
+def decreasing_rate(a_1: float,
+                    a_2: float, *,
+                    iteration_max: int,
+                    iteration: int,
+                    mode: str) -> float:
     """Return a decreasing rate from collection.
 
     Parameters
@@ -66,7 +71,10 @@ def decreasing_rate(a_1, a_2, *, iteration_max, iteration, mode) -> float:
     return rate
 
 
-def check_estimation_input(X, y, *, is_classification=False):
+def check_estimation_input(X: Sequence,
+                           y: Sequence, *,
+                           is_classification: bool = False
+                           ) -> Tuple[np.array, np.array]:
     """Check input arrays.
 
     This function is adapted from sklearn.utils.validation.
@@ -108,8 +116,10 @@ def check_estimation_input(X, y, *, is_classification=False):
     return X, y
 
 
-def modify_weight_matrix_online(som_array, *, dist_weight_matrix,
-                                true_vector, learningrate):
+def modify_weight_matrix_online(som_array: np.array, *,
+                                dist_weight_matrix: np.array,
+                                true_vector: np.array,
+                                learning_rate: float) -> np.array:
     """Modify weight matrix of the SOM for the online algorithm.
 
     Parameters
@@ -121,7 +131,7 @@ def modify_weight_matrix_online(som_array, *, dist_weight_matrix,
         Current distance weight of the SOM for the specific node
     true_vector : np.array
         True vector
-    learningrate : float
+    learning_rate : float
         Current learning rate of the SOM
 
     Returns
@@ -130,5 +140,5 @@ def modify_weight_matrix_online(som_array, *, dist_weight_matrix,
         Weight vector of the SOM after the modification
 
     """
-    return som_array + np.multiply(learningrate, np.multiply(
+    return som_array + np.multiply(learning_rate, np.multiply(
         dist_weight_matrix, -np.subtract(som_array, true_vector)))

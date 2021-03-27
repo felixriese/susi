@@ -6,6 +6,7 @@ All rights reserved.
 """
 
 import itertools
+from typing import List, Optional, Sequence, Tuple
 
 import numpy as np
 import scipy.spatial.distance as dist
@@ -115,12 +116,12 @@ class SOMClustering():
                  neighborhood_mode_unsupervised: str = "linear",
                  learn_mode_unsupervised: str = "min",
                  distance_metric: str = "euclidean",
-                 learning_rate_start=0.5,
-                 learning_rate_end=0.05,
+                 learning_rate_start: float = 0.5,
+                 learning_rate_end: float = 0.05,
                  nbh_dist_weight_mode: str = "pseudo-gaussian",
                  n_jobs=None,
                  random_state=None,
-                 verbose=0):
+                 verbose: Optional[int] = 0) -> None:
         """Initialize SOMClustering object."""
         self.n_rows = n_rows
         self.n_columns = n_columns
@@ -137,7 +138,7 @@ class SOMClustering():
         self.random_state = random_state
         self.verbose = verbose
 
-    def _init_unsuper_som(self):
+    def _init_unsuper_som(self) -> None:
         """Initialize map."""
         # init node list
         self.node_list_ = np.array(list(
@@ -189,7 +190,9 @@ class SOMClustering():
 
         self.unsuper_som_ = som
 
-    def fit(self, X, y=None):
+    def fit(self,
+            X: Sequence,
+            y: Optional[Sequence] = None):
         """Fit unsupervised SOM to input data.
 
         Parameters
@@ -223,7 +226,7 @@ class SOMClustering():
 
         return self
 
-    def _train_unsupervised_som(self):
+    def _train_unsupervised_som(self) -> None:
         """Train unsupervised SOM."""
         self._init_unsuper_som()
 
@@ -248,7 +251,7 @@ class SOMClustering():
                     som_array=self.unsuper_som_,
                     dist_weight_matrix=dist_weight_matrix,
                     true_vector=self.X_[dp],
-                    learningrate=learning_rate*self.sample_weights_[dp])
+                    learning_rate=learning_rate*self.sample_weights_[dp])
 
         elif self.train_mode_unsupervised == "batch":
             for it in tqdm(range(self.n_iter_unsupervised),
@@ -275,14 +278,16 @@ class SOMClustering():
 
         self._set_bmus(self.X_)
 
-    def _calc_learning_rate(self, curr_it, mode):
+    def _calc_learning_rate(self,
+                            curr_it: int,
+                            mode: str) -> float:
         """Calculate learning rate alpha with 0 <= alpha <= 1.
 
         Parameters
         ----------
         curr_it : int
             Current iteration count
-        mode : str, optional
+        mode : str
             Mode of the learning rate (min, exp, expsquare)
 
         Returns
@@ -298,7 +303,9 @@ class SOMClustering():
             iteration=curr_it,
             mode=mode)
 
-    def _calc_neighborhood_func(self, curr_it, mode):
+    def _calc_neighborhood_func(self,
+                                curr_it: int,
+                                mode: str) -> float:
         """Calculate neighborhood function (= radius).
 
         Parameters
@@ -321,7 +328,9 @@ class SOMClustering():
             iteration=curr_it,
             mode=mode)
 
-    def get_bmu(self, datapoint, som_array):
+    def get_bmu(self,
+                datapoint: np.array,
+                som_array: np.array) -> Tuple[int, int]:
         """Get best matching unit (BMU) for datapoint.
 
         Parameters
@@ -343,7 +352,10 @@ class SOMClustering():
 
         return np.argwhere(a == np.min(a))[0]
 
-    def get_bmus(self, X, som_array=None):
+    def get_bmus(self,
+                 X: np.array,
+                 som_array: Optional[np.array] = None
+                 ) -> Optional[List[Tuple[int, int]]]:
         """Get Best Matching Units for big datalist.
 
         Parameters
@@ -386,7 +398,8 @@ class SOMClustering():
             )
         return bmus
 
-    def _partition_bmus(self, X):
+    def _partition_bmus(self,
+                        X: np.array) -> Tuple[float, List[int], List[int]]:
         """Private function used to partition bmus between jobs.
 
         Parameters
@@ -415,7 +428,9 @@ class SOMClustering():
 
         return n_jobs, n_datapoints_per_job.tolist(), [0] + starts.tolist()
 
-    def _set_bmus(self, X, som_array=None):
+    def _set_bmus(self,
+                  X: np.array,
+                  som_array: Optional[np.array] = None) -> None:
         """Set BMUs in the current SOM object.
 
         Parameters
@@ -429,7 +444,9 @@ class SOMClustering():
         """
         self.bmus_ = self.get_bmus(X=X, som_array=som_array)
 
-    def _get_node_distance_matrix(self, datapoint, som_array):
+    def _get_node_distance_matrix(self,
+                                  datapoint: np.array,
+                                  som_array: np.array) -> np.array:
         """Get distance of datapoint and node using Euclidean distance.
 
         Parameters
@@ -490,7 +507,9 @@ class SOMClustering():
 
         return distmat
 
-    def _get_nbh_distance_weight_matrix(self, neighborhood_func, bmu_pos):
+    def _get_nbh_distance_weight_matrix(self,
+                                        neighborhood_func: float,
+                                        bmu_pos: Tuple[int, int]) -> np.array:
         """Calculate neighborhood distance weight.
 
         Parameters
@@ -527,7 +546,10 @@ class SOMClustering():
 
         return nbh_dist_weight_mat
 
-    def _get_nbh_distance_weight_block(self, nbh_func, bmus):
+    def _get_nbh_distance_weight_block(self,
+                                       nbh_func: float,
+                                       bmus: List[Tuple[int, int]]
+                                       ) -> np.array:
         """Calculate distance weight matrix for all datapoints.
 
         The combination of several distance weight matrices is called
@@ -537,8 +559,8 @@ class SOMClustering():
         ----------
         neighborhood_func : float
             Current neighborhood function
-        bmu_pos : tuple, shape=(int, int)
-            Position of calculated BMU of the current datapoint
+        bmus : list of tuple (int, int)
+            Positions of calculated BMUs of the datapoints
 
         Returns
         -------
@@ -555,7 +577,11 @@ class SOMClustering():
 
         return dist_weight_block
 
-    def _modify_weight_matrix_batch(self, som_array, dist_weight_matrix, data):
+
+    def _modify_weight_matrix_batch(self,
+                                    som_array: np.array,
+                                    dist_weight_matrix: np.array,
+                                    data: np.array) -> np.array:
         """Modify weight matrix of the SOM for the online algorithm.
 
         Parameters
@@ -565,9 +591,9 @@ class SOMClustering():
             shape = (self.n_rows, self.n_columns, X.shape[1])
         dist_weight_matrix : np.array of float
             Current distance weight of the SOM for the specific node
-        data : np.array, optional
+        data : np.array
             True vector(s)
-        learningrate : float
+        learning_rate : float
             Current learning rate of the SOM
 
         Returns
@@ -596,7 +622,9 @@ class SOMClustering():
         new_som[np.isnan(new_som)] = old_som[np.isnan(new_som)]
         return new_som
 
-    def transform(self, X, y=None):
+    def transform(self,
+                  X: Sequence,
+                  y: Optional[Sequence] = None) -> np.array:
         """Transform input data.
 
         Parameters
@@ -626,7 +654,9 @@ class SOMClustering():
         self.X_ = check_array(X, dtype=np.float64)
         return np.array(self.get_bmus(self.X_))
 
-    def fit_transform(self, X, y=None):
+    def fit_transform(self,
+                      X: Sequence,
+                      y: Optional[Sequence] = None) -> np.array:
         """Fit to the input data and transform it.
 
         Parameters
@@ -656,7 +686,7 @@ class SOMClustering():
         self.X_ = check_array(X, dtype=np.float64)
         return self.transform(X, y)
 
-    def get_datapoints_from_node(self, node):
+    def get_datapoints_from_node(self, node: Tuple[int, int]) -> List[int]:
         """Get all datapoints of one node.
 
         Parameters
@@ -676,12 +706,12 @@ class SOMClustering():
                 datapoints.append(i)
         return datapoints
 
-    def get_clusters(self, X):
+    def get_clusters(self, X: np.array) -> Optional[List[Tuple[int, int]]]:
         """Calculate the SOM nodes on the unsupervised SOM grid per datapoint.
 
         Parameters
         ----------
-        X : np.ndarray
+        X : np.array
             Input data
 
         Returns
@@ -692,7 +722,7 @@ class SOMClustering():
         """
         return self.get_bmus(X)
 
-    def get_u_matrix(self, mode="mean"):
+    def get_u_matrix(self, mode: str = "mean") -> np.array:
         """Calculate unified distance matrix (u-matrix).
 
         Parameters
@@ -702,7 +732,7 @@ class SOMClustering():
 
         Returns
         -------
-        np.array
+        u_matrix : np.array
             U-matrix containing the distances between all nodes of the
             unsupervised SOM. Shape = (n_rows*2-1, n_columns*2-1)
 
@@ -735,7 +765,7 @@ class SOMClustering():
 
         return self.u_matrix
 
-    def _calc_u_matrix_distances(self):
+    def _calc_u_matrix_distances(self) -> None:
         """Calculate the Eucl. distances between all neighbored SOM nodes."""
         for u_node in itertools.product(range(self.n_rows*2-1),
                                         range(self.n_columns*2-1)):
@@ -756,7 +786,7 @@ class SOMClustering():
                 self.unsuper_som_[u_node[0]//2+nb[0]][u_node[1]//2+nb[1]],
                 axis=0)
 
-    def _calc_u_matrix_means(self):
+    def _calc_u_matrix_means(self) -> None:
         """Calculate the missing parts of the u-matrix.
 
         After `_calc_u_matrix_distances()`, there are two kinds of entries
@@ -791,7 +821,8 @@ class SOMClustering():
                     (u_node[0], u_node[1]-1),
                     (u_node[0], u_node[1]+1)])
 
-    def _get_u_mean(self, nodelist):
+    def _get_u_mean(self,
+                    nodelist: List[Tuple[int, int]]) -> Optional[float]:
         """Calculate a mean value of the node entries in `nodelist`.
 
         Parameters
@@ -801,7 +832,7 @@ class SOMClustering():
 
         Returns
         -------
-        u_mean : `float`
+        u_mean : float
             Mean value
 
         """

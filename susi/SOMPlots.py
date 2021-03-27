@@ -5,13 +5,17 @@ All rights reserved.
 
 """
 
+from typing import List, Tuple
+
 import matplotlib.pyplot as plt
 import matplotlib
 import numpy as np
 
 
-def plot_estimation_map(estimation_map, cbar_label="Variable in unit",
-                        cmap="viridis", fontsize=20):
+def plot_estimation_map(estimation_map: np.array,
+                        cbar_label: str = "Variable in unit",
+                        cmap: str = "viridis",
+                        fontsize: int = 20) -> plt.Axes:
     """Plot estimation map.
 
     Parameters
@@ -51,8 +55,11 @@ def plot_estimation_map(estimation_map, cbar_label="Variable in unit",
     return ax
 
 
-def plot_som_histogram(bmu_list, n_rows, n_columns, n_datapoints_cbar=5,
-                       fontsize=22):
+def plot_som_histogram(bmu_list: List[Tuple[int, int]],
+                       n_rows: int,
+                       n_columns: int,
+                       n_datapoints_cbar: int = 5,
+                       fontsize: int = 22) -> plt.Axes:
     """Plot 2D Histogram of SOM.
 
     Plot 2D Histogram with one bin for each SOM node. The content of one
@@ -62,9 +69,9 @@ def plot_som_histogram(bmu_list, n_rows, n_columns, n_datapoints_cbar=5,
     ----------
     bmu_list  : list of (int, int) tuples
         Position of best matching units (row, column) for each datapoint
-    n_rows : int, optional (default=10)
+    n_rows : int
         Number of rows for the SOM grid
-    n_columns : int, optional (default=10)
+    n_columns : int
         Number of columns for the SOM grid
     n_datapoints_cbar : int, optional (default=5)
         Maximum number of datapoints shown on the colorbar
@@ -115,7 +122,11 @@ def plot_som_histogram(bmu_list, n_rows, n_columns, n_datapoints_cbar=5,
     return ax
 
 
-def plot_umatrix(u_matrix, n_rows, n_colums, cmap="Greys", fontsize=18):
+def plot_umatrix(u_matrix: np.array,
+                 n_rows: int,
+                 n_colums: int,
+                 cmap: str = "Greys",
+                 fontsize: int = 18) -> plt.Axes:
     """Plot u-matrix.
 
     Parameters
@@ -123,9 +134,9 @@ def plot_umatrix(u_matrix, n_rows, n_colums, cmap="Greys", fontsize=18):
     u_matrix : np.array
         U-matrix containing the distances between all nodes of the
         unsupervised SOM. Shape = (n_rows*2-1, n_columns*2-1)
-    n_rows : int, optional (default=10)
+    n_rows : int
         Number of rows for the SOM grid
-    n_columns : int, optional (default=10)
+    n_columns : int
         Number of columns for the SOM grid
     cmap : str, optional (default="Greys)
         Colormap
@@ -162,7 +173,8 @@ def plot_umatrix(u_matrix, n_rows, n_colums, cmap="Greys", fontsize=18):
     return ax
 
 
-def plot_nbh_dist_weight_matrix(som, it_frac=0.1):
+def plot_nbh_dist_weight_matrix(som,
+                                it_frac: float = 0.1) -> plt.Axes:
     """Plot neighborhood distance weight matrix in 3D.
 
     Parameters
