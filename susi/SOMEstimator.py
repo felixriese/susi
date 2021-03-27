@@ -126,27 +126,30 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
     """
 
-    def __init__(self,
-                 n_rows: int = 10,
-                 n_columns: int = 10, *,
-                 init_mode_unsupervised: str = "random",
-                 init_mode_supervised: str = "random",
-                 n_iter_unsupervised: int = 1000,
-                 n_iter_supervised: int = 1000,
-                 train_mode_unsupervised: str = "online",
-                 train_mode_supervised: str = "online",
-                 neighborhood_mode_unsupervised: str = "linear",
-                 neighborhood_mode_supervised: str = "linear",
-                 learn_mode_unsupervised: str = "min",
-                 learn_mode_supervised: str = "min",
-                 distance_metric: str = "euclidean",
-                 learning_rate_start: float = 0.5,
-                 learning_rate_end: float = 0.05,
-                 nbh_dist_weight_mode: str = "pseudo-gaussian",
-                 missing_label_placeholder: Optional[Union[int, str]] = None,
-                 n_jobs: Optional[int] = None,
-                 random_state=None,
-                 verbose: Optional[int] = 0) -> None:
+    def __init__(
+        self,
+        n_rows: int = 10,
+        n_columns: int = 10,
+        *,
+        init_mode_unsupervised: str = "random",
+        init_mode_supervised: str = "random",
+        n_iter_unsupervised: int = 1000,
+        n_iter_supervised: int = 1000,
+        train_mode_unsupervised: str = "online",
+        train_mode_supervised: str = "online",
+        neighborhood_mode_unsupervised: str = "linear",
+        neighborhood_mode_supervised: str = "linear",
+        learn_mode_unsupervised: str = "min",
+        learn_mode_supervised: str = "min",
+        distance_metric: str = "euclidean",
+        learning_rate_start: float = 0.5,
+        learning_rate_end: float = 0.05,
+        nbh_dist_weight_mode: str = "pseudo-gaussian",
+        missing_label_placeholder: Optional[Union[int, str]] = None,
+        n_jobs: Optional[int] = None,
+        random_state=None,
+        verbose: Optional[int] = 0,
+    ) -> None:
         """Initialize SOMEstimator object."""
         super().__init__(
             n_rows=n_rows,
@@ -162,7 +165,8 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
             nbh_dist_weight_mode=nbh_dist_weight_mode,
             n_jobs=n_jobs,
             random_state=random_state,
-            verbose=verbose)
+            verbose=verbose,
+        )
 
         self.init_mode_supervised = init_mode_supervised
         self.n_iter_supervised = n_iter_supervised
@@ -176,9 +180,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         """Initialize map."""
         return None
 
-    def fit(self,
-            X: Sequence,
-            y: Optional[Sequence] = None):
+    def fit(self, X: Sequence, y: Optional[Sequence] = None):
         """Fit supervised SOM to the input data.
 
         Parameters
@@ -225,16 +227,20 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         if self.missing_label_placeholder is None:
             self.labeled_indices_ = list(range(len(self.y_)))
             self.sample_weights_ = np.full(
-                fill_value=1., shape=(len(self.X_), 1))
+                fill_value=1.0, shape=(len(self.X_), 1)
+            )
 
         # semi-supervised case:
         else:
             self.labeled_indices_ = np.where(
-                self.y_ != self.missing_label_placeholder)[0]
-            unlabeled_weight = max(len(self.labeled_indices_) / len(self.y_),
-                                   0.1)
+                self.y_ != self.missing_label_placeholder
+            )[0]
+            unlabeled_weight = max(
+                len(self.labeled_indices_) / len(self.y_), 0.1
+            )
             self.sample_weights_ = np.full(
-                fill_value=unlabeled_weight, shape=(len(self.X_), 1))
+                fill_value=unlabeled_weight, shape=(len(self.X_), 1)
+            )
             self.sample_weights_[self.labeled_indices_] = 1.0
 
         # train SOMs
@@ -245,9 +251,9 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         return self
 
-    def predict(self,
-                X: Sequence,
-                y: Optional[Sequence] = None) -> List[float]:
+    def predict(
+        self, X: Sequence, y: Optional[Sequence] = None
+    ) -> List[float]:
         """Predict output of data X.
 
         Parameters
@@ -273,7 +279,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         """
         # Check is fit had been called
-        check_is_fitted(self, ['X_', 'y_'])
+        check_is_fitted(self, ["X_", "y_"])
 
         # Input validation
         X = check_array(X, dtype=np.float64)
@@ -283,9 +289,9 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         y_pred = np.array(y_pred_list)
         return y_pred
 
-    def _calc_estimation_output(self,
-                                datapoint: np.ndarray,
-                                mode: str = "bmu"):
+    def _calc_estimation_output(
+        self, datapoint: np.ndarray, mode: str = "bmu"
+    ):
         """Get SOM output for fixed SOM.
 
         The given datapoint doesn't have to belong to the training set of the
@@ -326,17 +332,18 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         #     return estimation
         else:
-            raise ValueError("Invalid _calc_estimation_output mode: "+str(
-                mode))
+            raise ValueError(
+                "Invalid _calc_estimation_output mode: " + str(mode)
+            )
 
         return estimation_output
 
     def _modify_weight_matrix_supervised(
-            self,
-            dist_weight_matrix: np.ndarray,
-            true_vector: Optional[np.array] = None,
-            learning_rate: Optional[float] = None
-            ) -> np.ndarray:
+        self,
+        dist_weight_matrix: np.ndarray,
+        true_vector: Optional[np.array] = None,
+        learning_rate: Optional[float] = None,
+    ) -> np.ndarray:
         """Modify weights of the supervised SOM, either online or batch.
 
         Parameters
@@ -358,24 +365,28 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         if self.train_mode_supervised == "online":
 
             # require valid values for true_vector and learning_rate
-            if (not isinstance(true_vector, np.ndarray) or
-                    not isinstance(learning_rate, float)):
+            if not isinstance(true_vector, np.ndarray) or not isinstance(
+                learning_rate, float
+            ):
                 raise ValueError("Parameters required to be not None.")
 
             return modify_weight_matrix_online(
                 som_array=self.super_som_,
                 dist_weight_matrix=dist_weight_matrix,
                 true_vector=true_vector,
-                learning_rate=learning_rate)
+                learning_rate=learning_rate,
+            )
 
         if self.train_mode_supervised == "batch":
             return self._modify_weight_matrix_batch(
                 som_array=self.super_som_,
                 dist_weight_matrix=dist_weight_matrix[self.labeled_indices_],
-                data=self.y_[self.labeled_indices_])
+                data=self.y_[self.labeled_indices_],
+            )
 
-        raise ValueError("Invalid train_mode_supervised: "+str(
-            self.train_mode_supervised))
+        raise ValueError(
+            "Invalid train_mode_supervised: " + str(self.train_mode_supervised)
+        )
 
     def _train_supervised_som(self):
         """Train supervised SOM."""
@@ -383,8 +394,11 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         self._init_super_som()
 
         if self.train_mode_supervised == "online":
-            for it in tqdm(range(self.n_iter_supervised),
-                           desc="super", **self.tqdm_params_):
+            for it in tqdm(
+                range(self.n_iter_supervised),
+                desc="super",
+                **self.tqdm_params_,
+            ):
 
                 # select one input vector & calculate best matching unit (BMU)
                 dp = self._get_random_datapoint()
@@ -392,39 +406,49 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
                 # calculate learning rate and neighborhood function
                 learning_rate = self._calc_learning_rate(
-                    curr_it=it, mode=self.learn_mode_supervised)
+                    curr_it=it, mode=self.learn_mode_supervised
+                )
                 nbh_func = self._calc_neighborhood_func(
-                    curr_it=it, mode=self.neighborhood_mode_supervised)
+                    curr_it=it, mode=self.neighborhood_mode_supervised
+                )
 
                 # calculate distance weight matrix and update weights
                 dist_weight_matrix = self._get_nbh_distance_weight_matrix(
-                    nbh_func, bmu_pos)
+                    nbh_func, bmu_pos
+                )
                 self.super_som_ = self._modify_weight_matrix_supervised(
                     dist_weight_matrix=dist_weight_matrix,
                     true_vector=self.y_[self.labeled_indices_][dp],
-                    learning_rate=learning_rate)
+                    learning_rate=learning_rate,
+                )
 
         elif self.train_mode_supervised == "batch":
-            for it in tqdm(range(self.n_iter_supervised),
-                           desc="super", **self.tqdm_params_):
+            for it in tqdm(
+                range(self.n_iter_supervised),
+                desc="super",
+                **self.tqdm_params_,
+            ):
 
                 # calculate BMUs with the unsupervised (!) SOM
                 bmus = self.get_bmus(self.X_)
 
                 # calculate neighborhood function
                 nbh_func = self._calc_neighborhood_func(
-                    curr_it=it, mode=self.neighborhood_mode_supervised)
+                    curr_it=it, mode=self.neighborhood_mode_supervised
+                )
 
                 # calculate distance weight matrix for all datapoints
                 dist_weight_block = self._get_nbh_distance_weight_block(
-                    nbh_func, bmus)
+                    nbh_func, bmus
+                )
 
                 self.super_som_ = self._modify_weight_matrix_supervised(
-                    dist_weight_matrix=dist_weight_block)
+                    dist_weight_matrix=dist_weight_block
+                )
 
-    def fit_transform(self,
-                      X: Sequence,
-                      y: Optional[Sequence] = None) -> np.ndarray:
+    def fit_transform(
+        self, X: Sequence, y: Optional[Sequence] = None
+    ) -> np.ndarray:
         """Fit to the input data and transform it.
 
         Parameters
@@ -487,7 +511,8 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         random_datapoint = None
         if self.missing_label_placeholder is not None:
             random_datapoint = np.random.choice(
-                len(self.y_[self.labeled_indices_]))
+                len(self.y_[self.labeled_indices_])
+            )
         else:
             random_datapoint = np.random.randint(low=0, high=len(self.y_))
         return random_datapoint

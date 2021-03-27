@@ -11,11 +11,9 @@ from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.validation import check_array, check_X_y
 
 
-def decreasing_rate(a_1: float,
-                    a_2: float, *,
-                    iteration_max: int,
-                    iteration: int,
-                    mode: str) -> float:
+def decreasing_rate(
+    a_1: float, a_2: float, *, iteration_max: int, iteration: int, mode: str
+) -> float:
     """Return a decreasing rate from collection.
 
     Parameters
@@ -51,10 +49,11 @@ def decreasing_rate(a_1: float,
 
     elif mode == "expsquare":
         rate = a_1 * np.exp(
-            -5 * np.power(np.divide(iteration, iteration_max), 2))
+            -5 * np.power(np.divide(iteration, iteration_max), 2)
+        )
 
     elif mode == "linear":
-        rate = (a_1-a_2)*(1 - np.divide(iteration, iteration_max)) + a_2
+        rate = (a_1 - a_2) * (1 - np.divide(iteration, iteration_max)) + a_2
 
     elif mode == "inverse":
         rate = a_1 / iteration
@@ -63,7 +62,7 @@ def decreasing_rate(a_1: float,
         rate = np.power(a_1, iteration / iteration_max)
 
     else:
-        raise ValueError("Invalid decreasing rate mode: "+str(mode))
+        raise ValueError("Invalid decreasing rate mode: " + str(mode))
 
     # # prevent zero:
     # rate = max(rate, a_2)
@@ -71,10 +70,9 @@ def decreasing_rate(a_1: float,
     return rate
 
 
-def check_estimation_input(X: Sequence,
-                           y: Sequence, *,
-                           is_classification: bool = False
-                           ) -> Tuple[np.array, np.array]:
+def check_estimation_input(
+    X: Sequence, y: Sequence, *, is_classification: bool = False
+) -> Tuple[np.array, np.array]:
     """Check input arrays.
 
     This function is adapted from sklearn.utils.validation.
@@ -116,10 +114,13 @@ def check_estimation_input(X: Sequence,
     return X, y
 
 
-def modify_weight_matrix_online(som_array: np.ndarray, *,
-                                dist_weight_matrix: np.ndarray,
-                                true_vector: np.ndarray,
-                                learning_rate: float) -> np.ndarray:
+def modify_weight_matrix_online(
+    som_array: np.ndarray,
+    *,
+    dist_weight_matrix: np.ndarray,
+    true_vector: np.ndarray,
+    learning_rate: float,
+) -> np.ndarray:
     """Modify weight matrix of the SOM for the online algorithm.
 
     Parameters
@@ -140,5 +141,7 @@ def modify_weight_matrix_online(som_array: np.ndarray, *,
         Weight vector of the SOM after the modification
 
     """
-    return som_array + np.multiply(learning_rate, np.multiply(
-        dist_weight_matrix, -np.subtract(som_array, true_vector)))
+    return som_array + np.multiply(
+        learning_rate,
+        np.multiply(dist_weight_matrix, -np.subtract(som_array, true_vector)),
+    )

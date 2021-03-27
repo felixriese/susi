@@ -18,6 +18,9 @@ codecov>=2.1.10
 nbval>=0.9.5
 coverage>=5.3
 
+# for formatting
+black
+
 # for the documentation
 sphinx>=3.3.0
 sphinx-autobuild>=0.7.1

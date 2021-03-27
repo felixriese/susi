@@ -136,25 +136,32 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
 
         # initialize regression SOM
         if self.init_mode_supervised == "random":
-            som = np.random.rand(self.n_rows, self.n_columns,
-                                 self.n_regression_vars_)
+            som = np.random.rand(
+                self.n_rows, self.n_columns, self.n_regression_vars_
+            )
 
         elif self.init_mode_supervised == "random_data":
             indices = np.random.randint(
-                low=0, high=self.y_[self.labeled_indices_].shape[0],
-                size=self.n_rows*self.n_columns)
+                low=0,
+                high=self.y_[self.labeled_indices_].shape[0],
+                size=self.n_rows * self.n_columns,
+            )
             som_list = self.y_[self.labeled_indices_][indices]
             som = som_list.reshape(
-                self.n_rows, self.n_columns, self.y_.shape[1])
+                self.n_rows, self.n_columns, self.y_.shape[1]
+            )
 
         elif self.init_mode_supervised == "random_minmax":
             som = np.random.uniform(
                 low=np.min(self.y_[self.labeled_indices_]),
                 high=np.max(self.y_[self.labeled_indices_]),
-                size=(self.n_rows, self.n_columns, self.n_regression_vars_))
+                size=(self.n_rows, self.n_columns, self.n_regression_vars_),
+            )
 
         else:
-            raise ValueError("Invalid init_mode_supervised: "+str(
-                self.init_mode_supervised))
+            raise ValueError(
+                "Invalid init_mode_supervised: "
+                + str(self.init_mode_supervised)
+            )
 
         self.super_som_ = som

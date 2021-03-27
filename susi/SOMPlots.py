@@ -12,10 +12,12 @@ import matplotlib
 import numpy as np
 
 
-def plot_estimation_map(estimation_map: np.ndarray,
-                        cbar_label: str = "Variable in unit",
-                        cmap: str = "viridis",
-                        fontsize: int = 20) -> plt.Axes:
+def plot_estimation_map(
+    estimation_map: np.ndarray,
+    cbar_label: str = "Variable in unit",
+    cmap: str = "viridis",
+    fontsize: int = 20,
+) -> plt.Axes:
     """Plot estimation map.
 
     Parameters
@@ -41,7 +43,7 @@ def plot_estimation_map(estimation_map: np.ndarray,
     ax.set_ylabel("SOM rows", fontsize=fontsize)
     # ax.set_xticklabels(fontsize=fontsize)
     # ax.set_yticklabels(fontsize=fontsize)
-    ax.tick_params(axis='both', which='major', labelsize=fontsize)
+    ax.tick_params(axis="both", which="major", labelsize=fontsize)
 
     # colorbar
     cbar = plt.colorbar(img, ax=ax)
@@ -55,11 +57,13 @@ def plot_estimation_map(estimation_map: np.ndarray,
     return ax
 
 
-def plot_som_histogram(bmu_list: List[Tuple[int, int]],
-                       n_rows: int,
-                       n_columns: int,
-                       n_datapoints_cbar: int = 5,
-                       fontsize: int = 22) -> plt.Axes:
+def plot_som_histogram(
+    bmu_list: List[Tuple[int, int]],
+    n_rows: int,
+    n_columns: int,
+    n_datapoints_cbar: int = 5,
+    fontsize: int = 22,
+) -> plt.Axes:
     """Plot 2D Histogram of SOM.
 
     Plot 2D Histogram with one bin for each SOM node. The content of one
@@ -90,19 +94,33 @@ def plot_som_histogram(bmu_list: List[Tuple[int, int]],
     cmap = plt.cm.viridis
     cmaplist = [cmap(i) for i in range(cmap.N)]
     cmap = matplotlib.colors.LinearSegmentedColormap.from_list(
-        'mcm', cmaplist, cmap.N)
+        "mcm", cmaplist, cmap.N
+    )
 
-    bounds = np.arange(0., n_datapoints_cbar+1, 1.)
+    bounds = np.arange(0.0, n_datapoints_cbar + 1, 1.0)
     norm = matplotlib.colors.BoundaryNorm(bounds, cmap.N)
     ax2 = fig.add_axes([0.96, 0.12, 0.03, 0.76])
     cbar = matplotlib.colorbar.ColorbarBase(
-        ax2, cmap=cmap, norm=norm, spacing='proportional', ticks=bounds,
-        boundaries=bounds, format='%1i', extend="max")
-    cbar.ax.set_ylabel('Number of datapoints', fontsize=fontsize)
+        ax2,
+        cmap=cmap,
+        norm=norm,
+        spacing="proportional",
+        ticks=bounds,
+        boundaries=bounds,
+        format="%1i",
+        extend="max",
+    )
+    cbar.ax.set_ylabel("Number of datapoints", fontsize=fontsize)
     cbar.ax.tick_params(labelsize=fontsize)
 
-    ax.hist2d([x[0] for x in bmu_list], [x[1] for x in bmu_list],
-              bins=[n_rows, n_columns], cmin=1, cmap=cmap, norm=norm)
+    ax.hist2d(
+        [x[0] for x in bmu_list],
+        [x[1] for x in bmu_list],
+        bins=[n_rows, n_columns],
+        cmin=1,
+        cmap=cmap,
+        norm=norm,
+    )
 
     for label in cbar.ax.xaxis.get_ticklabels()[::2]:
         label.set_visible(False)
@@ -122,11 +140,13 @@ def plot_som_histogram(bmu_list: List[Tuple[int, int]],
     return ax
 
 
-def plot_umatrix(u_matrix: np.ndarray,
-                 n_rows: int,
-                 n_colums: int,
-                 cmap: str = "Greys",
-                 fontsize: int = 18) -> plt.Axes:
+def plot_umatrix(
+    u_matrix: np.ndarray,
+    n_rows: int,
+    n_colums: int,
+    cmap: str = "Greys",
+    fontsize: int = 18,
+) -> plt.Axes:
     """Plot u-matrix.
 
     Parameters
@@ -151,10 +171,10 @@ def plot_umatrix(u_matrix: np.ndarray,
     """
     _, ax = plt.subplots(figsize=(6, 6))
     img = ax.imshow(u_matrix.squeeze(), cmap=cmap)
-    ax.set_xticks(np.arange(0, n_colums*2+1, 20))
-    ax.set_xticklabels(np.arange(0, n_colums+1, 10))
-    ax.set_yticks(np.arange(0, n_rows*2+1, 20))
-    ax.set_yticklabels(np.arange(0, n_rows+1, 10))
+    ax.set_xticks(np.arange(0, n_colums * 2 + 1, 20))
+    ax.set_xticklabels(np.arange(0, n_colums + 1, 10))
+    ax.set_yticks(np.arange(0, n_rows * 2 + 1, 20))
+    ax.set_yticklabels(np.arange(0, n_rows + 1, 10))
 
     # ticks and labels
     for tick in ax.xaxis.get_major_ticks():
@@ -166,15 +186,15 @@ def plot_umatrix(u_matrix: np.ndarray,
 
     # colorbar
     cbar = plt.colorbar(img, ax=ax, fraction=0.04, pad=0.04)
-    cbar.ax.set_ylabel('Distance measure (a.u.)', rotation=90,
-                       fontsize=fontsize, labelpad=20)
+    cbar.ax.set_ylabel(
+        "Distance measure (a.u.)", rotation=90, fontsize=fontsize, labelpad=20
+    )
     cbar.ax.tick_params(labelsize=fontsize)
 
     return ax
 
 
-def plot_nbh_dist_weight_matrix(som,
-                                it_frac: float = 0.1) -> plt.Axes:
+def plot_nbh_dist_weight_matrix(som, it_frac: float = 0.1) -> plt.Axes:
     """Plot neighborhood distance weight matrix in 3D.
 
     Parameters
@@ -191,13 +211,16 @@ def plot_nbh_dist_weight_matrix(som,
 
     """
     nbh_func = som._calc_neighborhood_func(
-        curr_it=som.n_iter_unsupervised*it_frac,
-        mode=som.neighborhood_mode_unsupervised)
+        curr_it=som.n_iter_unsupervised * it_frac,
+        mode=som.neighborhood_mode_unsupervised,
+    )
     dist_weight_matrix = som._get_nbh_distance_weight_matrix(
-        neighborhood_func=nbh_func, bmu_pos=[som.n_rows//2, som.n_columns//2])
+        neighborhood_func=nbh_func,
+        bmu_pos=[som.n_rows // 2, som.n_columns // 2],
+    )
 
     fig = plt.figure(figsize=(10, 10))
-    ax = fig.add_subplot(111, projection='3d')
+    ax = fig.add_subplot(111, projection="3d")
 
     x = np.arange(som.n_rows)
     y = np.arange(som.n_columns)
@@ -205,8 +228,15 @@ def plot_nbh_dist_weight_matrix(som,
     Z = dist_weight_matrix.reshape(som.n_rows, som.n_columns)
 
     surf = ax.plot_surface(
-        X, Y, Z, cmap=matplotlib.cm.coolwarm, antialiased=False,
-        rstride=1, cstride=1, linewidth=0)
+        X,
+        Y,
+        Z,
+        cmap=matplotlib.cm.coolwarm,
+        antialiased=False,
+        rstride=1,
+        cstride=1,
+        linewidth=0,
+    )
     fig.colorbar(surf, shrink=0.5, aspect=10)
 
     return ax

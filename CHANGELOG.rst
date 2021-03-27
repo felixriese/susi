@@ -1,10 +1,11 @@
 Change Log
 ==========
 
-[dev] - XXXX-XX-XX
---------------------
+[dev]
+-----
 - [ADDED] Landing page with vuepress.
 - [ADDED] Conda-forge recipe.
+- [CHANGED] Code formatting to black.
 - [FIXED] Requirements in setup.py
 
 [1.1.2] - 2021-02-18
