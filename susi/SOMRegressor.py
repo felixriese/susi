@@ -1,6 +1,6 @@
 """SOMRegressor class.
 
-Copyright (c) 2019-2020, Felix M. Riese.
+Copyright (c) 2019-2021 Felix M. Riese.
 All rights reserved.
 
 """
