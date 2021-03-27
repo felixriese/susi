@@ -6,7 +6,7 @@ All rights reserved.
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Optional, Sequence
+from typing import List, Optional, Sequence, Union
 
 import numpy as np
 from sklearn.base import BaseEstimator
@@ -143,10 +143,10 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
                  learning_rate_start: float = 0.5,
                  learning_rate_end: float = 0.05,
                  nbh_dist_weight_mode: str = "pseudo-gaussian",
-                 missing_label_placeholder=None,
-                 n_jobs=None,
+                 missing_label_placeholder: Optional[Union[int, str]] = None,
+                 n_jobs: Optional[int] = None,
                  random_state=None,
-                 verbose=0) -> None:
+                 verbose: Optional[int] = 0) -> None:
         """Initialize SOMEstimator object."""
         super().__init__(
             n_rows=n_rows,
@@ -356,6 +356,12 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         """
         if self.train_mode_supervised == "online":
+
+            # require valid values for true_vector and learning_rate
+            if (not isinstance(true_vector, np.ndarray) or
+                    not isinstance(learning_rate, float)):
+                raise ValueError("Parameters required to be not None.")
+
             return modify_weight_matrix_online(
                 som_array=self.super_som_,
                 dist_weight_matrix=dist_weight_matrix,

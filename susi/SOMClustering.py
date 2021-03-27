@@ -119,7 +119,7 @@ class SOMClustering():
                  learning_rate_start: float = 0.5,
                  learning_rate_end: float = 0.05,
                  nbh_dist_weight_mode: str = "pseudo-gaussian",
-                 n_jobs=None,
+                 n_jobs: Optional[int] = None,
                  random_state=None,
                  verbose: Optional[int] = 0) -> None:
         """Initialize SOMClustering object."""
@@ -509,7 +509,8 @@ class SOMClustering():
 
     def _get_nbh_distance_weight_matrix(self,
                                         neighborhood_func: float,
-                                        bmu_pos: Tuple[int, int]) -> np.ndarray:
+                                        bmu_pos: Tuple[int, int]
+                                        ) -> np.ndarray:
         """Calculate neighborhood distance weight.
 
         Parameters
@@ -576,7 +577,6 @@ class SOMClustering():
                 nbh_func, bmu_pos).reshape((self.n_rows, self.n_columns))
 
         return dist_weight_block
-
 
     def _modify_weight_matrix_batch(self,
                                     som_array: np.ndarray,

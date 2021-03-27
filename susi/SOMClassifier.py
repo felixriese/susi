@@ -4,7 +4,7 @@ Copyright (c) 2019-2021 Felix M. Riese.
 All rights reserved.
 
 """
-from typing import Optional, Sequence
+from typing import Optional, Sequence, Union
 
 import numpy as np
 from scipy.special import softmax
@@ -146,11 +146,11 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
                  learning_rate_start: float = 0.5,
                  learning_rate_end: float = 0.05,
                  nbh_dist_weight_mode: str = "pseudo-gaussian",
-                 missing_label_placeholder=None,
-                 do_class_weighting=True,
-                 n_jobs=None,
+                 missing_label_placeholder: Optional[Union[int, str]] = None,
+                 do_class_weighting: bool = True,
+                 n_jobs: Optional[int] = None,
                  random_state=None,
-                 verbose=0) -> None:
+                 verbose: Optional[int] = 0) -> None:
         """Initialize SOMClassifier object."""
         super().__init__(
             n_rows=n_rows,
