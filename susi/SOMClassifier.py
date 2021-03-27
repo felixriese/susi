@@ -1,9 +1,10 @@
 """SOMClassifier class.
 
-Copyright (c) 2019-2020, Felix M. Riese.
+Copyright (c) 2019-2021 Felix M. Riese.
 All rights reserved.
 
 """
+from typing import Optional, Sequence, Union
 
 import numpy as np
 from scipy.special import softmax
@@ -95,7 +96,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
     Attributes
     ----------
-    node_list_ : np.array of (int, int) tuples
+    node_list_ : np.ndarray of (int, int) tuples
         List of 2-dimensional coordinates of SOM nodes
 
     radius_max_ : float, int
@@ -104,11 +105,11 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
     radius_min_ : float, int
         Minimum radius of the neighborhood function
 
-    unsuper_som_ : np.array
+    unsuper_som_ : np.ndarray
         Weight vectors of the unsupervised SOM
         shape = (self.n_rows, self.n_columns, X.shape[1])
 
-    X_ : np.array
+    X_ : np.ndarray
         Input data
 
     fitted_ : bool
@@ -128,28 +129,31 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
     """
 
-    def __init__(self,
-                 n_rows: int = 10,
-                 n_columns: int = 10, *,
-                 init_mode_unsupervised: str = "random",
-                 init_mode_supervised: str = "majority",
-                 n_iter_unsupervised: int = 1000,
-                 n_iter_supervised: int = 1000,
-                 train_mode_unsupervised: str = "online",
-                 train_mode_supervised: str = "online",
-                 neighborhood_mode_unsupervised: str = "linear",
-                 neighborhood_mode_supervised: str = "linear",
-                 learn_mode_unsupervised: str = "min",
-                 learn_mode_supervised: str = "min",
-                 distance_metric: str = "euclidean",
-                 learning_rate_start=0.5,
-                 learning_rate_end=0.05,
-                 nbh_dist_weight_mode: str = "pseudo-gaussian",
-                 missing_label_placeholder=None,
-                 do_class_weighting=True,
-                 n_jobs=None,
-                 random_state=None,
-                 verbose=0):
+    def __init__(
+        self,
+        n_rows: int = 10,
+        n_columns: int = 10,
+        *,
+        init_mode_unsupervised: str = "random",
+        init_mode_supervised: str = "majority",
+        n_iter_unsupervised: int = 1000,
+        n_iter_supervised: int = 1000,
+        train_mode_unsupervised: str = "online",
+        train_mode_supervised: str = "online",
+        neighborhood_mode_unsupervised: str = "linear",
+        neighborhood_mode_supervised: str = "linear",
+        learn_mode_unsupervised: str = "min",
+        learn_mode_supervised: str = "min",
+        distance_metric: str = "euclidean",
+        learning_rate_start: float = 0.5,
+        learning_rate_end: float = 0.05,
+        nbh_dist_weight_mode: str = "pseudo-gaussian",
+        missing_label_placeholder: Optional[Union[int, str]] = None,
+        do_class_weighting: bool = True,
+        n_jobs: Optional[int] = None,
+        random_state=None,
+        verbose: Optional[int] = 0,
+    ) -> None:
         """Initialize SOMClassifier object."""
         super().__init__(
             n_rows=n_rows,
@@ -171,11 +175,12 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
             missing_label_placeholder=missing_label_placeholder,
             n_jobs=n_jobs,
             random_state=random_state,
-            verbose=verbose)
+            verbose=verbose,
+        )
 
         self.do_class_weighting = do_class_weighting
 
-    def _init_super_som(self):
+    def _init_super_som(self) -> None:
         """Initialize map."""
         self.max_iterations_ = self.n_iter_supervised
 
@@ -187,7 +192,8 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
         # get class information
         self.classes_, self.class_counts_ = np.unique(
-            self.y_[self.labeled_indices_], return_counts=True)
+            self.y_[self.labeled_indices_], return_counts=True
+        )
         self.class_dtype_ = type(self.y_.flatten()[0])
         self._set_placeholder()
 
@@ -195,14 +201,18 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         if self.placeholder_ in self.classes_:
             raise ValueError("Forbidden class:", self.placeholder_)
         if self.placeholder_ == self.missing_label_placeholder:
-            raise ValueError("Forbidden missing_label_placeholder:",
-                             self.missing_label_placeholder)
+            raise ValueError(
+                "Forbidden missing_label_placeholder:",
+                self.missing_label_placeholder,
+            )
 
         # class weighting:
         if self.do_class_weighting:
             self.class_weights_ = class_weight.compute_class_weight(
-                'balanced', classes=np.unique(self.y_[self.labeled_indices_]),
-                y=self.y_[self.labeled_indices_].flatten())
+                "balanced",
+                classes=np.unique(self.y_[self.labeled_indices_]),
+                y=self.y_[self.labeled_indices_].flatten(),
+            )
         else:
             self.class_weights_ = np.ones(shape=self.classes_.shape)
 
@@ -211,12 +221,14 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
             # define dtype
             if self.class_dtype_ in [str, np.str_]:
-                init_dtype = "U" + str(len(max(np.unique(
-                    self.y_[self.labeled_indices_]), key=len)))
+                init_dtype = "U" + str(
+                    len(
+                        max(np.unique(self.y_[self.labeled_indices_]), key=len)
+                    )
+                )
             else:
                 init_dtype = self.class_dtype_
-            som = np.empty((self.n_rows, self.n_columns, 1),
-                           dtype=init_dtype)
+            som = np.empty((self.n_rows, self.n_columns, 1), dtype=init_dtype)
 
             for node in self.node_list_:
                 dp_in_node = self.get_datapoints_from_node(node)
@@ -225,24 +237,35 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
                 # node_class = self.placeholder_
                 node_class = np.random.choice(
                     self.classes_,
-                    p=self.class_counts_/np.sum(self.class_counts_))
+                    p=self.class_counts_ / np.sum(self.class_counts_),
+                )
 
                 # if at least one datapoint with label is mapped to this node:
                 if dp_in_node != []:
                     y_in_node = self.y_.flatten()[dp_in_node]
                     if not any(y_in_node == self.missing_label_placeholder):
                         node_class = np.argmax(
-                            np.unique(y_in_node, return_counts=True)[1])
+                            np.unique(y_in_node, return_counts=True)[1]
+                        )
 
                 som[node[0], node[1], 0] = node_class
         else:
-            raise ValueError("Invalid init_mode_supervised: "+str(
-                self.init_mode_supervised))
+            raise ValueError(
+                "Invalid init_mode_supervised: "
+                + str(self.init_mode_supervised)
+            )
 
         self.super_som_ = som
 
-    def _set_placeholder(self):
-        """Set placeholder depending on the class dtype."""
+    def _set_placeholder(self) -> None:
+        """Set placeholder depending on the class dtype.
+
+        Raises
+        ------
+        ValueError
+            Raised if no placeholder defined for dtype of a class.
+
+        """
         if self.class_dtype_ in [str, np.str_]:
             self.placeholder_ = self.placeholder_dict_["str"]
         elif self.class_dtype_ in [int, np.uint8, np.int64]:
@@ -250,11 +273,12 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         elif self.class_dtype_ in [float, np.float_, np.float64]:
             self.placeholder_ = self.placeholder_dict_["float"]
         else:
-            raise ValueError("No placeholder defined " +
-                             "for the dtype of the classes:",
-                             self.class_dtype_)
+            raise ValueError(
+                "No placeholder defined " + "for the dtype of the classes:",
+                self.class_dtype_,
+            )
 
-    def fit(self, X, y=None):
+    def fit(self, X: Sequence, y: Optional[Sequence] = None):
         """Fit classification SOM to the input data.
 
         Parameters
@@ -278,43 +302,58 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
         """
         X, y = check_estimation_input(X, y, is_classification=True)
-        self.n_features_in_ = X.shape[1]
+        self.X_: np.ndarray = X
+        self.y_: np.ndarray = y
+        self.n_features_in_ = self.X_.shape[1]
 
-        return self._fit_estimator(X, y)
+        return self._fit_estimator()
 
-    def _modify_weight_matrix_supervised(self, dist_weight_matrix,
-                                         true_vector=None,
-                                         learningrate=None):
+    def _modify_weight_matrix_supervised(
+        self,
+        dist_weight_matrix: np.ndarray,
+        true_vector: Optional[np.array] = None,
+        learning_rate: Optional[float] = None,
+    ) -> np.ndarray:
         """Modify weight matrix of the SOM.
 
         Parameters
         ----------
-        dist_weight_matrix : np.array of float
+        dist_weight_matrix : np.ndarray of float
             Current distance weight of the SOM for the specific node
-        learningrate : float, optional
+        learning_rate : float, optional
             Current learning rate of the SOM
-        true_vector : np.array
+        true_vector : np.ndarray
             Datapoint = one row of the dataset X
 
         Returns
         -------
-        new_matrix : np.array
+        new_matrix : np.ndarray
             Weight vector of the SOM after the modification
 
         """
         new_matrix = None
         if self.train_mode_supervised == "online":
+
+            # require valid values for true_vector and learning_rate
+            if not isinstance(true_vector, np.ndarray) or not isinstance(
+                learning_rate, float
+            ):
+                raise ValueError("Parameters required to be not None.")
+
             class_weight = self.class_weights_[
-                np.argwhere(self.classes_ == true_vector)[0, 0]]
+                np.argwhere(self.classes_ == true_vector)[0, 0]
+            ]
             change_class_bool = self._change_class_proba(
-                learningrate, dist_weight_matrix, class_weight)
+                learning_rate, dist_weight_matrix, class_weight
+            )
 
             different_classes_matrix = (
-                self.super_som_ != true_vector).reshape(
-                    (self.n_rows, self.n_columns, 1))
+                self.super_som_ != true_vector
+            ).reshape((self.n_rows, self.n_columns, 1))
 
-            change_mask = np.multiply(change_class_bool,
-                                      different_classes_matrix)
+            change_mask = np.multiply(
+                change_class_bool, different_classes_matrix
+            )
 
             new_matrix = np.copy(self.super_som_)
             new_matrix[change_mask] = true_vector
@@ -328,44 +367,59 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
             # calculate numerator and divisor for the batch formula
             numerator = np.sum(
-                [np.multiply(y_bin[i], dist_weight_matrix[i].reshape(
-                    (self.n_rows, self.n_columns, 1)))
-                    for i in self.labeled_indices_], axis=0)
+                [
+                    np.multiply(
+                        y_bin[i],
+                        dist_weight_matrix[i].reshape(
+                            (self.n_rows, self.n_columns, 1)
+                        ),
+                    )
+                    for i in self.labeled_indices_
+                ],
+                axis=0,
+            )
 
             # update weights
             new_matrix = lb.inverse_transform(
                 softmax(numerator, axis=2).reshape(
-                    (self.n_rows*self.n_columns, y_bin.shape[1]))).reshape(
-                    (self.n_rows, self.n_columns, 1))
+                    (self.n_rows * self.n_columns, y_bin.shape[1])
+                )
+            ).reshape((self.n_rows, self.n_columns, 1))
 
         else:
-            raise ValueError("Invalid train_mode_supervised: "+str(
-                self.train_mode_supervised))
+            raise ValueError(
+                "Invalid train_mode_supervised: "
+                + str(self.train_mode_supervised)
+            )
 
         return new_matrix
 
-    def _change_class_proba(self, learningrate, dist_weight_matrix,
-                            class_weight):
+    def _change_class_proba(
+        self,
+        learning_rate: float,
+        dist_weight_matrix: np.ndarray,
+        class_weight: float,
+    ) -> np.ndarray:
         """Calculate probability of changing class in a node.
 
         Parameters
         ----------
-        learningrate : float
+        learning_rate : float
             Current learning rate of the SOM
-        dist_weight_matrix : np.array of float
+        dist_weight_matrix : np.ndarray of float
             Current distance weight of the SOM for the specific node
         class_weight : float
             Weight of the class of the current datapoint
 
         Returns
         -------
-        change_class_bool : np.array, shape = (n_rows, n_columns)
+        change_class_bool : np.ndarray, shape = (n_rows, n_columns)
             Matrix with one boolean for each node on the SOM node.
             If true, the value of the respective SOM node gets changed.
             If false, the value of the respective SOM node stays the same.
 
         """
-        _change_class_proba = learningrate * dist_weight_matrix
+        _change_class_proba = learning_rate * dist_weight_matrix
         _change_class_proba *= class_weight
         random_matrix = np.random.rand(self.n_rows, self.n_columns, 1)
         change_class_bool = random_matrix < _change_class_proba

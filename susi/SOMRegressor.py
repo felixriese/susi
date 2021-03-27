@@ -1,6 +1,6 @@
 """SOMRegressor class.
 
-Copyright (c) 2019-2020, Felix M. Riese.
+Copyright (c) 2019-2021 Felix M. Riese.
 All rights reserved.
 
 """
@@ -88,7 +88,7 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
 
     Attributes
     ----------
-    node_list_ : np.array of (int, int) tuples
+    node_list_ : np.ndarray of (int, int) tuples
         List of 2-dimensional coordinates of SOM nodes
 
     radius_max_ : float, int
@@ -97,11 +97,11 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
     radius_min_ : float, int
         Minimum radius of the neighborhood function
 
-    unsuper_som_ : np.array
+    unsuper_som_ : np.ndarray
         Weight vectors of the unsupervised SOM
         shape = (self.n_rows, self.n_columns, X.shape[1])
 
-    X_ : np.array
+    X_ : np.ndarray
         Input data
 
     fitted_ : bool
@@ -123,7 +123,7 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
 
     """
 
-    def _init_super_som(self):
+    def _init_super_som(self) -> None:
         """Initialize map for regression."""
         self.max_iterations_ = self.n_iter_supervised
         self.n_regression_vars_ = None
@@ -136,25 +136,32 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
 
         # initialize regression SOM
         if self.init_mode_supervised == "random":
-            som = np.random.rand(self.n_rows, self.n_columns,
-                                 self.n_regression_vars_)
+            som = np.random.rand(
+                self.n_rows, self.n_columns, self.n_regression_vars_
+            )
 
         elif self.init_mode_supervised == "random_data":
             indices = np.random.randint(
-                low=0, high=self.y_[self.labeled_indices_].shape[0],
-                size=self.n_rows*self.n_columns)
+                low=0,
+                high=self.y_[self.labeled_indices_].shape[0],
+                size=self.n_rows * self.n_columns,
+            )
             som_list = self.y_[self.labeled_indices_][indices]
             som = som_list.reshape(
-                self.n_rows, self.n_columns, self.y_.shape[1])
+                self.n_rows, self.n_columns, self.y_.shape[1]
+            )
 
         elif self.init_mode_supervised == "random_minmax":
             som = np.random.uniform(
                 low=np.min(self.y_[self.labeled_indices_]),
                 high=np.max(self.y_[self.labeled_indices_]),
-                size=(self.n_rows, self.n_columns, self.n_regression_vars_))
+                size=(self.n_rows, self.n_columns, self.n_regression_vars_),
+            )
 
         else:
-            raise ValueError("Invalid init_mode_supervised: "+str(
-                self.init_mode_supervised))
+            raise ValueError(
+                "Invalid init_mode_supervised: "
+                + str(self.init_mode_supervised)
+            )
 
         self.super_som_ = som

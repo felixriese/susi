@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('../'))
 # -- Project information -----------------------------------------------------
 
 project = 'SuSi'
-copyright = '2020, Felix M. Riese'
+copyright = '2019-2021 Felix M. Riese'
 author = 'Felix M. Riese'
 
 # The short X.Y version

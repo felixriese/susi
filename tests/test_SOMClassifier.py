@@ -95,19 +95,19 @@ def test_init_super_som_raises():
 
 
 @pytest.mark.parametrize(
-    ("n_rows,n_columns,learningrate,dist_weight_matrix,random_state,"
+    ("n_rows,n_columns,learning_rate,dist_weight_matrix,random_state,"
      "class_weight,expected"), [
         (2, 2, 0.3, np.array([[1.3, 0.4], [2.1, 0.2]]).reshape(2, 2, 1),
          3, 1., None),
         (2, 2, 1e-9, np.array([[1.3, 0.4], [2.1, 0.2]]).reshape(2, 2, 1),
          3, 1., np.array([[False, False], [False, False]])),
      ])
-def test_change_class_proba(n_rows, n_columns, learningrate,
+def test_change_class_proba(n_rows, n_columns, learning_rate,
                             dist_weight_matrix, random_state, class_weight,
                             expected):
     som = susi.SOMClassifier(n_rows=n_rows, n_columns=n_columns,
                              random_state=random_state)
-    new_som_array = som._change_class_proba(learningrate, dist_weight_matrix,
+    new_som_array = som._change_class_proba(learning_rate, dist_weight_matrix,
                                            class_weight)
     assert(new_som_array.shape == (n_rows, n_columns, 1))
     assert(new_som_array.dtype == bool)
@@ -116,14 +116,14 @@ def test_change_class_proba(n_rows, n_columns, learningrate,
 
 
 @pytest.mark.parametrize(
-    ("n_rows,n_columns,learningrate,dist_weight_matrix,som_array,"
+    ("n_rows,n_columns,learning_rate,dist_weight_matrix,som_array,"
      "random_state,true_vector"), [
         (2, 2, 0.3, np.array([[1.3, 0.4], [2.1, 0.2]]).reshape(2, 2, 1),
          np.array([[1.3, 0.4], [2.1, 0.2]]).reshape(2, 2, 1), 3,
          np.array([1])),
      ])
 def test_modify_weight_matrix_supervised(
-        n_rows, n_columns, learningrate, dist_weight_matrix, som_array,
+        n_rows, n_columns, learning_rate, dist_weight_matrix, som_array,
         random_state, true_vector):
     som = susi.SOMClassifier(
         n_rows=n_rows,
@@ -135,7 +135,7 @@ def test_modify_weight_matrix_supervised(
     new_som = som._modify_weight_matrix_supervised(
         dist_weight_matrix=dist_weight_matrix,
         true_vector=true_vector,
-        learningrate=learningrate)
+        learning_rate=learning_rate)
     assert(new_som.shape == (n_rows, n_columns, 1))
 
 

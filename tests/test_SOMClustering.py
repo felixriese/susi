@@ -216,7 +216,7 @@ def test_get_nbh_distance_weight_matrix(n_rows, n_columns, random_state,
 
 
 @pytest.mark.parametrize(
-    ("n_rows,n_columns,random_state,n_iter_unsupervised, X,learningrate,"
+    ("n_rows,n_columns,random_state,n_iter_unsupervised, X,learning_rate,"
      "neighborhood_func,bmu_pos,dp,expected"), [
         (2, 2, 42, 2, np.array([[0., 0.1, 0.2], [2.3, 2.1, 2.1]]), 0.7, 0.4,
          (1, 1), 1,
@@ -226,7 +226,7 @@ def test_get_nbh_distance_weight_matrix(n_rows, n_columns, random_state,
                     [1.9329369, 1.62053297, 1.83942631]]])),
         ])
 def test_modify_weight_matrix_online(n_rows, n_columns, random_state,
-                                     n_iter_unsupervised, X, learningrate,
+                                     n_iter_unsupervised, X, learning_rate,
                                      neighborhood_func, bmu_pos, dp, expected):
     som_clustering = susi.SOMClustering(
         n_rows=n_rows, n_columns=n_columns,
@@ -234,7 +234,7 @@ def test_modify_weight_matrix_online(n_rows, n_columns, random_state,
     som_clustering.fit(X)
     assert np.allclose(susi.modify_weight_matrix_online(
         som_array=som_clustering.unsuper_som_,
-        learningrate=learningrate,
+        learning_rate=learning_rate,
         dist_weight_matrix=som_clustering._get_nbh_distance_weight_matrix(
             neighborhood_func, bmu_pos),
         true_vector=som_clustering.X_[dp]), expected, atol=1e-8)
