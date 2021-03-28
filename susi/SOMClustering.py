@@ -193,8 +193,7 @@ class SOMClustering:
 
         else:
             raise ValueError(
-                "Invalid init_mode_unsupervised: "
-                + str(self.init_mode_unsupervised)
+                f"Invalid init_mode_unsupervised: {self.init_mode_unsupervised}."
             )
 
         self.unsuper_som_ = som
@@ -565,11 +564,9 @@ class SOMClustering:
         )
 
         if self.nbh_dist_weight_mode == "pseudo-gaussian":
-            nbh_dist_weight_mat = pseudogaussian.reshape(
-                (self.n_rows, self.n_columns, 1)
-            )
+            return pseudogaussian.reshape((self.n_rows, self.n_columns, 1))
 
-        elif self.nbh_dist_weight_mode == "mexican-hat":
+        if self.nbh_dist_weight_mode == "mexican-hat":
             mexicanhat = np.multiply(
                 pseudogaussian,
                 np.subtract(
@@ -579,17 +576,11 @@ class SOMClustering:
                     ),
                 ),
             )
-            nbh_dist_weight_mat = mexicanhat.reshape(
-                (self.n_rows, self.n_columns, 1)
-            )
+            return mexicanhat.reshape((self.n_rows, self.n_columns, 1))
 
-        else:
-            raise ValueError(
-                "Invalid nbh_dist_weight_mode: "
-                + str(self.nbh_dist_weight_mode)
-            )
-
-        return nbh_dist_weight_mat
+        raise ValueError(
+            "Invalid nbh_dist_weight_mode: " + str(self.nbh_dist_weight_mode)
+        )
 
     def _get_nbh_distance_weight_block(
         self, nbh_func: float, bmus: List[Tuple[int, int]]
@@ -909,3 +900,33 @@ class SOMClustering:
         elif self.u_mean_mode_ == "max":
             u_mean = np.max(meanlist)
         return u_mean
+
+    def _get_node_neighbors(
+        self, node: Tuple[int, int], radius: int = 1
+    ) -> List[Tuple[int, int]]:
+        """Get neighboring nodes (grid parameters) of `node`.
+
+        .. versionadded:: 1.1.3
+
+        Parameters
+        ----------
+        node : Tuple[int, int]
+            Node position on the SOM grid.
+        radius : int, optional (default=1)
+            Radius to calculate the node radius. Is set arbitrarily to 1, can
+            be changed in future versions.
+
+        Returns
+        -------
+        [type]
+            [description]
+        """
+        row_range = range(
+            max(node[0] - radius, 0),
+            min(node[0] + radius, self.n_rows - 1) + 1,
+        )
+        column_range = range(
+            max(node[1] - radius, 0),
+            min(node[1] + radius, self.n_columns - 1) + 1,
+        )
+        return list(itertools.product(row_range, column_range))

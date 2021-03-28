@@ -5,6 +5,7 @@ Change Log
 -----
 - [ADDED] Landing page with vuepress.
 - [ADDED] Conda-forge recipe.
+- [ADDED] Function `SOMClassifier.predict_proba()`
 - [CHANGED] Code formatting to black.
 - [FIXED] Requirements in setup.py
 

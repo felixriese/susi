@@ -113,7 +113,8 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
     bmus_ :  list of (int, int) tuples
         List of best matching units (BMUs) of the dataset X
 
-    sample_weights_ : TODO
+    sample_weights_ : np.ndarray
+        Sample weights.
 
     n_regression_vars_ : int
         Number of regression variables. In most examples, this equals one.
@@ -160,8 +161,7 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
 
         else:
             raise ValueError(
-                "Invalid init_mode_supervised: "
-                + str(self.init_mode_supervised)
+                f"Invalid init_mode_supervised: {self.init_mode_supervised}"
             )
 
         self.super_som_ = som

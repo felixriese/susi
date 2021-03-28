@@ -6,7 +6,7 @@ All rights reserved.
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Optional, Sequence, Union
+from typing import List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 from sklearn.base import BaseEstimator
@@ -119,7 +119,8 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
     bmus_ :  list of (int, int) tuples
         List of best matching units (BMUs) of the dataset X
 
-    sample_weights_ : TODO
+    sample_weights_ : np.ndarray
+        Sample weights.
 
     n_features_in_ : int
         Number of input features
@@ -285,13 +286,13 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         X = check_array(X, dtype=np.float64)
         y_pred_list = []
         for dp in tqdm(X, desc="predict", **self.tqdm_params_):
-            y_pred_list.append(self._calc_estimation_output(dp, mode="bmu"))
+            y_pred_list.append(self._calc_estimation_output(dp, proba=False))
         y_pred = np.array(y_pred_list)
         return y_pred
 
     def _calc_estimation_output(
-        self, datapoint: np.ndarray, mode: str = "bmu"
-    ):
+        self, datapoint: np.ndarray, proba: bool = False
+    ) -> Tuple[Union[int, str, float], np.ndarray]:
         """Get SOM output for fixed SOM.
 
         The given datapoint doesn't have to belong to the training set of the
@@ -301,42 +302,46 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         ----------
         datapoint : np.ndarray, shape=(X.shape[1])
             Datapoint = one row of the dataset X
-        mode : str, optional (default="bmu")
-            Mode of the regression output calculation
+        proba : bool
+            If True, probabilities are calculated.
 
         Returns
         -------
-        estimation_output : object
+        int or str or float
             Content of SOM node which is linked to the datapoint.
             Classification: the label.
             Regression: the target variable.
 
         TODO Implement handling of incomplete datapoints
-        TODO implement "neighborhood" mode
 
         """
         bmu_pos = self.get_bmu(datapoint, self.unsuper_som_)
-        estimation_output = None
+        estimation_output = self.super_som_[bmu_pos[0], bmu_pos[1]][0]
 
-        if mode == "bmu":
-            estimation_output = self.super_som_[bmu_pos[0], bmu_pos[1]][0]
+        if not proba:
+            return estimation_output
 
-        # elif mode == "neighborhood":
-        #     nbh_radius = 2.0      # TODO change
-        #     nbh_nodes = self.getNeighbors(bmu_pos, nbh_radius)
-        #     estimation = np.average(
-        #         a=[self.output_som_[node] for node in nbh_nodes],
-        #         weights=[self.getNeighborhoodDistanceWeight(nbh_radius,
-        #                                                     bmu_pos, node)
-        #                  for node in nbh_nodes])
+        return (estimation_output, self._calc_proba(bmu_pos=bmu_pos))
 
-        #     return estimation
-        else:
-            raise ValueError(
-                "Invalid _calc_estimation_output mode: " + str(mode)
-            )
+    def _calc_proba(self, bmu_pos: Tuple[int, int]) -> np.ndarray:
+        """Calculate probabilities for datapoint related to BMU.
 
-        return estimation_output
+        .. versionadded:: 1.1.3
+
+        This function is just a placeholder and should not be used.
+
+        Parameters
+        ----------
+        bmu_pos : Tuple[int, int]
+            BMU position on the SOM grid.
+
+        Returns
+        -------
+        np.ndarray
+            Dummy output.
+
+        """
+        return np.array([1.0])
 
     def _modify_weight_matrix_supervised(
         self,
