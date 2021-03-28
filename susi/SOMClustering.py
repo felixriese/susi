@@ -193,8 +193,7 @@ class SOMClustering:
 
         else:
             raise ValueError(
-                "Invalid init_mode_unsupervised: "
-                + str(self.init_mode_unsupervised)
+                f"Invalid init_mode_unsupervised: {self.init_mode_unsupervised}."
             )
 
         self.unsuper_som_ = som
@@ -565,11 +564,9 @@ class SOMClustering:
         )
 
         if self.nbh_dist_weight_mode == "pseudo-gaussian":
-            nbh_dist_weight_mat = pseudogaussian.reshape(
-                (self.n_rows, self.n_columns, 1)
-            )
+            return pseudogaussian.reshape((self.n_rows, self.n_columns, 1))
 
-        elif self.nbh_dist_weight_mode == "mexican-hat":
+        if self.nbh_dist_weight_mode == "mexican-hat":
             mexicanhat = np.multiply(
                 pseudogaussian,
                 np.subtract(
@@ -579,17 +576,11 @@ class SOMClustering:
                     ),
                 ),
             )
-            nbh_dist_weight_mat = mexicanhat.reshape(
-                (self.n_rows, self.n_columns, 1)
-            )
+            return mexicanhat.reshape((self.n_rows, self.n_columns, 1))
 
-        else:
-            raise ValueError(
-                "Invalid nbh_dist_weight_mode: "
-                + str(self.nbh_dist_weight_mode)
-            )
-
-        return nbh_dist_weight_mat
+        raise ValueError(
+            "Invalid nbh_dist_weight_mode: " + str(self.nbh_dist_weight_mode)
+        )
 
     def _get_nbh_distance_weight_block(
         self, nbh_func: float, bmus: List[Tuple[int, int]]

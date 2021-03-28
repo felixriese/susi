@@ -161,8 +161,7 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
 
         else:
             raise ValueError(
-                "Invalid init_mode_supervised: "
-                + str(self.init_mode_supervised)
+                f"Invalid init_mode_supervised: {self.init_mode_supervised}"
             )
 
         self.super_som_ = som

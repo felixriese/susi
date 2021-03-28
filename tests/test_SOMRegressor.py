@@ -93,8 +93,8 @@ def test_init_super_som_regressor(X, y, init_mode):
     n_columns = som.n_columns
     assert som.super_som_.shape == (n_rows, n_columns, som.n_regression_vars_)
 
-    with pytest.raises(Exception):
-        som = susi.SOMRegressor(init_mode_supervised="pca")
+    with pytest.raises(ValueError):
+        som = susi.SOMRegressor(init_mode_supervised="wrong")
         som.X_ = X
         som.y_ = y
         som._init_super_som()
@@ -166,7 +166,7 @@ def test_mexicanhat_nbh_dist_weight_mode():
     som = susi.SOMRegressor(nbh_dist_weight_mode="mexican-hat")
     som.fit(X_train, y_train)
     som.predict(X_test)
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         som = susi.SOMRegressor(nbh_dist_weight_mode="pseudogaussian")
         som.fit(X_train, y_train)
 
@@ -192,3 +192,28 @@ def test_semisupervised_regressor(
     som_reg.fit(X_train, y_train_semi)
     y_pred = som_reg.predict(X_test)
     assert y_pred.shape == y_test.shape
+
+
+def test_modify_weight_matrix_supervised():
+    som = susi.SOMRegressor(train_mode_supervised="online")
+
+    with pytest.raises(ValueError):
+        som._modify_weight_matrix_supervised(
+            dist_weight_matrix=np.array([1.0, 2.0]),
+            true_vector=None,
+            learning_rate=1.0,
+        )
+    with pytest.raises(ValueError):
+        som._modify_weight_matrix_supervised(
+            dist_weight_matrix=np.array([1.0, 2.0]),
+            true_vector=np.array([1.0, 2.0]),
+            learning_rate=None,
+        )
+
+    som = susi.SOMRegressor(train_mode_supervised="wrong")
+    with pytest.raises(ValueError):
+        som._modify_weight_matrix_supervised(
+            dist_weight_matrix=np.array([1.0, 2.0]),
+            true_vector=np.array([1.0, 2.0]),
+            learning_rate=None,
+        )

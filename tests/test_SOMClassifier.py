@@ -187,6 +187,32 @@ def test_modify_weight_matrix_supervised(
     )
     assert new_som.shape == (n_rows, n_columns, 1)
 
+    # raise because true_vector is None
+    som = susi.SOMClassifier(train_mode_supervised="online")
+    with pytest.raises(ValueError):
+        som._modify_weight_matrix_supervised(
+            dist_weight_matrix=np.array([1.0, 2.0]),
+            true_vector=None,
+            learning_rate=1.0,
+        )
+
+    # raise because learning_rate is None
+    with pytest.raises(ValueError):
+        som._modify_weight_matrix_supervised(
+            dist_weight_matrix=np.array([1.0, 2.0]),
+            true_vector=np.array([1.0, 2.0]),
+            learning_rate=None,
+        )
+
+    # raise because train_mode_supervised is wrong
+    som = susi.SOMClassifier(train_mode_supervised="wrong")
+    with pytest.raises(ValueError):
+        som._modify_weight_matrix_supervised(
+            dist_weight_matrix=np.array([1.0, 2.0]),
+            true_vector=np.array([1.0, 2.0]),
+            learning_rate=None,
+        )
+
 
 @pytest.mark.parametrize(
     "train_mode_unsupervised,train_mode_supervised",
