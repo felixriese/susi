@@ -909,3 +909,33 @@ class SOMClustering:
         elif self.u_mean_mode_ == "max":
             u_mean = np.max(meanlist)
         return u_mean
+
+    def _get_node_neighbors(
+        self, node: Tuple[int, int], radius: int = 1
+    ) -> List[Tuple[int, int]]:
+        """Get neighboring nodes (grid parameters) of `node`.
+
+        .. versionadded:: 1.1.3
+
+        Parameters
+        ----------
+        node : Tuple[int, int]
+            Node position on the SOM grid.
+        radius : int, optional (default=1)
+            Radius to calculate the node radius. Is set arbitrarily to 1, can
+            be changed in future versions.
+
+        Returns
+        -------
+        [type]
+            [description]
+        """
+        row_range = range(
+            max(node[0] - radius, 0),
+            min(node[0] + radius, self.n_rows - 1) + 1,
+        )
+        column_range = range(
+            max(node[1] - radius, 0),
+            min(node[1] + radius, self.n_columns - 1) + 1,
+        )
+        return list(itertools.product(row_range, column_range))

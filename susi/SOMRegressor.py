@@ -113,7 +113,8 @@ class SOMRegressor(SOMEstimator, RegressorMixin):
     bmus_ :  list of (int, int) tuples
         List of best matching units (BMUs) of the dataset X
 
-    sample_weights_ : TODO
+    sample_weights_ : np.ndarray
+        Sample weights.
 
     n_regression_vars_ : int
         Number of regression variables. In most examples, this equals one.

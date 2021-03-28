@@ -4,13 +4,15 @@ Copyright (c) 2019-2021 Felix M. Riese.
 All rights reserved.
 
 """
-from typing import Optional, Sequence, Union
+from typing import Optional, Sequence, Tuple, Union
 
 import numpy as np
 from scipy.special import softmax
 from sklearn.base import ClassifierMixin
 from sklearn.preprocessing import LabelBinarizer
+from sklearn.utils.validation import check_array, check_is_fitted
 from sklearn.utils import class_weight
+from tqdm import tqdm
 
 from .SOMEstimator import SOMEstimator
 from .SOMUtils import check_estimation_input
@@ -119,13 +121,22 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         Maximum number of iterations for the current training
 
     bmus_ :  list of (int, int) tuples
-        List of best matching units (BMUs) of the dataset X
+        List of best matching units (BMUs) of the dataset *X*.
 
     placeholder_dict_ : dict
         Dict of placeholders for initializing nodes without mapped class.
 
     n_features_in_ : int
-        Number of input features
+        Number of input features in *X*.
+
+    classes_ : np.ndarray
+        Unique classes in the dataset labels *y*.
+
+    class_counts_ : np.ndarray
+        Number of datapoints per unique class in *y*.
+
+    class_dtype_ : type
+        Type of a label in *y*.
 
     """
 
@@ -285,7 +296,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         ----------
         X : array-like matrix of shape = [n_samples, n_features]
             The prediction input samples.
-        y : array-like matrix of shape = [n_samples, 1]
+        y : array-like matrix of shape = [n_samples, 1], optional
             The labels (ground truth) of the input samples
 
         Returns
@@ -307,6 +318,39 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         self.n_features_in_ = self.X_.shape[1]
 
         return self._fit_estimator()
+
+    def predict_proba(
+        self, X: Sequence, y: Optional[Sequence] = None
+    ) -> np.ndarray:
+        """Predict class probabilities for `X`.
+
+        .. versionadded:: 1.1.3
+
+        Parameters
+        ----------
+        X : array-like matrix of shape = [n_samples, n_features]
+            The prediction input samples.
+        y : array-like matrix of shape = [n_samples, 1], optional
+            The labels (ground truth) of the input samples
+
+        Returns
+        -------
+        np.ndarray
+            List of probabilities of shape (n_samples, n_classes)
+
+        """
+        # Check is fit had been called
+        check_is_fitted(self, ["X_", "y_"])
+
+        # Input validation
+        X = check_array(X, dtype=np.float64)
+        proba_list = []
+        for dp in tqdm(X, desc="predict", **self.tqdm_params_):
+            _, proba = self._calc_estimation_output(dp, proba=True)
+            proba_list.append(proba)
+
+        # transform to numpy array
+        return np.array(proba_list)
 
     def _modify_weight_matrix_supervised(
         self,
@@ -330,8 +374,12 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         new_matrix : np.ndarray
             Weight vector of the SOM after the modification
 
+        Raises
+        ------
+        ValueError
+            Raised if *train_mode_supervised* is invalid.
+
         """
-        new_matrix = None
         if self.train_mode_supervised == "online":
 
             # require valid values for true_vector and learning_rate
@@ -358,9 +406,9 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
             new_matrix = np.copy(self.super_som_)
             new_matrix[change_mask] = true_vector
 
-            new_matrix = new_matrix.reshape((self.n_rows, self.n_columns, 1))
+            return new_matrix.reshape((self.n_rows, self.n_columns, 1))
 
-        elif self.train_mode_supervised == "batch":
+        if self.train_mode_supervised == "batch":
             # transform labels
             lb = LabelBinarizer()
             y_bin = lb.fit_transform(self.y_)
@@ -380,19 +428,15 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
             )
 
             # update weights
-            new_matrix = lb.inverse_transform(
+            return lb.inverse_transform(
                 softmax(numerator, axis=2).reshape(
                     (self.n_rows * self.n_columns, y_bin.shape[1])
                 )
             ).reshape((self.n_rows, self.n_columns, 1))
 
-        else:
-            raise ValueError(
-                "Invalid train_mode_supervised: "
-                + str(self.train_mode_supervised)
-            )
-
-        return new_matrix
+        raise ValueError(
+            f"Invalid train_mode_supervised: {self.train_mode_supervised}"
+        )
 
     def _change_class_proba(
         self,
@@ -424,3 +468,46 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
         random_matrix = np.random.rand(self.n_rows, self.n_columns, 1)
         change_class_bool = random_matrix < _change_class_proba
         return change_class_bool
+
+    def _calc_proba(self, bmu_pos: Tuple[int, int]) -> np.ndarray:
+        """Calculate probability for `predict_proba()`.
+
+        .. versionadded:: 1.1.3
+
+        Parameters
+        ----------
+        bmu_pos : Tuple[int, int]
+            BMU position on the SOM grid.
+
+        Returns
+        -------
+        proba : np.ndarray
+            List of probabilities of shape (n_samples, n_classes)
+
+        """
+        # find all nodes around the BMU
+        nbh_nodes = self._get_node_neighbors(bmu_pos)
+
+        # get node predictions
+        nodes_predictions = [
+            self.super_som_[node[0], node[1]][0] for node in nbh_nodes
+        ]
+
+        # calculate weights (Exponent 3 is chosen to make the results
+        # consistent with the current estimation while using radius=1. This can
+        # be changed if we switch to a np.argmax(proba, axis=1) estimation
+        # instead of a node-based estimation.)
+        nbh_nodes_weights = (
+            np.divide(1, 1 + np.linalg.norm(nbh_nodes - bmu_pos, axis=1)) ** 3
+        )
+
+        # calculate probabilities
+        proba = np.zeros(shape=self.classes_.shape)
+        for prediction, weight in zip(nodes_predictions, nbh_nodes_weights):
+            class_index = np.argwhere(self.classes_ == prediction)[0, 0]
+            proba[class_index] += weight
+
+        # normalize probabilities
+        proba /= proba.sum()
+
+        return proba
