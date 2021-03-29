@@ -51,9 +51,15 @@ setuptools.setup(
         "Intended Audience :: Education",
         "Intended Audience :: Information Technology",
         "Intended Audience :: Science/Research",
-        "License :: OSI Approved",
+        "License :: OSI Approved :: BSD License",
         "Natural Language :: English",
         "Operating System :: OS Independent",
         "Topic :: Scientific/Engineering",
     ],
+    project_urls={
+        "Documentation": "https://susi.readthedocs.io/en/latest/?badge=latest",
+        "Source": "https://github.com/felixriese/susi",
+        "Tracker": "https://github.com/felixriese/susi/issues",
+    },
+    python_requires=">=3.6",
 )
