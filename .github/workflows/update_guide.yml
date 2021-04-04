@@ -27,5 +27,5 @@ jobs:
         sudo git init
         sudo git add -A
         sudo git commit -m 'deploy'
-        sudo git push -f https://x-access-token:${DEPLOY_TOKEN}@github.com/felixriese/susi.git master:gh-pages
+        sudo git push -f https://x-access-token:${DEPLOY_TOKEN}@github.com/felixriese/susi.git main:gh-pages
       working-directory: ./guide/.vuepress/dist
