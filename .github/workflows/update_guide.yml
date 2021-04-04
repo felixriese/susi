@@ -2,8 +2,7 @@ name: Guide
 
 on:
   push:
-    branches:
-      - master
+    branches: [ main ]
 
 jobs:
   vuepress:
