@@ -22,9 +22,10 @@ jobs:
     - name: Push
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
       run: |
         sudo git init
         sudo git add -A
         sudo git commit -m 'deploy'
-        sudo git push -f https://x-access-token:${GITHUB_TOKEN}@github.com/felixriese/susi.git master:gh-pages
+        sudo git push -f https://x-access-token:${DEPLOY_TOKEN}@github.com/felixriese/susi.git master:gh-pages
       working-directory: ./guide/.vuepress/dist
