@@ -23,8 +23,10 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
       run: |
-        sudo git init
+        sudo git init -b main
         sudo git add -A
         sudo git commit -m 'deploy'
+        sudo git config --global user.name "Felix Riese"
+        sudo git config --global user.email "github@felixriese.de"
         sudo git push -f https://x-access-token:${DEPLOY_TOKEN}@github.com/felixriese/susi.git main:gh-pages
       working-directory: ./guide/.vuepress/dist
