@@ -5,12 +5,12 @@ We present the SuSi package for Python.
 It includes a fully functional SOM for unsupervised, supervised and semi-supervised tasks.
 
 :License:
-    `3-Clause BSD license <https://github.com/felixriese/susi/blob/master/LICENSE>`_
+    `3-Clause BSD license <https://github.com/felixriese/susi/blob/main/LICENSE>`_
 
 :Author:
     `Felix M. Riese <mailto:github@felixriese.de>`_
 
-:Citation: see `Citation <citation.html>`_ and in the `bibtex <https://github.com/felixriese/susi/blob/master/bibliography.bib>`_ file
+:Citation: see `Citation <citation.html>`_ and in the `bibtex <https://github.com/felixriese/susi/blob/main/bibliography.bib>`_ file
 
 :Paper:
     `F. M. Riese, S. Keller and S. Hinz in Remote Sensing, 2020 <https://www.mdpi.com/2072-4292/12/1/7>`_

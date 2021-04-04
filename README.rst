@@ -55,7 +55,7 @@ It includes a fully functional SOM for unsupervised, supervised and semi-supervi
     `Felix M. Riese <mailto:github@felixriese.de>`_
 
 :Citation:
-    see `Citation`_ and in the `bibtex <https://github.com/felixriese/susi/blob/master/bibliography.bib>`_ file
+    see `Citation`_ and in the `bibtex <https://github.com/felixriese/susi/blob/main/bibliography.bib>`_ file
 
 :Documentation:
     `Documentation <https://susi.readthedocs.io/en/latest/index.html>`_
@@ -96,11 +96,12 @@ Examples
 A collection of code examples can be found in `the documentation <https://susi.readthedocs.io/en/latest/examples.html>`_.
 Code examples as Jupyter Notebooks can be found here:
 
-* `examples/SOMClustering <https://github.com/felixriese/susi/blob/master/examples/SOMClustering.ipynb>`_
-* `examples/SOMRegressor <https://github.com/felixriese/susi/blob/master/examples/SOMRegressor.ipynb>`_
-* `examples/SOMRegressor_semisupervised <https://github.com/felixriese/susi/blob/master/examples/SOMRegressor_semisupervised.ipynb>`_
-* `examples/SOMClassifier <https://github.com/felixriese/susi/blob/master/examples/SOMClassifier.ipynb>`_
-* `examples/SOMClassifier_semisupervised <https://github.com/felixriese/susi/blob/master/examples/SOMClassifier_semisupervised.ipynb>`_
+* `examples/SOMClustering <https://github.com/felixriese/susi/blob/main/examples/SOMClustering.ipynb>`_
+* `examples/SOMRegressor <https://github.com/felixriese/susi/blob/main/examples/SOMRegressor.ipynb>`_
+* `examples/SOMRegressor_semisupervised <https://github.com/felixriese/susi/blob/main/examples/SOMRegressor_semisupervised.ipynb>`_
+* `examples/SOMRegressor_multioutput <https://github.com/felixriese/susi/blob/main/examples/SOMRegressor_multioutput.ipynb>`_
+* `examples/SOMClassifier <https://github.com/felixriese/susi/blob/main/examples/SOMClassifier.ipynb>`_
+* `examples/SOMClassifier_semisupervised <https://github.com/felixriese/susi/blob/main/examples/SOMClassifier_semisupervised.ipynb>`_
 
 FAQs
 -----
@@ -122,7 +123,7 @@ Citation
 --------
 
 The bibtex file including both references is available in `bibliography.bib
-<https://github.com/felixriese/susi/blob/master/bibliography.bib>`_.
+<https://github.com/felixriese/susi/blob/main/bibliography.bib>`_.
 
 **Paper:**
 
@@ -175,5 +176,5 @@ License
 This project is published under the `3-Clause BSD <LICENSE>`_ license.
 
 .. image:: https://img.shields.io/pypi/l/susi.svg
-    :target: https://github.com/felixriese/susi/blob/master/LICENSE
+    :target: https://github.com/felixriese/susi/blob/main/LICENSE
     :alt: PyPI - License

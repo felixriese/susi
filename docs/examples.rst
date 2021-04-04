@@ -38,8 +38,9 @@ In  :bash:`python3`:
 More examples
 -------------
 
-* `examples/SOMClustering <https://github.com/felixriese/susi/blob/master/examples/SOMClustering.ipynb>`_
-* `examples/SOMRegressor <https://github.com/felixriese/susi/blob/master/examples/SOMRegressor.ipynb>`_
-* `examples/SOMRegressor_semisupervised <https://github.com/felixriese/susi/blob/master/examples/SOMRegressor_semisupervised.ipynb>`_
-* `examples/SOMClassifier <https://github.com/felixriese/susi/blob/master/examples/SOMClassifier.ipynb>`_
-* `examples/SOMClassifier_semisupervised <https://github.com/felixriese/susi/blob/master/examples/SOMClassifier_semisupervised.ipynb>`_
+* `examples/SOMClustering <https://github.com/felixriese/susi/blob/main/examples/SOMClustering.ipynb>`_
+* `examples/SOMRegressor <https://github.com/felixriese/susi/blob/main/examples/SOMRegressor.ipynb>`_
+* `examples/SOMRegressor_semisupervised <https://github.com/felixriese/susi/blob/main/examples/SOMRegressor_semisupervised.ipynb>`_
+* `examples/SOMRegressor_multioutput <https://github.com/felixriese/susi/blob/main/examples/SOMRegressor_multioutput.ipynb>`_
+* `examples/SOMClassifier <https://github.com/felixriese/susi/blob/main/examples/SOMClassifier.ipynb>`_
+* `examples/SOMClassifier_semisupervised <https://github.com/felixriese/susi/blob/main/examples/SOMClassifier_semisupervised.ipynb>`_

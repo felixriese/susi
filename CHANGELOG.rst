@@ -6,6 +6,7 @@ Change Log
 - [ADDED] Landing page with vuepress.
 - [ADDED] Conda-forge recipe.
 - [ADDED] Function `SOMClassifier.predict_proba()`
+- [ADDED] Example notebook for multi-output regression
 - [CHANGED] Code formatting to black.
 - [FIXED] Requirements in setup.py
 

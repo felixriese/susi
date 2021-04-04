@@ -18,7 +18,7 @@ module.exports = {
   themeConfig: {
     smoothScroll: true,
     repo: 'https://github.com/felixriese/susi',
-    logo: 'https://github.com/felixriese/susi/blob/master/docs/_static/susi_logo_small.png?raw=true',
+    logo: 'https://github.com/felixriese/susi/blob/main/docs/_static/susi_logo_small.png?raw=true',
     nav: [{text: 'Documentation', link: 'https://susi.readthedocs.io/en/latest/?badge=latest' }],
   },
 }
