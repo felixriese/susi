@@ -48,7 +48,6 @@ jobs:
         verbose: true
 
   linting:
-    # run flake8 and check for errors
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
