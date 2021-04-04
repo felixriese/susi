@@ -4,7 +4,7 @@ Python package for unsupervised, supervised and semi-supervised
 self-organizing maps (SOM).
 
 """
-__version__ = "1.1.2"
+__version__ = "1.2"
 
 from .SOMClassifier import SOMClassifier
 from .SOMClustering import SOMClustering

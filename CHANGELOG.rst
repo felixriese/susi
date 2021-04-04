@@ -1,13 +1,14 @@
 Change Log
 ==========
 
-[dev]
------
+[1.2] - 2021-04-04
+------------------
 - [ADDED] Landing page with vuepress.
 - [ADDED] Conda-forge recipe.
 - [ADDED] Function `SOMClassifier.predict_proba()`
 - [ADDED] Example notebook for multi-output regression
 - [CHANGED] Code formatting to black.
+- [CHANGED] CI from travis to GitHub actions.
 - [FIXED] Requirements in setup.py
 
 [1.1.2] - 2021-02-18
