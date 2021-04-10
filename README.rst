@@ -25,6 +25,10 @@
 .. image:: https://anaconda.org/conda-forge/susi/badges/version.svg
     :target: https://anaconda.org/conda-forge/susi
     :alt: Conda-forge
+    
+.. image:: https://requires.io/github/felixriese/susi/requirements.svg?branch=main
+     :target: https://requires.io/github/felixriese/susi/requirements/?branch=main
+     :alt: Requirements Status
 
 |
 
