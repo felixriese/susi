@@ -1,7 +1,7 @@
 ---
 home: true
 heroImage: https://github.com/felixriese/susi/blob/main/docs/_static/susi_logo.png?raw=true
-heroText: SuSi
+heroText: SuSi – Self-organizing Maps with Python
 tagline: "Self-organizing maps (SOM) Python package for unsupervised, supervised and semi-supervised learning"
 actionText: Get Started →
 actionLink: https://susi.readthedocs.io/en/latest/install.html
