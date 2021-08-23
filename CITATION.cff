@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite both the article from preferred-citation and the software itself."
+authors:
+  - family-names: Riese
+    given-names: Felix M.
+    orcid: https://orcid.org/0000-0003-0596-9585
+title: "SuSi: SUpervised Self-organIzing maps in Python"
+version: 1.2.0
+doi: "10.5281/zenodo.2609130"
+date-released: 2021-04-04
+repository-code: https://github.com/felixriese/susi
+license: BSD-3-Clause
+preferred-citation:
+  authors:
+    - family-names: Riese
+      given-names: Felix M.
+    - family-names: Hinz
+      given-names: Stefan
+    - family-names: Keller
+      given-names: Sina
+  title: "Supervised and Semi-Supervised Self-Organizing Maps for Regression and Classification Focusing on Hyperspectral Data"
+  type: article
+  year: 2020
+  doi: "10.3390/rs12010007"
+  journal: "Remote Sensing"
+  number: 7
+  volume: 12
+  issue: 1
+  url: https://www.mdpi.com/2072-4292/12/1/7
