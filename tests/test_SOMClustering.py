@@ -676,3 +676,15 @@ def test_get_clusters():
     clusters = som.get_clusters(X)
     assert len(clusters) == len(X)
     assert len(clusters[0]) == 2
+
+
+def test_get_quantization_error():
+    # given
+    som = susi.SOMClustering()
+    som.fit(X)
+
+    # when
+    qerror = som.get_quantization_error()
+
+    # then
+    assert qerror < 0.05

@@ -930,3 +930,30 @@ class SOMClustering:
             min(node[1] + radius, self.n_columns - 1) + 1,
         )
         return list(itertools.product(row_range, column_range))
+
+    def get_quantization_error(self) -> float:
+        """Get quantization error.
+
+        Returns
+        -------
+        float
+            Mean quantization error over all datapoints.
+
+        Raises
+        ------
+        RuntimeError
+            Raised if the SOM is not fitted yet.
+
+        """
+        if not self.fitted_:
+            raise RuntimeError("SOM is not fitted!")
+
+        weights_per_datapoint = [
+            self.unsuper_som_[bmu[0], bmu[1]] for bmu in self.bmus_
+        ]
+
+        quantization_errors = np.linalg.norm(
+            np.subtract(weights_per_datapoint, self.X_)
+        )
+
+        return np.mean(quantization_errors)
