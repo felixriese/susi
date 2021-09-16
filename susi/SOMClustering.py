@@ -931,8 +931,14 @@ class SOMClustering:
         )
         return list(itertools.product(row_range, column_range))
 
-    def get_quantization_error(self) -> float:
-        """Get quantization error.
+    def get_quantization_error(self, X: Optional[Sequence] = None) -> float:
+        """Get quantization error for `X` (or the training data).
+
+        Parameters
+        ----------
+        X : array-like matrix, optional (default=True)
+            Samples of shape = [n_samples, n_features]. If `None`, the training
+            data is used for the calculation.
 
         Returns
         -------
@@ -948,12 +954,15 @@ class SOMClustering:
         if not self.fitted_:
             raise RuntimeError("SOM is not fitted!")
 
+        if X is None:
+            X = self.X_
+
         weights_per_datapoint = [
-            self.unsuper_som_[bmu[0], bmu[1]] for bmu in self.bmus_
+            self.unsuper_som_[bmu[0], bmu[1]] for bmu in self.get_bmus(X)
         ]
 
         quantization_errors = np.linalg.norm(
-            np.subtract(weights_per_datapoint, self.X_)
+            np.subtract(weights_per_datapoint, X)
         )
 
         return np.mean(quantization_errors)
