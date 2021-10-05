@@ -9,7 +9,7 @@ import os
 import sys
 import itertools
 import numpy as np
-from sklearn.datasets import load_boston
+from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils.estimator_checks import check_estimator
@@ -20,9 +20,9 @@ sys.path.insert(
 import susi
 
 # define test dataset
-boston = load_boston()
+cali = fetch_california_housing()
 X_train_orig, X_test_orig, y_train, y_test = train_test_split(
-    boston.data, boston.target, test_size=0.5, random_state=42
+    cali.data, cali.target, test_size=0.5, random_state=42
 )
 
 # preprocessing
