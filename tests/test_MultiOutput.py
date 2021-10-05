@@ -8,7 +8,7 @@ import os
 import sys
 
 import numpy as np
-from sklearn.datasets import load_boston
+from sklearn.datasets import fetch_california_housing
 from sklearn.multioutput import MultiOutputRegressor
 
 sys.path.insert(
@@ -18,9 +18,9 @@ import susi
 
 
 # define test dataset
-boston = load_boston()
-X = boston.data
-y = np.array([boston.target, boston.target]).T
+cali = fetch_california_housing()
+X = cali.data
+y = np.array([cali.target, cali.target]).T
 
 
 def test_MultiOutputRegressor():

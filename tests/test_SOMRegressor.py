@@ -9,7 +9,7 @@ import os
 import sys
 import itertools
 import numpy as np
-from sklearn.datasets import load_boston
+from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils.estimator_checks import check_estimator
@@ -19,22 +19,39 @@ sys.path.insert(
 )
 import susi
 
-# define test dataset
-boston = load_boston()
-X_train_orig, X_test_orig, y_train, y_test = train_test_split(
-    boston.data, boston.target, test_size=0.5, random_state=42
-)
 
-# preprocessing
-scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train_orig)
-X_test = scaler.transform(X_test_orig)
+@pytest.fixture
+def training_data():
+    """Get training data for supervised regression."""
+    # define test dataset
+    cali = fetch_california_housing()
+    n_datapoints: int = 100
+    X_all = cali.data[:n_datapoints]
+    y_all = cali.target[:n_datapoints]
+    X_train_orig, X_test_orig, y_train, y_test = train_test_split(
+        X_all, y_all, test_size=0.5, random_state=42
+    )
 
-# data with missing labels -> semi-supervised
-rng = np.random.RandomState(42)
-random_unlabeled_points = rng.rand(len(y_train)) < 0.5
-y_train_semi = np.copy(y_train)
-y_train_semi[random_unlabeled_points] = -1
+    # preprocessing
+    scaler = StandardScaler()
+    X_train = scaler.fit_transform(X_train_orig)
+    X_test = scaler.transform(X_test_orig)
+    return X_train, X_test, y_train, y_test
+
+
+@pytest.fixture
+def training_data_semi(training_data):
+    """Get training data for semi-supervised regression."""
+    X_train, X_test, y_train, y_test = training_data
+
+    # data with missing labels -> semi-supervised
+    rng = np.random.RandomState(42)
+    random_unlabeled_points = rng.rand(len(y_train)) < 0.5
+    y_train_semi = np.copy(y_train)
+    y_train_semi[random_unlabeled_points] = -1
+
+    return X_train, X_test, y_train_semi, y_test
+
 
 # SOM variables
 TRAIN_MODES = ["online", "batch"]
@@ -104,7 +121,12 @@ def test_init_super_som_regressor(X, y, init_mode):
     "train_mode_unsupervised,train_mode_supervised",
     itertools.product(TRAIN_MODES, TRAIN_MODES),
 )
-def test_predict(train_mode_unsupervised, train_mode_supervised):
+def test_predict(
+    training_data, train_mode_unsupervised, train_mode_supervised
+):
+
+    X_train, X_test, y_train, y_test = training_data
+
     som_reg = susi.SOMRegressor(
         n_rows=3,
         n_columns=3,
@@ -162,7 +184,8 @@ def test_calc_estimation_output(
     assert np.array_equal(output, expected)
 
 
-def test_mexicanhat_nbh_dist_weight_mode():
+def test_mexicanhat_nbh_dist_weight_mode(training_data):
+    X_train, X_test, y_train, _ = training_data
     som = susi.SOMRegressor(nbh_dist_weight_mode="mexican-hat")
     som.fit(X_train, y_train)
     som.predict(X_test)
@@ -176,8 +199,9 @@ def test_mexicanhat_nbh_dist_weight_mode():
     itertools.product(TRAIN_MODES, TRAIN_MODES),
 )
 def test_semisupervised_regressor(
-    train_mode_unsupervised, train_mode_supervised
+    training_data_semi, train_mode_unsupervised, train_mode_supervised
 ):
+    X_train, X_test, y_train_semi, y_test = training_data_semi
     som_reg = susi.SOMRegressor(
         n_rows=3,
         n_columns=3,
