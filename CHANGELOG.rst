@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+[1.2.1] - 2021-10-19
+--------------------
+- [ADDED] Quantization error `get_quantization_error()`
+
 [1.2] - 2021-04-04
 ------------------
 - [ADDED] Landing page with vuepress.
