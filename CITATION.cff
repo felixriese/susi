@@ -5,9 +5,9 @@ authors:
     given-names: Felix M.
     orcid: https://orcid.org/0000-0003-0596-9585
 title: "SuSi: SUpervised Self-organIzing maps in Python"
-version: 1.2.1
+version: 1.2.2
 doi: "10.5281/zenodo.2609130"
-date-released: 2021-10-19
+date-released: 2021-12-11
 repository-code: https://github.com/felixriese/susi
 license: BSD-3-Clause
 preferred-citation:

@@ -14,7 +14,7 @@ long_description = "\n\n".join((readme, changelog))
 
 setuptools.setup(
     name="susi",
-    version="1.2.1",
+    version="1.2.2",
     author="Felix M. Riese",
     author_email="github@felixriese.de",
     description=(
@@ -42,10 +42,10 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Environment :: Console",
         "Intended Audience :: Developers",
         "Intended Audience :: Education",
@@ -61,5 +61,5 @@ setuptools.setup(
         "Source": "https://github.com/felixriese/susi",
         "Tracker": "https://github.com/felixriese/susi/issues",
     },
-    python_requires=">=3.6",
+    python_requires=">=3.7",
 )
