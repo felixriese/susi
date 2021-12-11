@@ -42,10 +42,10 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Environment :: Console",
         "Intended Audience :: Developers",
         "Intended Audience :: Education",
@@ -61,5 +61,5 @@ setuptools.setup(
         "Source": "https://github.com/felixriese/susi",
         "Tracker": "https://github.com/felixriese/susi/issues",
     },
-    python_requires=">=3.6",
+    python_requires=">=3.7",
 )
