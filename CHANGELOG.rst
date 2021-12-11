@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+[1.2.2] - 2021-12-11
+--------------------
+- [ADDED] Official support for Python 3.10.
+- [REMOVED] Official support for Python 3.6 (will be deprecated end of 2021
+  anyways). It might still work, but will not be maintained on this version.
+
 [1.2.1] - 2021-10-19
 --------------------
 - [ADDED] Quantization error `get_quantization_error()`
