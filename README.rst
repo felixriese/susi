@@ -80,6 +80,10 @@ Pip
 .. code:: bash
 
     pip3 install susi
+    
+.. image:: https://static.pepy.tech/personalized-badge/susi?period=total&units=international_system&left_color=black&right_color=blue&left_text=Downloads
+	:target: https://pepy.tech/project/susi
+	:alt: PyPi Downloads
 
 Conda
 ~~~~~
@@ -90,9 +94,9 @@ Conda
 
 More information can be found in the `installation guidelines <https://susi.readthedocs.io/en/latest/install.html>`_.
 
-.. image:: https://static.pepy.tech/personalized-badge/susi?period=total&units=international_system&left_color=black&right_color=blue&left_text=Downloads
-	:target: https://pepy.tech/project/susi
-	:alt: Downloads
+.. image:: https://img.shields.io/conda/dn/conda-forge/susi.svg
+	:target: https://anaconda.org/conda-forge/susi
+	:alt: Conda-Forge Downloads
 
 Examples
 --------
