@@ -13,7 +13,9 @@ jobs:
       with:
         node-version: 16
     - name: Build
-      run: npm run build
+      run: |
+        npm install
+        npm run build
       working-directory: ./guide
     - name: Push
       env:
