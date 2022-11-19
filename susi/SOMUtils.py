@@ -1,9 +1,4 @@
-"""SOMUtils functions.
-
-Copyright (c) 2019-2021 Felix M. Riese.
-All rights reserved.
-
-"""
+"""SOMUtils functions."""
 from typing import Sequence, Tuple
 
 import numpy as np

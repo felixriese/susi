@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2019-2021 by Felix M. Riese. All rights reserved.
-
 import setuptools
 
 with open("README.rst", "r") as f:
