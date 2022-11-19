@@ -140,6 +140,5 @@ pip-selfcheck.json
 
 # vuepress
 node_modules/
-guide/package.json
 guide/package-lock.json
 guide/deploy.sh

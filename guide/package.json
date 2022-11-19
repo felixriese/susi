@@ -1,0 +1,19 @@
+{
+  "name": "SuSi - Self-organizing Maps with Python",
+  "version": "1.2.2",
+  "description": "Susi is a Python package for unsupervised, supervised and semi-supervised self-organizing maps (SOM).",
+  "main": "index.js",
+  "authors": {
+    "name": "Felix Riese",
+    "email": "github@felixriese.de"
+  },
+  "repository": "https://github.com/felixriese/susi",
+  "scripts": {
+    "dev": "vuepress dev",
+    "build": "vuepress build"
+  },
+  "license": "BSD-3-Clause License",
+  "devDependencies": {
+    "vuepress": "^1.9.7"
+  }
+}
