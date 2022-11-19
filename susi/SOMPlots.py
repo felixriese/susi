@@ -1,9 +1,4 @@
-"""SOMPlots functions.
-
-Copyright (c) 2019-2021 Felix M. Riese.
-All rights reserved.
-
-"""
+"""SOMPlots functions."""
 
 from typing import List, Tuple
 

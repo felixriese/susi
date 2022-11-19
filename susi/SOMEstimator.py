@@ -1,9 +1,4 @@
-"""SOMEstimator class.
-
-Copyright (c) 2019-2021 Felix M. Riese.
-All rights reserved.
-
-"""
+"""SOMEstimator class."""
 
 from abc import ABC, abstractmethod
 from typing import Optional, Sequence, Tuple, Union

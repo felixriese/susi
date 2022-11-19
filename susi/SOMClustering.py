@@ -1,9 +1,4 @@
-"""SOMClustering class.
-
-Copyright (c) 2019-2021 Felix M. Riese.
-All rights reserved.
-
-"""
+"""SOMClustering class."""
 
 import itertools
 from typing import List, Optional, Sequence, Tuple

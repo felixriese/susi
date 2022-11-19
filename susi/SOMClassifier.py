@@ -1,9 +1,4 @@
-"""SOMClassifier class.
-
-Copyright (c) 2019-2021 Felix M. Riese.
-All rights reserved.
-
-"""
+"""SOMClassifier class."""
 from typing import Optional, Sequence, Tuple, Union
 
 import numpy as np
