@@ -6,7 +6,7 @@ All rights reserved.
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Optional, Sequence, Tuple, Union
+from typing import Optional, Sequence, Tuple, Union
 
 import numpy as np
 from sklearn.base import BaseEstimator
@@ -252,9 +252,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         return self
 
-    def predict(
-        self, X: Sequence, y: Optional[Sequence] = None
-    ) -> List[float]:
+    def predict(self, X: Sequence, y: Optional[Sequence] = None) -> np.ndarray:
         """Predict output of data X.
 
         Parameters
@@ -346,7 +344,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
     def _modify_weight_matrix_supervised(
         self,
         dist_weight_matrix: np.ndarray,
-        true_vector: Optional[np.array] = None,
+        true_vector: Optional[np.ndarray] = None,
         learning_rate: Optional[float] = None,
     ) -> np.ndarray:
         """Modify weights of the supervised SOM, either online or batch.
@@ -406,8 +404,8 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
             ):
 
                 # select one input vector & calculate best matching unit (BMU)
-                dp = self._get_random_datapoint()
-                bmu_pos = self.bmus_[dp]
+                dp_index = self._get_random_datapoint_index()
+                bmu_pos = self.bmus_[dp_index]
 
                 # calculate learning rate and neighborhood function
                 learning_rate = self._calc_learning_rate(
@@ -423,7 +421,7 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
                 )
                 self.super_som_ = self._modify_weight_matrix_supervised(
                     dist_weight_matrix=dist_weight_matrix,
-                    true_vector=self.y_[self.labeled_indices_][dp],
+                    true_vector=self.y_[self.labeled_indices_][dp_index],
                     learning_rate=learning_rate,
                 )
 
@@ -504,18 +502,17 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
         """
         return self.super_som_
 
-    def _get_random_datapoint(self) -> np.ndarray:
-        """Find and return random datapoint from labeled dataset.
+    def _get_random_datapoint_index(self) -> int:
+        """Find and return random datapoint index from labeled dataset.
 
         Returns
         -------
-        random_datapoint : np.ndarray
-            Random datapoint from labeled dataset
+        int
+            Random datapoint index from labeled dataset
 
         """
-        random_datapoint = None
         if self.missing_label_placeholder is not None:
-            random_datapoint = np.random.choice(
+            random_datapoint: int = np.random.choice(
                 len(self.y_[self.labeled_indices_])
             )
         else:
