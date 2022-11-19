@@ -12,7 +12,7 @@ jobs:
     - name: vuepress-deploy
       uses: jenkey2011/vuepress-deploy@master
       env:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        ACCESS_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         TARGET_REPO: felixriese/susi
         TARGET_BRANCH: gh-pages
         BUILD_SCRIPT: cd ./guide && yarn && yarn build
