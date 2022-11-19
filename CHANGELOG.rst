@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+[1.2.3] - xxxx-xx-xx
+--------------------
+-
+
 [1.2.2] - 2021-12-11
 --------------------
 - [ADDED] Official support for Python 3.10.
