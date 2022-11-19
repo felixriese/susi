@@ -8,23 +8,20 @@ jobs:
   vuepress:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Install vuepress
-      run: |
-        sudo apt update
-        sudo apt install yarn
-        sudo yarn global add vuepress
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
     - name: Build
-      run: |
-        sudo vuepress build
+      run: npm run build
       working-directory: ./guide
     - name: Push
       env:
         DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
       run: |
         sudo git init -b main
-        sudo git config --global user.name "Felix Riese"
-        sudo git config --global user.email "github@felixriese.de"
+        sudo git config --global user.name "GitHub Actions Bot"
+        sudo git config --global user.email "<>"
         sudo git add -A
         sudo git commit -m 'deploy'
         sudo git push -f https://x-access-token:$DEPLOY_TOKEN@github.com/felixriese/susi.git main:gh-pages
