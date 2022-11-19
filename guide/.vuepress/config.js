@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'SuSi – Self-organizing Maps with Python',
+  title: 'susi-self-organizing-maps-with-python',
   base: "/susi/",
   description: "Susi is a Python package for unsupervised, supervised and semi-supervised self-organizing maps (SOM).",
   head: [
