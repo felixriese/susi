@@ -12,11 +12,12 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16
-    - name: Build
-      run: |
-        npm install
-        npm run build
+    - name: Install
       working-directory: ./guide
+      run: npm ci
+    - name: Build
+      working-directory: ./guide
+      run: npm run build
     - name: Push
       env:
         DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
