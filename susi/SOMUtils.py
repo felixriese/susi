@@ -72,7 +72,7 @@ def decreasing_rate(
 
 def check_estimation_input(
     X: Sequence, y: Sequence, *, is_classification: bool = False
-) -> Tuple[np.array, np.array]:
+) -> Tuple[np.ndarray, np.ndarray]:
     """Check input arrays.
 
     This function is adapted from sklearn.utils.validation.

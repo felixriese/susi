@@ -193,7 +193,8 @@ class SOMClustering:
 
         else:
             raise ValueError(
-                f"Invalid init_mode_unsupervised: {self.init_mode_unsupervised}."
+                f"Invalid init_mode_unsupervised: "
+                f"{self.init_mode_unsupervised}."
             )
 
         self.unsuper_som_ = som
@@ -372,7 +373,7 @@ class SOMClustering:
         return np.argwhere(a == np.min(a))[0]
 
     def get_bmus(
-        self, X: np.ndarray, som_array: Optional[np.array] = None
+        self, X: np.ndarray, som_array: Optional[np.ndarray] = None
     ) -> Optional[List[Tuple[int, int]]]:
         """Get Best Matching Units for big datalist.
 
@@ -448,7 +449,7 @@ class SOMClustering:
         return n_jobs, n_datapoints_per_job.tolist(), [0] + starts.tolist()
 
     def _set_bmus(
-        self, X: np.ndarray, som_array: Optional[np.array] = None
+        self, X: np.ndarray, som_array: Optional[np.ndarray] = None
     ) -> None:
         """Set BMUs in the current SOM object.
 

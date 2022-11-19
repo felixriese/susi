@@ -355,7 +355,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
     def _modify_weight_matrix_supervised(
         self,
         dist_weight_matrix: np.ndarray,
-        true_vector: Optional[np.array] = None,
+        true_vector: Optional[np.ndarray] = None,
         learning_rate: Optional[float] = None,
     ) -> np.ndarray:
         """Modify weight matrix of the SOM.
