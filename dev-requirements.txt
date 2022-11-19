@@ -9,3 +9,7 @@ sphinx>=4.5.0
 sphinx-autobuild>=0.7.1
 numpydoc>=1.2.1
 sphinx_rtd_theme>=1.0.0
+
+# for linting
+mypy==0.991
+pre-commit==2.20.0
