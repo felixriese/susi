@@ -1,0 +1,8 @@
+# for formatting
+black==21.10.0
+
+# for the documentation
+sphinx>=4.5.0
+sphinx-autobuild>=0.7.1
+numpydoc>=1.2.1
+sphinx_rtd_theme>=1.0.0
