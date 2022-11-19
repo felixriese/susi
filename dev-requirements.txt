@@ -1,5 +1,8 @@
+-r requirements.txt
+-r test-requirements.txt
+
 # for formatting
-black==21.10.0
+black==22.10.0
 
 # for the documentation
 sphinx>=4.5.0
