@@ -517,10 +517,10 @@ class SOMClustering:
                         datapoint.reshape(1, -1),
                         threshold=threshold,
                         copy=True,
-                    ),
+                    ).ravel(),
                     binarize(
                         som_node.reshape(1, -1), threshold=threshold, copy=True
-                    ),
+                    ).ravel(),
                 )
 
         elif self.distance_metric == "spectralangle":

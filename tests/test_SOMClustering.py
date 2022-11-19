@@ -46,7 +46,9 @@ def test_calc_learning_rate(
         learning_rate_end=learning_rate_end,
     )
     som_clustering.max_iterations_ = max_it
-    assert som_clustering._calc_learning_rate(curr_it, mode) == expected
+    assert np.allclose(
+        som_clustering._calc_learning_rate(curr_it, mode), expected
+    )
 
 
 @pytest.mark.parametrize(
@@ -118,7 +120,6 @@ def test_get_node_distance_matrix(
     som_clustering.n_rows = som_array.shape[0]
     som_clustering.n_columns = som_array.shape[1]
     som_clustering._init_unsuper_som()
-
     assert np.allclose(
         som_clustering._get_node_distance_matrix(datapoint, som_array),
         expected,
@@ -140,7 +141,9 @@ def test_calc_neighborhood_func(
     som_clustering.radius_max_ = radius_max
     som_clustering.radius_min_ = radius_min
     som_clustering.max_iterations_ = max_it
-    assert som_clustering._calc_neighborhood_func(curr_it, mode) == expected
+    assert np.allclose(
+        som_clustering._calc_neighborhood_func(curr_it, mode), expected
+    )
 
 
 @pytest.mark.parametrize(
@@ -170,12 +173,10 @@ def test_decreasing_rate(a_1, a_2, max_it, curr_it, mode, expected):
             )
 
     else:
-        assert (
-            susi.decreasing_rate(
-                a_1, a_2, iteration_max=max_it, iteration=curr_it, mode=mode
-            )
-            == expected
+        rate = susi.decreasing_rate(
+            a_1, a_2, iteration_max=max_it, iteration=curr_it, mode=mode
         )
+        assert np.allclose(rate, expected, rtol=1e-2)
 
 
 @pytest.mark.parametrize(
