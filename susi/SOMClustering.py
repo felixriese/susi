@@ -525,6 +525,7 @@ class SOMClustering:
                     np.divide(
                         np.dot(som_array[node[0], node[1]], datapoint),
                         np.multiply(
+                            # TODO check if an axis needs to be set here
                             np.linalg.norm(som_array),
                             np.linalg.norm(datapoint),
                         ),
