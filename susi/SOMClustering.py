@@ -927,6 +927,24 @@ class SOMClustering:
         )
         return list(itertools.product(row_range, column_range))
 
+    def _get_weights_per_datapoint(self, datapoints: Sequence) -> list:
+        """Get SOM weights per datapoint.
+
+        Parameters
+        ----------
+        datapoints : array-like matrix, optional (default=True)
+            Samples of shape = [n_samples, n_features].
+
+        Returns
+        -------
+        float
+            Mean quantization error over all datapoints.
+        """
+        return [
+            self.unsuper_som_[bmu[0], bmu[1]]
+            for bmu in self.get_bmus(datapoints)
+        ]
+
     def get_quantization_error(self, X: Optional[Sequence] = None) -> float:
         """Get quantization error for `X` (or the training data).
 
@@ -953,12 +971,10 @@ class SOMClustering:
         if X is None:
             X = self.X_
 
-        weights_per_datapoint = [
-            self.unsuper_som_[bmu[0], bmu[1]] for bmu in self.get_bmus(X)
-        ]
+        weights_per_datapoint = self._get_weights_per_datapoint(X)
 
         quantization_errors = np.linalg.norm(
-            np.subtract(weights_per_datapoint, X)
+            np.subtract(weights_per_datapoint, X), axis=1
         )
 
         return np.mean(quantization_errors)
