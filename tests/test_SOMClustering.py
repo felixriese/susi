@@ -4,10 +4,11 @@ Usage:
 python -m pytest tests/test_SOMClustering.py
 
 """
-import pytest
 import os
 import sys
+
 import numpy as np
+import pytest
 from sklearn.datasets import make_biclusters
 
 sys.path.insert(
