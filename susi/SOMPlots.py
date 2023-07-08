@@ -2,8 +2,8 @@
 
 from typing import List, Tuple
 
-import matplotlib.pyplot as plt
 import matplotlib
+import matplotlib.pyplot as plt
 import numpy as np
 
 
@@ -47,7 +47,7 @@ def plot_estimation_map(
     for label in cbar.ax.xaxis.get_ticklabels()[::2]:
         label.set_visible(False)
 
-    plt.grid(b=False)
+    plt.grid(visible=False)
 
     return ax
 
@@ -130,7 +130,7 @@ def plot_som_histogram(
     # to be compatible with plt.imshow:
     ax.invert_yaxis()
 
-    plt.grid(b=False)
+    plt.grid(visible=False)
 
     return ax
 
