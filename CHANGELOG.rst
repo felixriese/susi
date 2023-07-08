@@ -1,9 +1,12 @@
 Change Log
 ==========
 
-[1.2.3] - xxxx-xx-xx
+[1.3.0] - 2023-07-08
 --------------------
--
+- [ADDED] Official support for Python 3.11.
+- [FIXED] Quantization error axis bug.
+- [REMOVED] Official support for Python 3.7 (deprecated in 2023). It might
+  still work, but will not be maintained on this version.
 
 [1.2.2] - 2021-12-11
 --------------------
