@@ -12,7 +12,7 @@ features:
   details: Support for unsupervised clustering and visualization, semi-supervised and supervised classification and regression.
 - title: Built-in visualization
   details: Present your data with SuSi through built-in plotting scripts and example notebooks.
-footer: Copyright © 2019-2022 Felix M. Riese
+footer: Copyright © 2019-2023 Felix M. Riese
 # search: false
 
 ---
