@@ -21,3 +21,10 @@ exclude = '''
   | .pytest_cache
 )/
 '''
+
+[tool.isort]
+profile = "black"
+
+[tool.pydocstyle]
+convention = "numpy"
+match = 'susi/*'

@@ -4,18 +4,19 @@ Usage:
 python -m pytest tests/test_SOMClustering.py
 
 """
-import pytest
 import os
 import sys
+
 import numpy as np
+import pytest
 from sklearn.datasets import make_biclusters
 
 sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )
-import susi
+import susi  # noqa
 
-X, _, _ = make_biclusters((100, 10), 3)
+test_data, _, _ = make_biclusters((100, 10), 3)
 
 
 @pytest.mark.parametrize(
@@ -665,7 +666,7 @@ def test_get_datapoints_from_node(
 )
 def test_get_u_matrix(n_rows, n_columns, mode):
     som = susi.SOMClustering(n_rows=n_rows, n_columns=n_columns)
-    som.fit(X)
+    som.fit(test_data)
     u_matrix = som.get_u_matrix(mode=mode)
     assert isinstance(u_matrix, np.ndarray)
     assert u_matrix.shape == (n_rows * 2 - 1, n_columns * 2 - 1, 1)
@@ -673,19 +674,52 @@ def test_get_u_matrix(n_rows, n_columns, mode):
 
 def test_get_clusters():
     som = susi.SOMClustering()
-    som.fit(X)
-    clusters = som.get_clusters(X)
-    assert len(clusters) == len(X)
+    som.fit(test_data)
+    clusters = som.get_clusters(test_data)
+    assert len(clusters) == len(test_data)
     assert len(clusters[0]) == 2
 
 
-def test_get_quantization_error():
-    # given
-    som = susi.SOMClustering()
-    som.fit(X)
+class TestGetQuantizationError:
+    def test_with_default_data(self) -> None:
+        # given
+        som = susi.SOMClustering()
+        som.fit(test_data)
 
-    # when
-    qerror = som.get_quantization_error()
+        # when
+        qerror = som.get_quantization_error()
 
-    # then
-    assert qerror < 0.05
+        # then
+        assert qerror < 0.05
+
+    def test_with_explicit_data(self, mocker) -> None:
+        # given
+        som = susi.SOMClustering()
+        X = np.array(
+            [
+                [8, 9, 7, 8, 6, 3, 0, 4, 1, 6],
+                [3, 2, 1, 2, 5, 7, 0, 0, 3, 3],
+                [0, 7, 5, 1, 4, 5, 7, 5, 8, 5],
+                [9, 1, 1, 7, 5, 9, 8, 9, 3, 3],
+                [2, 7, 7, 2, 3, 3, 3, 3, 3, 3],
+            ]
+        )
+        som.fit(X)
+        weights_per_datapoint = [
+            [8, 5, 0, 4, 5, 7, 0, 2, 0, 2],
+            [4, 0, 7, 4, 8, 0, 4, 2, 2, 8],
+            [5, 3, 1, 2, 7, 9, 9, 8, 8, 7],
+            [8, 6, 8, 7, 7, 5, 4, 7, 1, 1],
+            [6, 2, 3, 5, 7, 5, 9, 5, 9, 0],
+        ]
+        mocker.patch.object(
+            som,
+            "_get_weights_per_datapoint",
+            return_value=weights_per_datapoint,
+        )
+
+        # when
+        qerror = som.get_quantization_error(X)
+
+        # then
+        assert qerror == 11.45650021348017
