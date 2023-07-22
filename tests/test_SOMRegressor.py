@@ -4,11 +4,12 @@ Usage:
 python -m pytest tests/test_SOMRegressor.py
 
 """
-import pytest
+import itertools
 import os
 import sys
-import itertools
+
 import numpy as np
+import pytest
 from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -17,7 +18,7 @@ from sklearn.utils.estimator_checks import check_estimator
 sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )
-import susi
+import susi  # noqa
 
 
 @pytest.fixture
@@ -124,7 +125,6 @@ def test_init_super_som_regressor(X, y, init_mode):
 def test_predict(
     training_data, train_mode_unsupervised, train_mode_supervised
 ):
-
     X_train, X_test, y_train, y_test = training_data
 
     som_reg = susi.SOMRegressor(
