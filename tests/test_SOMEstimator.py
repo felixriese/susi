@@ -4,15 +4,16 @@ Usage:
 python -m pytest tests/test_SOMEstimator.py
 
 """
-import pytest
 import os
 import sys
+
 import numpy as np
+import pytest
 
 sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )
-import susi
+import susi  # noqa
 
 
 @pytest.mark.parametrize(
