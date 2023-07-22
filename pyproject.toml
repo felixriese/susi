@@ -4,7 +4,7 @@ license_file = "LICENSE"
 
 [tool.black]
 line-length = 79
-target-version = ['py37', 'py38', 'py39', 'py310']
+target-version = ['py38', 'py39', 'py310', 'py311']
 include = '\.pyi?$'
 exclude = '''
 /(
@@ -24,6 +24,11 @@ exclude = '''
 
 [tool.isort]
 profile = "black"
+line_length = 79
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
 
 [tool.pydocstyle]
 convention = "numpy"
