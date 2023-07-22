@@ -361,7 +361,6 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         """
         if self.train_mode_supervised == "online":
-
             # require valid values for true_vector and learning_rate
             if not isinstance(true_vector, np.ndarray) or not isinstance(
                 learning_rate, float
@@ -397,7 +396,6 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
                 desc="super",
                 **self.tqdm_params_,
             ):
-
                 # select one input vector & calculate best matching unit (BMU)
                 dp_index = self._get_random_datapoint_index()
                 bmu_pos = self.bmus_[dp_index]
@@ -426,7 +424,6 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
                 desc="super",
                 **self.tqdm_params_,
             ):
-
                 # calculate BMUs with the unsupervised (!) SOM
                 bmus = self.get_bmus(self.X_)
 

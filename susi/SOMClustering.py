@@ -167,7 +167,6 @@ class SOMClustering:
             )
 
         elif self.init_mode_unsupervised == "pca":
-
             # fixed number of components
             pca = PCA(n_components=2, random_state=self.random_state)
 
@@ -237,7 +236,6 @@ class SOMClustering:
                 desc="unsuper",
                 **self.tqdm_params_,
             ):
-
                 # select one input vector & calculate best matching unit (BMU)
                 dp = np.random.randint(low=0, high=len(self.X_))
                 bmu_pos = self.get_bmu(self.X_[dp], self.unsuper_som_)
@@ -267,7 +265,6 @@ class SOMClustering:
                 desc="unsuper",
                 **self.tqdm_params_,
             ):
-
                 # calculate BMUs
                 bmus = self.get_bmus(self.X_)
 
@@ -813,7 +810,6 @@ class SOMClustering:
         for u_node in itertools.product(
             range(self.n_rows * 2 - 1), range(self.n_columns * 2 - 1)
         ):
-
             # neighbor vector
             nb = (0, 0)
 
@@ -845,7 +841,6 @@ class SOMClustering:
         for u_node in itertools.product(
             range(self.n_rows * 2 - 1), range(self.n_columns * 2 - 1)
         ):
-
             if not (u_node[0] % 2) and not (u_node[1] % 2):
                 # SOM nodes -> mean over 2-4 values
 

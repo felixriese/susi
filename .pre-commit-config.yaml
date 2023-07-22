@@ -32,11 +32,3 @@ repos:
   hooks:
   - id: pydocstyle
     additional_dependencies: [toml]
-- repo: local
-  hooks:
-  - id: pytest
-    name: Run tests
-    entry: pytest --nbval
-    language: system
-    types: [python]
-    pass_filenames: false

@@ -5,8 +5,8 @@ import numpy as np
 from scipy.special import softmax
 from sklearn.base import ClassifierMixin
 from sklearn.preprocessing import LabelBinarizer
-from sklearn.utils.validation import check_array, check_is_fitted
 from sklearn.utils import class_weight
+from sklearn.utils.validation import check_array, check_is_fitted
 from tqdm import tqdm
 
 from .SOMEstimator import SOMEstimator
@@ -224,7 +224,6 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
         # initialize classification SOM
         if self.init_mode_supervised == "majority":
-
             # define dtype
             if self.class_dtype_ in [str, np.str_]:
                 init_dtype = "U" + str(
@@ -376,7 +375,6 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
 
         """
         if self.train_mode_supervised == "online":
-
             # require valid values for true_vector and learning_rate
             if not isinstance(true_vector, np.ndarray) or not isinstance(
                 learning_rate, float
