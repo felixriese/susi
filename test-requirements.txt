@@ -1,4 +1,4 @@
-black==23.7.0
+black==24.3.0
 codecov>=2.1.10
 coverage>=5.3
 flake8==6.0.0
