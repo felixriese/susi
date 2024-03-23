@@ -1,4 +1,5 @@
 """SOMUtils functions."""
+
 from typing import Sequence, Tuple
 
 import numpy as np
