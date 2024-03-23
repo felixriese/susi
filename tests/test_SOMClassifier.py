@@ -4,6 +4,7 @@ Usage:
 python -m pytest tests/test_SOMClassifier.py
 
 """
+
 import itertools
 import os
 import sys

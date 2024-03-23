@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+[1.4.0] - 2024-XX-XX
+--------------------
+- [ADDED] Official support for Python 3.12.
+- [REMOVED] Official support for Python 3.8 (will be deprecated in 10/2024). It might
+  still work, but will not be maintained on this version.
+
 [1.3.0] - 2023-07-08
 --------------------
 - [ADDED] Official support for Python 3.11.

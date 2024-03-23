@@ -4,6 +4,7 @@ Usage:
 python -m pytest tests/test_SOMClustering.py
 
 """
+
 import os
 import sys
 
