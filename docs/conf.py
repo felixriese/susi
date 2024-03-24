@@ -40,6 +40,7 @@ release = "1.3.0"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinx_rtd_theme",
     "sphinx.ext.autodoc",
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
@@ -49,7 +50,6 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
     "sphinx.ext.napoleon",
-    "sphinx_rtd_theme",
 ]
 
 napoleon_google_docstring = False
@@ -170,8 +170,6 @@ texinfo_documents = [
         "SuSi Documentation",
         author,
         "SuSi",
-        "One line description of project.",
-        "Miscellaneous",
     ),
 ]
 

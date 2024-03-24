@@ -35,7 +35,7 @@ setuptools.setup(
         "docs": ["numpydoc", "sphinx", "sphinx-autobuild", "sphinx_rtd_theme"],
         "examples": ["notebook", "seaborn", "pandas"],
         "tests": ["pytest", "pytest-cov", "codecov", "nbval", "coverage"],
-        "formatting": ["black"],
+        "formatting": ["black", "isort"],
     },
     packages=setuptools.find_packages(),
     classifiers=[
