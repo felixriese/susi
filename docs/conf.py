@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath("../"))
 # -- Project information -----------------------------------------------------
 
 project = "SuSi"
-copyright = "2019-2023 Felix M. Riese"
+copyright = "2019-2024 Felix M. Riese"
 author = "Felix M. Riese"
 
 # The short X.Y version
@@ -45,10 +45,11 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.todo",
     "sphinx.ext.coverage",
-    "sphinx.ext.imgmath",
+    "sphinx.ext.mathjax",
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
     "sphinx.ext.napoleon",
+    "sphinx_rtd_theme",
 ]
 
 napoleon_google_docstring = False
@@ -198,7 +199,10 @@ epub_exclude_files = ["search.html"]
 # -- Options for intersphinx extension ---------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {"https://docs.python.org/": None}
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", None),
+    "sklearn": ("https://scikit-learn.org/stable/", None),
+}
 
 # -- Options for todo extension ----------------------------------------------
 
