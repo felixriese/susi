@@ -1,0 +1,5 @@
+# requirements for generating the documentation
+sphinx==7.2.6
+sphinx-autobuild>=2024.2.4
+numpydoc==1.6.0
+sphinx_rtd_theme==2.0.0
