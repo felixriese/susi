@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-[1.4.0] - 2024-XX-XX
+[1.4.0] - 2024-03-29
 --------------------
 - [ADDED] Official support for Python 3.12.
 - [REMOVED] Official support for Python 3.8 (will be deprecated in 10/2024). It might
