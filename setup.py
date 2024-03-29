@@ -59,5 +59,5 @@ setuptools.setup(
         "Source": "https://github.com/felixriese/susi",
         "Tracker": "https://github.com/felixriese/susi/issues",
     },
-    python_requires=">=3.7",
+    python_requires=">=3.9",
 )
