@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+[1.4.1] - 2024-08-XX
+--------------------
+- [ADDED] Numpy 2 compatibility
+
 [1.4.0] - 2024-03-29
 --------------------
 - [ADDED] Official support for Python 3.12.
