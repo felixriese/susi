@@ -6,10 +6,6 @@
     :target: https://pypi.org/project/susi/
     :alt: PyPI - Python Version
 
-.. image:: https://travis-ci.com/felixriese/susi.svg?branch=master
-    :target: https://travis-ci.com/felixriese/susi
-    :alt: Travis.CI Status
-
 .. image:: https://readthedocs.org/projects/susi/badge/?version=latest
     :target: https://susi.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
