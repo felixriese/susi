@@ -1,9 +1,9 @@
-black==24.3.0
+black==24.8.0
 codecov>=2.1.13
-coverage>=7.4.4
-flake8==7.0.0
+coverage>=7.6.0
+flake8==7.1.0
 isort==5.13.2
 nbval>=0.11.0
-pytest>=8.1.1
+pytest>=8.3.2
 pytest-cov>=4.1.0
 pytest_mock==3.14.0

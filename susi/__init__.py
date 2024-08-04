@@ -5,7 +5,7 @@ self-organizing maps (SOM).
 
 """
 
-__version__ = "1.4.0"
+__version__ = "1.4.1"
 
 from .SOMClassifier import SOMClassifier
 from .SOMClustering import SOMClustering
