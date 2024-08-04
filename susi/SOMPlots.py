@@ -122,10 +122,7 @@ def plot_som_histogram(
 
     ax.set_xlabel("SOM columns", fontsize=fontsize)
     ax.set_ylabel("SOM rows", fontsize=fontsize)
-    for tick in ax.xaxis.get_major_ticks():
-        tick.label.set_fontsize(fontsize)
-    for tick in ax.yaxis.get_major_ticks():
-        tick.label.set_fontsize(fontsize)
+    ax.tick_params(labelsize=fontsize)
 
     # to be compatible with plt.imshow:
     ax.invert_yaxis()
@@ -172,10 +169,7 @@ def plot_umatrix(
     ax.set_yticklabels(np.arange(0, n_rows + 1, 10))
 
     # ticks and labels
-    for tick in ax.xaxis.get_major_ticks():
-        tick.label.set_fontsize(fontsize)
-    for tick in ax.yaxis.get_major_ticks():
-        tick.label.set_fontsize(fontsize)
+    ax.tick_params(labelsize=fontsize)
     ax.set_ylabel("SOM rows", fontsize=fontsize)
     ax.set_xlabel("SOM columns", fontsize=fontsize)
 
