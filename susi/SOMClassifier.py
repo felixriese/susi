@@ -276,7 +276,7 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
             self.placeholder_ = self.placeholder_dict_["str"]
         elif self.class_dtype_ in [int, np.uint8, np.int64]:
             self.placeholder_ = self.placeholder_dict_["int"]
-        elif self.class_dtype_ in [float, np.float_, np.float64]:
+        elif self.class_dtype_ in [float, np.float64]:
             self.placeholder_ = self.placeholder_dict_["float"]
         else:
             raise ValueError(
