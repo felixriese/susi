@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/susi-{{ version }}.zip
-  sha256: 688f396f77026bb71df04670bc1f41b5b2d7f95d4187885ff3f5e0b7e88242d0
+  sha256: 44efdb56207dbb7f1e0ffa7f7c0aa848c9645a43502d8c0561dfad1e994c5357
 
 build:
   number: 0
@@ -26,7 +26,7 @@ requirements:
     - scikit-learn >=0.21.1
     - scipy >=1.3.1
     - tqdm >=4.45.0
-    - matplotlib-base >=3.7.2
+    - matplotlib-base >=3.9.0
     - seaborn >=0.11.0
     - pandas >=1.1.5
 
