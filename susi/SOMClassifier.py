@@ -272,16 +272,21 @@ class SOMClassifier(SOMEstimator, ClassifierMixin):
             Raised if no placeholder defined for dtype of a class.
 
         """
-        if self.class_dtype_ in [str, np.str_]:
+        if self.class_dtype_ in (str, np.str_):
             self.placeholder_ = self.placeholder_dict_["str"]
-        elif self.class_dtype_ in [int, np.uint8, np.int64]:
+        elif self.class_dtype_ in (
+            int,
+            np.uint8,
+            np.int16,
+            np.int32,
+            np.int64,
+        ):
             self.placeholder_ = self.placeholder_dict_["int"]
-        elif self.class_dtype_ in [float, np.float64]:
+        elif self.class_dtype_ in (float, np.float16, np.float32, np.float64):
             self.placeholder_ = self.placeholder_dict_["float"]
         else:
             raise ValueError(
-                "No placeholder defined " + "for the dtype of the classes:",
-                self.class_dtype_,
+                f"No placeholder defined for the dtype of the classes: {self.class_dtype_}"
             )
 
     def fit(self, X: Sequence, y: Optional[Sequence] = None):

@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+UNVERSIONED
+--------------------
+- [ADDED] Numpy types as placeholders
+
 [1.4.1] - 2024-08-04
 --------------------
 - [ADDED] Numpy 2 compatibility
