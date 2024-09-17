@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/susi-{{ version }}.zip
-  sha256: 44efdb56207dbb7f1e0ffa7f7c0aa848c9645a43502d8c0561dfad1e994c5357
+  sha256: a47ec6ac5521f9538208d654ed335e8e61336299d4cd7b9ea7854c240e0f1948
 
 build:
   number: 0
@@ -18,6 +18,7 @@ build:
 requirements:
   host:
     - pip
+    - setuptools
     - python >=3.9
   run:
     - joblib >=0.13.0
