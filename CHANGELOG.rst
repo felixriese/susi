@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-UNVERSIONED
+[1.4.2] - 2024-09-17
 --------------------
 - [ADDED] Numpy types as placeholders
 

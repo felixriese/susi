@@ -12,7 +12,7 @@ long_description = "\n\n".join((readme, changelog))
 
 setuptools.setup(
     name="susi",
-    version="1.4.1",
+    version="1.4.2",
     author="Felix M. Riese",
     author_email="github@felixriese.de",
     description=(
