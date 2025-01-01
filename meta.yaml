@@ -7,11 +7,11 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/susi-{{ version }}.zip
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/susi-{{ version }}.zip
   sha256: a47ec6ac5521f9538208d654ed335e8e61336299d4cd7b9ea7854c240e0f1948
 
 build:
-  number: 0
+  number: 1
   noarch: python
   script: {{ PYTHON }} -m pip install . -vv
 
@@ -19,11 +19,11 @@ requirements:
   host:
     - pip
     - setuptools
-    - python >=3.9
+    - python {{ python_min }}
   run:
     - joblib >=0.13.0
     - numpy >=1.18.5
-    - python >=3.9
+    - python >={{ python_min }}
     - scikit-learn >=0.21.1
     - scipy >=1.3.1
     - tqdm >=4.45.0
@@ -38,6 +38,7 @@ test:
     - pip check
   requires:
     - pip
+    - python {{ python_min }}
 
 about:
   home: https://github.com/felixriese/susi
