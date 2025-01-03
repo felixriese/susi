@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+[1.5.0] - XXXX-XX-XX
+--------------------
+- [REMOVE] Support for `scikit-learn>=1.6` because of breaking changes.
+  This will be added back in a future version.
+
 [1.4.2] - 2024-09-17
 --------------------
 - [ADDED] Numpy types as placeholders
