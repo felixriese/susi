@@ -21,13 +21,13 @@ sys.path.insert(0, os.path.abspath("../"))
 # -- Project information -----------------------------------------------------
 
 project = "SuSi"
-copyright = "2019-2024 Felix M. Riese"
+copyright = "2019-2025 Felix M. Riese"
 author = "Felix M. Riese"
 
 # The short X.Y version
 version = ""
 # The full version, including alpha/beta/rc tags
-release = "1.4.2"
+release = "1.4.3"
 
 
 # -- General configuration ---------------------------------------------------
