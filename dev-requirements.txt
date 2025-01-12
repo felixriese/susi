@@ -3,4 +3,4 @@
 -r test-requirements.txt
 
 mypy==1.11.1
-pre-commit==3.8.0
+pre-commit==4.0.1

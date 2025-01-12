@@ -1,6 +1,6 @@
 {
   "name": "susi-self-organizing-maps-with-python",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Susi is a Python package for unsupervised, supervised and semi-supervised self-organizing maps (SOM).",
   "main": "index.js",
   "authors": {
