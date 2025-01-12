@@ -233,7 +233,13 @@ def test_fit(train_mode_unsupervised, train_mode_supervised):
 
 
 def test_estimator_status():
-    check_estimator(susi.SOMClassifier())
+    check_estimator(
+        susi.SOMClassifier(),
+        expected_failed_checks={
+            "check_n_features_in_after_fitting": "added for scikit-learn>=1.6",
+            "check_transformer_preserve_dtypes": "added for scikit-learn>=1.6",
+        },
+    )
 
 
 @pytest.mark.parametrize(

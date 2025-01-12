@@ -26,7 +26,7 @@ setuptools.setup(
     install_requires=[
         "joblib>=0.13.0",
         "numpy>=1.18.5",
-        "scikit-learn>=0.21.1, <1.6",
+        "scikit-learn>=0.21.1",
         "scipy>=1.3.1",
         "tqdm>=4.45.0",
         "matplotlib>=3.9.0",

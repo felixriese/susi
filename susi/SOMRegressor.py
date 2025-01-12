@@ -6,7 +6,7 @@ from sklearn.base import RegressorMixin
 from .SOMEstimator import SOMEstimator
 
 
-class SOMRegressor(SOMEstimator, RegressorMixin):
+class SOMRegressor(RegressorMixin, SOMEstimator):
     """Supervised SOM for estimating continuous variables (= regression).
 
     Parameters

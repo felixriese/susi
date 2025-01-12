@@ -14,7 +14,7 @@ from .SOMEstimator import SOMEstimator
 from .SOMUtils import check_estimation_input
 
 
-class SOMClassifier(SOMEstimator, ClassifierMixin):
+class SOMClassifier(ClassifierMixin, SOMEstimator):
     """Supervised SOM for estimating discrete variables (= classification).
 
     Parameters
