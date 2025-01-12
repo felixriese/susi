@@ -150,7 +150,11 @@ def test_estimator_status():
             n_iter_supervised=10000,
             n_rows=30,
             n_columns=30,
-        )
+        ),
+        expected_failed_checks={
+            "check_n_features_in_after_fitting": "added for scikit-learn>=1.6",
+            "check_transformer_preserve_dtypes": "added for scikit-learn>=1.6",
+        },
     )
 
 

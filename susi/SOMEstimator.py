@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from typing import Optional, Sequence, Tuple, Union
 
 import numpy as np
-from sklearn.base import BaseEstimator
+from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.utils.validation import check_array, check_is_fitted
 from tqdm import tqdm
 
@@ -12,7 +12,7 @@ from .SOMClustering import SOMClustering
 from .SOMUtils import check_estimation_input, modify_weight_matrix_online
 
 
-class SOMEstimator(SOMClustering, BaseEstimator, ABC):
+class SOMEstimator(SOMClustering, TransformerMixin, BaseEstimator, ABC):
     """Basic class for supervised self-organizing maps.
 
     Parameters
@@ -520,3 +520,16 @@ class SOMEstimator(SOMClustering, BaseEstimator, ABC):
 
         """
         return {"preserves_dtype": []}
+
+    def __sklearn_tags__(self):
+        """Add tags for `sklearn.utils.estimator_checks.check_estimator()`.
+
+        Needed since `scikit-learn>=1.6`.
+
+        Source
+        ------
+        https://scikit-learn.org/stable/developers/develop.html#estimator-tags
+
+        """
+        tags = super().__sklearn_tags__()
+        return tags
