@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+NOT RELEASED
+------------
+- [ADDED] Official support for Python 3.13.
+
 [1.4.3] - 2025-01-12
 --------------------
 - [ADDED] Support for `scikit-learn>=1.6` because of breaking changes.
