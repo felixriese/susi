@@ -8,7 +8,7 @@ jobs:
   vuepress:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
     - name: vuepress-deploy
       uses: jenkey2011/vuepress-deploy@master
       env:
