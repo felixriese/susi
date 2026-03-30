@@ -250,9 +250,10 @@ class SOMClassifier(ClassifierMixin, SOMEstimator):
                 if dp_in_node != []:
                     y_in_node = self.y_.flatten()[dp_in_node]
                     if not any(y_in_node == self.missing_label_placeholder):
-                        node_class = np.argmax(
-                            np.unique(y_in_node, return_counts=True)[1]
-                        )
+                        labels, counts = np.unique(y_in_node, return_counts=True)
+                        # classify the node by assigning it the label that occurs
+                        # most frequently among the datapoints mapped to this node
+                        node_class = labels[np.argmax(counts)]
 
                 som[node[0], node[1], 0] = node_class
         else:
